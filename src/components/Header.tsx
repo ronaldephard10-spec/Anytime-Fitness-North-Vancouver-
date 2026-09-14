@@ -1,0 +1,136 @@
+import React from 'react';
+import { MapPin, Phone, ShieldCheck, Clock, Wifi, WifiOff, FileText, Key } from 'lucide-react';
+import { FACILITY_INFO } from '../types/inspection';
+import { PWAInstallBanner } from './PWAInstallBanner';
+import { useOnlineStatus } from '../hooks/useOnlineStatus';
+
+interface HeaderProps {
+  currentDayName: string;
+  formattedDate: string;
+  formattedTime: string;
+  onResetAudit: () => void;
+  isCompleted: boolean;
+  onOpenSourceDoc?: () => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({
+  currentDayName,
+  formattedDate,
+  formattedTime,
+  onResetAudit,
+  onOpenSourceDoc,
+}) => {
+  const isOnline = useOnlineStatus();
+
+  return (
+    <header id="facility-header" className="w-full bg-slate-900/90 border-b border-purple-900/40 backdrop-blur-md sticky top-0 z-30 shadow-lg">
+      <div className="max-w-7xl mx-auto px-4 py-3 sm:px-6">
+        {/* Top brand row */}
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            {/* Anytime Fitness Purple Badge */}
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-700 to-indigo-900 border border-purple-400/30 flex items-center justify-center text-white shadow-md shadow-purple-950/50">
+              <ShieldCheck className="w-6 h-6 text-purple-200" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-purple-900/70 text-purple-300 border border-purple-700/50">
+                  Clean Audit Pro
+                </span>
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-300 border border-slate-700">
+                  <Clock className="w-3 h-3 text-purple-400" />
+                  {currentDayName} • 11:00 PM Shift
+                </span>
+                <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-800">
+                  Acct #3007
+                </span>
+              </div>
+              <h1 className="text-base sm:text-lg font-extrabold text-white tracking-tight mt-0.5">
+                {FACILITY_INFO.facility}
+              </h1>
+            </div>
+          </div>
+
+          {/* Right utility buttons: Source Document, PWA install, connectivity, reset */}
+          <div className="flex items-center gap-2.5 ml-auto">
+            {/* Source Document Reference button */}
+            {onOpenSourceDoc && (
+              <button
+                onClick={onOpenSourceDoc}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-900/40 hover:bg-purple-800/60 text-purple-200 border border-purple-700/50 text-xs font-semibold transition shadow-sm"
+                title="View Coverall Health-Based Cleaning System Original Work Agreement & Schedule (Acct #3007)"
+              >
+                <FileText className="w-3.5 h-3.5 text-purple-300" />
+                <span className="hidden sm:inline">Source Agreement</span>
+                <span className="text-[10px] bg-purple-950 px-1 rounded border border-purple-800">Docs</span>
+              </button>
+            )}
+
+            {/* Online/Offline pill */}
+            <div
+              id="network-status-badge"
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium border ${
+                isOnline
+                  ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-400'
+                  : 'bg-amber-950/50 border-amber-500/50 text-amber-300'
+              }`}
+            >
+              {isOnline ? (
+                <>
+                  <Wifi className="w-3 h-3" />
+                  <span className="hidden sm:inline">Online</span>
+                </>
+              ) : (
+                <>
+                  <WifiOff className="w-3 h-3" />
+                  <span>Offline Mode</span>
+                </>
+              )}
+            </div>
+
+            {/* PWA Install */}
+            <PWAInstallBanner />
+
+            {/* Reset button */}
+            <button
+              id="reset-audit-button"
+              onClick={onResetAudit}
+              className="text-xs px-2.5 py-1.5 rounded-lg border border-slate-700 hover:border-slate-600 bg-slate-800 hover:bg-slate-750 text-slate-300 hover:text-white transition"
+              title="Reset today's checklist state"
+            >
+              New Audit
+            </button>
+          </div>
+        </div>
+
+        {/* Facility Metadata Bar */}
+        <div className="mt-3 pt-2.5 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-x-5 gap-y-1.5 text-xs text-slate-400">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5">
+            <div className="flex items-center gap-1.5 text-slate-300">
+              <MapPin className="w-3.5 h-3.5 text-purple-400 shrink-0" />
+              <span className="font-medium">{FACILITY_INFO.address}</span>
+            </div>
+
+            <div className="flex items-center gap-1.5 text-slate-300">
+              <Phone className="w-3.5 h-3.5 text-purple-400 shrink-0" />
+              <span>Contact: <strong className="text-slate-200">{FACILITY_INFO.contactName}</strong> ({FACILITY_INFO.contactPhone})</span>
+            </div>
+
+            <div className="hidden lg:flex items-center gap-1.5 text-amber-300/90 text-[11px]">
+              <Key className="w-3 h-3 text-amber-400" />
+              <span>Keys: 1 Fob + 1 Key</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1.5 text-[11px] text-purple-300 bg-purple-950/50 px-2.5 py-1 rounded-md border border-purple-800/40">
+            <Clock className="w-3 h-3 text-purple-400 shrink-0" />
+            <span>
+              <strong>Schedule:</strong> {FACILITY_INFO.frequency}
+            </span>
+            <span className="text-slate-400 ml-1 hidden xl:inline">• {formattedDate} {formattedTime}</span>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+};

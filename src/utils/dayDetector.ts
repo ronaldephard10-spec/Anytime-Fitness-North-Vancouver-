@@ -1,0 +1,75 @@
+import { ActiveTab, DayOfWeek } from '../types/inspection';
+
+export const INSPECTION_SCHEDULE = {
+  days: ['Sunday', 'Tuesday', 'Thursday'] as const,
+  frequency: '3x / Week',
+  time: '11:00 PM',
+  fullScheduleText: '3x / Week (Sunday, Tuesday, Thursday at 11:00 PM)',
+};
+
+export function getTodayInspectionDay(): {
+  dayOfWeekNum: number;
+  dayName: string;
+  matchedInspectionDay: DayOfWeek | null;
+  recommendedTab: ActiveTab;
+  isScheduledDay: boolean;
+  scheduledTime: string;
+  scheduleSummary: string;
+} {
+  const now = new Date();
+  const dayNum = now.getDay(); // 0 = Sunday, 1 = Monday, 2 = Tuesday, 3 = Wednesday, 4 = Thursday, 5 = Friday, 6 = Saturday
+
+  const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const dayName = dayNames[dayNum];
+
+  let matchedInspectionDay: DayOfWeek | null = null;
+  let recommendedTab: ActiveTab = 'sunday';
+
+  if (dayNum === 0) {
+    matchedInspectionDay = 'sunday';
+    recommendedTab = 'sunday';
+  } else if (dayNum === 2) {
+    matchedInspectionDay = 'tuesday';
+    recommendedTab = 'tuesday';
+  } else if (dayNum === 4) {
+    matchedInspectionDay = 'thursday';
+    recommendedTab = 'thursday';
+  } else {
+    // If it's another day, recommend the closest inspection shift
+    if (dayNum === 1) recommendedTab = 'tuesday';
+    else if (dayNum === 3) recommendedTab = 'thursday';
+    else if (dayNum === 5 || dayNum === 6) recommendedTab = 'sunday';
+  }
+
+  const isScheduledDay = matchedInspectionDay !== null;
+
+  return {
+    dayOfWeekNum: dayNum,
+    dayName,
+    matchedInspectionDay,
+    recommendedTab,
+    isScheduledDay,
+    scheduledTime: INSPECTION_SCHEDULE.time,
+    scheduleSummary: INSPECTION_SCHEDULE.fullScheduleText,
+  };
+}
+
+export function formatInspectionTimestamp(date: Date = new Date()): {
+  formattedDate: string;
+  formattedTime: string;
+} {
+  const formattedDate = date.toLocaleDateString('en-CA', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+
+  const formattedTime = date.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+  });
+
+  return { formattedDate, formattedTime };
+}
