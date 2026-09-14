@@ -7,7 +7,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-// Dev server API middleware plugin for /api/send-inspection
+// Dev server API middleware plugin for /api/send-inspection and /api/send-monthly-summary
 function apiPlugin(): Plugin {
   return {
     name: 'api-server-middleware',
@@ -28,7 +28,6 @@ function apiPlugin(): Plugin {
         req.on('end', async () => {
           try {
             const data = JSON.parse(body);
-            // Dynamic import to support dev bundling
             const { handleSendInspection } = await import('./api/send-inspection.ts');
             const result = await handleSendInspection(data);
             res.statusCode = 200;
@@ -39,6 +38,36 @@ function apiPlugin(): Plugin {
             res.statusCode = 500;
             res.setHeader('Content-Type', 'application/json');
             res.end(JSON.stringify({ error: err?.message || 'Failed to send inspection' }));
+          }
+        });
+      });
+
+      server.middlewares.use('/api/send-monthly-summary', async (req, res) => {
+        if (req.method !== 'POST') {
+          res.statusCode = 405;
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ error: 'Method Not Allowed' }));
+          return;
+        }
+
+        let body = '';
+        req.on('data', (chunk) => {
+          body += chunk;
+        });
+
+        req.on('end', async () => {
+          try {
+            const data = JSON.parse(body);
+            const { handleSendMonthlySummary } = await import('./api/send-monthly-summary.ts');
+            const result = await handleSendMonthlySummary(data);
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify(result));
+          } catch (err: any) {
+            console.error('Error processing monthly summary send:', err);
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ error: err?.message || 'Failed to send monthly summary' }));
           }
         });
       });

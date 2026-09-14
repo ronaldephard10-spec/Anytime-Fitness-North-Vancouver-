@@ -115,14 +115,14 @@ export const TUESDAY_SPECIFIC: InspectionItem[] = [
     name: 'High/Low dusting (up to 6ft)',
     category: 'tuesday',
     applicableDays: ['tuesday'],
-    description: 'Dust surfaces up to 6 feet including baseboards, display ledges, and workout signage.',
+    description: 'Dust low shelves, surfaces, corners, picture frames, and high areas up to 6 feet.',
   },
   {
     id: 'tue-surface-dusting',
-    name: 'Surface dusting',
+    name: 'Surface dusting (fixtures & office furniture)',
     category: 'tuesday',
     applicableDays: ['tuesday'],
-    description: 'Dust gym console tops, weight machine selector plates, window sills, and reception counters.',
+    description: 'Dust all fixtures and office furniture including computer monitors, file cabinets, desks, credenzas, countertops, display units, and window ledges.',
   },
 ];
 

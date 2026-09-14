@@ -29,6 +29,7 @@ import { OfflineIndicator } from './components/OfflineIndicator';
 import { ScheduleRadarBanner } from './components/ScheduleRadarBanner';
 import { SourceDocumentModal } from './components/SourceDocumentModal';
 import { PeriodicServicesModal } from './components/PeriodicServicesModal';
+import { MonthlySummaryModal } from './components/MonthlySummaryModal';
 import { useOnlineStatus } from './hooks/useOnlineStatus';
 
 const STORAGE_KEY = 'af_inspection_audit_state_v1';
@@ -36,9 +37,10 @@ const STORAGE_KEY = 'af_inspection_audit_state_v1';
 export default function App() {
   const isOnline = useOnlineStatus();
 
-  // Modals for Source Document Reference and Annual / Periodic Services
+  // Modals for Source Document Reference, Annual / Periodic Services, & Monthly QA Summary
   const [isSourceDocOpen, setIsSourceDocOpen] = useState<boolean>(false);
   const [isPeriodicModalOpen, setIsPeriodicModalOpen] = useState<boolean>(false);
+  const [isMonthlySummaryOpen, setIsMonthlySummaryOpen] = useState<boolean>(false);
 
   // 1. Detect Day of week
   const todayInfo = useMemo(() => getTodayInspectionDay(), []);
@@ -443,6 +445,7 @@ export default function App() {
         onResetAudit={handleResetAudit}
         isCompleted={activeScore.percentage >= 85}
         onOpenSourceDoc={() => setIsSourceDocOpen(true)}
+        onOpenMonthlySummary={() => setIsMonthlySummaryOpen(true)}
       />
 
       {/* Top Tab Bar: [Sunday | Tuesday | Thursday | Full Audit] */}
@@ -462,6 +465,7 @@ export default function App() {
           onToggleMonthly={handleToggleMonthly}
           onOpenSourceDoc={() => setIsSourceDocOpen(true)}
           onOpenPeriodicServices={() => setIsPeriodicModalOpen(true)}
+          onOpenMonthlySummary={() => setIsMonthlySummaryOpen(true)}
         />
 
         {/* Compliance Score Card */}
@@ -531,7 +535,7 @@ export default function App() {
               <ChecklistSection
                 title="Tuesday Specific Services"
                 badgeText="Tuesday Shift"
-                subtitle="High/Low dusting (up to 6ft), surface dusting across gym and console surfaces."
+                subtitle="High/Low dusting (up to 6ft) and surface dusting of fixtures, desks, counters, display units & ledges."
                 items={TUESDAY_SPECIFIC}
                 evaluations={evaluations}
                 onUpdateStatus={handleUpdateStatus}
@@ -615,6 +619,7 @@ export default function App() {
           record={currentRecord}
           activeItems={activeItems}
           isOnline={isOnline}
+          onOpenMonthlySummary={() => setIsMonthlySummaryOpen(true)}
         />
       </main>
 
@@ -632,6 +637,12 @@ export default function App() {
         onServiceCompleted={(title) => {
           setOverallNotes((prev) => `${prev ? prev + ' ' : ''}[Logged Periodic Service: ${title}]`);
         }}
+      />
+
+      {/* Client Monthly QA Summary & Executive Report Modal (Option 2 Strategy) */}
+      <MonthlySummaryModal
+        isOpen={isMonthlySummaryOpen}
+        onClose={() => setIsMonthlySummaryOpen(false)}
       />
 
       {/* Offline Connectivity Toast */}

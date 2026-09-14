@@ -11,6 +11,7 @@ interface HeaderProps {
   onResetAudit: () => void;
   isCompleted: boolean;
   onOpenSourceDoc?: () => void;
+  onOpenMonthlySummary?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -19,6 +20,7 @@ export const Header: React.FC<HeaderProps> = ({
   formattedTime,
   onResetAudit,
   onOpenSourceDoc,
+  onOpenMonthlySummary,
 }) => {
   const isOnline = useOnlineStatus();
 
@@ -53,6 +55,20 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Right utility buttons: Source Document, PWA install, connectivity, reset */}
           <div className="flex items-center gap-2.5 ml-auto">
+            {/* Monthly Client Summary Report button */}
+            {onOpenMonthlySummary && (
+              <button
+                onClick={onOpenMonthlySummary}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-800 to-indigo-800 hover:from-purple-700 hover:to-indigo-700 text-white border border-purple-500/50 text-xs font-bold transition shadow-sm"
+                title="Open Client Monthly QA Summary & Executive PDF Generator (Option 2 Strategy)"
+              >
+                <FileText className="w-3.5 h-3.5 text-purple-200" />
+                <span className="hidden sm:inline">Monthly QA Report</span>
+                <span className="sm:hidden">Monthly QA</span>
+                <span className="text-[10px] bg-purple-950/80 px-1.5 py-0.2 rounded border border-purple-400/50 text-purple-200 font-extrabold">Client</span>
+              </button>
+            )}
+
             {/* Source Document Reference button */}
             {onOpenSourceDoc && (
               <button

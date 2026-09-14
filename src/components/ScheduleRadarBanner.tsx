@@ -25,6 +25,7 @@ interface ScheduleRadarBannerProps {
   onToggleMonthly: (toggleKey: string) => void;
   onOpenSourceDoc: () => void;
   onOpenPeriodicServices: () => void;
+  onOpenMonthlySummary?: () => void;
 }
 
 export const ScheduleRadarBanner: React.FC<ScheduleRadarBannerProps> = ({
@@ -33,6 +34,7 @@ export const ScheduleRadarBanner: React.FC<ScheduleRadarBannerProps> = ({
   onToggleMonthly,
   onOpenSourceDoc,
   onOpenPeriodicServices,
+  onOpenMonthlySummary,
 }) => {
   const [isLookaheadOpen, setIsLookaheadOpen] = useState(false);
   const now = new Date();
@@ -87,8 +89,19 @@ export const ScheduleRadarBanner: React.FC<ScheduleRadarBannerProps> = ({
           </div>
         </div>
 
-        {/* Action Buttons: Source Doc & Periodic Services */}
-        <div className="flex items-center gap-2 self-end sm:self-center">
+        {/* Action Buttons: Source Doc, Periodic Services, & Monthly QA Report */}
+        <div className="flex flex-wrap items-center gap-2 self-end sm:self-center">
+          {onOpenMonthlySummary && (
+            <button
+              onClick={onOpenMonthlySummary}
+              className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-800 to-indigo-800 hover:from-purple-700 hover:to-indigo-700 text-white border border-purple-500/50 text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
+              title="Open Client Monthly QA Summary & Executive Report"
+            >
+              <FileText className="w-3.5 h-3.5 text-purple-200" />
+              <span>Monthly Client QA</span>
+            </button>
+          )}
+
           <button
             onClick={onOpenPeriodicServices}
             className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition flex items-center gap-1.5 shadow-sm"

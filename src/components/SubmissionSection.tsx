@@ -15,16 +15,34 @@ import {
   Edit3,
   RotateCcw,
   Check,
+  Calendar,
+  Sparkles,
+  ArrowRight,
+  Info,
 } from 'lucide-react';
-import { InspectionRecord, RECIPIENT_CONFIG, InspectionItem, ItemEvaluation } from '../types/inspection';
+import {
+  InspectionRecord,
+  RECIPIENT_CONFIG,
+  CLIENT_REPORT_RECIPIENTS,
+  InspectionItem,
+  ItemEvaluation,
+  ReportingCadence,
+} from '../types/inspection';
 import { generateInspectionPDF } from '../utils/pdfGenerator';
 import { CertificatePreviewModal } from './CertificatePreviewModal';
+import {
+  getReportingCadence,
+  setReportingCadence,
+  saveCompletedInspection,
+  CompletedInspection,
+} from '../utils/inspectionHistory';
 
 interface SubmissionSectionProps {
   record: InspectionRecord;
   activeItems: InspectionItem[];
   isOnline: boolean;
   onAuditSubmitted?: (result: any) => void;
+  onOpenMonthlySummary?: () => void;
 }
 
 export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
@@ -32,6 +50,7 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
   activeItems,
   isOnline,
   onAuditSubmitted,
+  onOpenMonthlySummary,
 }) => {
   const [isSending, setIsSending] = useState(false);
   const [sendResult, setSendResult] = useState<{
@@ -44,16 +63,57 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
 
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
-  // Email Recipient Routing State (persisted locally so changes stick across sessions)
+  // Active Cadence Strategy (Option 1, 2, or 3)
+  const [cadence, setCadenceState] = useState<ReportingCadence>(() => getReportingCadence());
+
+  // Email Recipient Routing State
   const [recipientTo, setRecipientTo] = useState<string>(() => {
-    return localStorage.getItem('afnv_recipient_to') || record.recipientTo || RECIPIENT_CONFIG.to;
+    const saved = localStorage.getItem('afnv_recipient_to');
+    if (saved) return saved;
+    // Default based on cadence
+    if (getReportingCadence() === 'every-visit') {
+      return `${CLIENT_REPORT_RECIPIENTS.to}, ${RECIPIENT_CONFIG.to}`;
+    }
+    return RECIPIENT_CONFIG.to;
   });
+
   const [recipientCc, setRecipientCc] = useState<string>(() => {
     const saved = localStorage.getItem('afnv_recipient_cc');
     if (saved !== null) return saved;
     return record.recipientCc !== undefined ? record.recipientCc : RECIPIENT_CONFIG.cc;
   });
+
   const [isEditingRecipients, setIsEditingRecipients] = useState(false);
+
+  const handleCadenceChange = (newCadence: ReportingCadence) => {
+    setCadenceState(newCadence);
+    setReportingCadence(newCadence);
+
+    if (newCadence === 'monthly-summary') {
+      // Option 2: Send to Ronald only per visit; client gets monthly summary
+      setRecipientTo(RECIPIENT_CONFIG.to);
+      setRecipientCc(RECIPIENT_CONFIG.cc);
+      localStorage.setItem('afnv_recipient_to', RECIPIENT_CONFIG.to);
+      localStorage.setItem('afnv_recipient_cc', RECIPIENT_CONFIG.cc);
+    } else if (newCadence === 'every-visit') {
+      // Option 3: Send directly to client + Ronald after every visit
+      const combinedTo = `${CLIENT_REPORT_RECIPIENTS.to}, ${RECIPIENT_CONFIG.to}`;
+      setRecipientTo(combinedTo);
+      setRecipientCc(RECIPIENT_CONFIG.cc);
+      localStorage.setItem('afnv_recipient_to', combinedTo);
+      localStorage.setItem('afnv_recipient_cc', RECIPIENT_CONFIG.cc);
+    } else if (newCadence === 'weekly-summary') {
+      // Option 1: Send to Ronald on Sun/Tue; Thursday includes client
+      if (record.activeDay === 'thursday') {
+        const combinedTo = `${CLIENT_REPORT_RECIPIENTS.to}, ${RECIPIENT_CONFIG.to}`;
+        setRecipientTo(combinedTo);
+        localStorage.setItem('afnv_recipient_to', combinedTo);
+      } else {
+        setRecipientTo(RECIPIENT_CONFIG.to);
+        localStorage.setItem('afnv_recipient_to', RECIPIENT_CONFIG.to);
+      }
+    }
+  };
 
   const handleToChange = (val: string) => {
     setRecipientTo(val);
@@ -94,6 +154,38 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
 
   const handlePreviewPDF = () => {
     setIsPreviewOpen(true);
+  };
+
+  // Collect deficiencies for persistent history logging
+  const getDeficienciesList = () => {
+    const list: Array<{ itemName: string; notes: string; resolved: boolean }> = [];
+    activeItems.forEach((item) => {
+      const ev = record.items[item.id];
+      if (ev && ev.status === 'fail') {
+        list.push({
+          itemName: item.name,
+          notes: ev.notes || 'Identified during walk-through and corrected before departure.',
+          resolved: true,
+        });
+      }
+    });
+    return list;
+  };
+
+  // Collect active monthly tasks completed
+  const getActiveMonthlyTasksCompleted = () => {
+    const completed: string[] = [];
+    Object.entries(record.monthlyToggles || {}).forEach(([key, val]) => {
+      if (val) {
+        const matchingItem = activeItems.find((i) => i.id === key || i.id.includes(key));
+        if (matchingItem) {
+          completed.push(matchingItem.name);
+        } else {
+          completed.push(key.replace(/-/g, ' ').toUpperCase());
+        }
+      }
+    });
+    return completed;
   };
 
   const handleSendResendEmail = async () => {
@@ -137,6 +229,31 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
         throw new Error(data?.error || `Server returned ${response.status}`);
       }
 
+      // 3. Persist this completed inspection into local historical store
+      const completedAudit: CompletedInspection = {
+        id: record.id,
+        date: record.inspectionDate,
+        isoDate: new Date().toISOString().split('T')[0],
+        time: record.inspectionTime,
+        shift: record.activeDay,
+        score: record.score.percentage,
+        passedCount: record.score.passedCount,
+        failedCount: record.score.failedCount,
+        naCount: record.score.naCount,
+        totalEvaluated: record.score.totalEvaluated,
+        inspectorName: record.inspectorName || 'Ronald Ephard',
+        supervisorName: record.supervisorName || 'Jennifer Johnson',
+        notes: record.overallNotes || 'Inspection certified compliant.',
+        monthlyTasksCompleted: getActiveMonthlyTasksCompleted(),
+        deficiencies: getDeficienciesList(),
+        photoCount: totalPhotos,
+        dispatchedTo: recipientTo,
+        cadenceMode: cadence,
+        createdAt: new Date().toISOString(),
+      };
+
+      saveCompletedInspection(completedAudit);
+
       setSendResult({
         success: true,
         mode: data.mode,
@@ -177,10 +294,10 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
         <div>
           <div className="flex flex-wrap items-center gap-2">
             <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">
-              Certified Audit Dispatch & Export
+              Certified Inspection Dispatch &amp; Client Reporting
             </h3>
             <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-500/40 text-emerald-300">
-              Official PDF Report
+              Clean Audit Pro
             </span>
             {totalPhotos > 0 && (
               <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-purple-950 border border-purple-500/40 text-purple-300 flex items-center gap-1">
@@ -192,11 +309,22 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
             )}
           </div>
           <p className="text-xs text-slate-400 mt-0.5">
-            Automated delivery to Anytime Fitness and Clean Audit Pro management via Resend API
+            Anytime Fitness North Vancouver • Account #3007 • Resend API Dispatched
           </p>
         </div>
 
         <div className="flex items-center gap-2 self-start sm:self-auto">
+          {onOpenMonthlySummary && (
+            <button
+              onClick={onOpenMonthlySummary}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-purple-600 bg-purple-900/60 hover:bg-purple-800 text-purple-100 text-xs font-bold transition shadow-sm"
+              title="Open Client Monthly QA Summary Generator"
+            >
+              <FileText className="w-3.5 h-3.5 text-purple-300" />
+              <span>Monthly Client QA Report</span>
+            </button>
+          )}
+
           <button
             onClick={handlePreviewPDF}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-750 text-slate-200 text-xs font-semibold transition active:scale-95"
@@ -217,13 +345,148 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
         </div>
       </div>
 
+      {/* Strategic Reporting Cadence Policy Selector */}
+      <div className="bg-slate-950/90 border border-slate-800 rounded-xl p-4 space-y-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="w-4 h-4 text-purple-400" />
+            <span className="text-xs font-bold text-white uppercase tracking-wider">
+              Client Reporting Policy &amp; Cadence
+            </span>
+          </div>
+          <span className="text-[11px] text-purple-300 font-semibold">
+            Select how Anytime Fitness receives reports
+          </span>
+        </div>
+
+        {/* 3 Strategy Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+          {/* Option 2 (Recommended / Active) */}
+          <button
+            type="button"
+            onClick={() => handleCadenceChange('monthly-summary')}
+            className={`p-3 rounded-xl border text-left transition relative ${
+              cadence === 'monthly-summary'
+                ? 'bg-purple-950/60 border-purple-500 shadow-md ring-1 ring-purple-500/50'
+                : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'
+            }`}
+          >
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-xs font-bold text-white">Option 2 (Preferred)</span>
+              <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-emerald-950 border border-emerald-500/40 text-emerald-300">
+                Recommended
+              </span>
+            </div>
+            <div className="text-[11px] font-semibold text-purple-300 mb-1">
+              Monthly Summary to Client • Every Inspection to Ronald
+            </div>
+            <p className="text-[10px] text-slate-400 leading-relaxed">
+              Emails Ronald after every visit. Client receives a single executive report on the First Friday of the month. Avoids report fatigue.
+            </p>
+          </button>
+
+          {/* Option 1 */}
+          <button
+            type="button"
+            onClick={() => handleCadenceChange('weekly-summary')}
+            className={`p-3 rounded-xl border text-left transition relative ${
+              cadence === 'weekly-summary'
+                ? 'bg-purple-950/60 border-purple-500 shadow-md ring-1 ring-purple-500/50'
+                : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'
+            }`}
+          >
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-xs font-bold text-white">Option 1</span>
+              <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-slate-800 text-slate-400">
+                Balanced
+              </span>
+            </div>
+            <div className="text-[11px] font-semibold text-purple-300 mb-1">
+              Weekly Thursday Roll-up
+            </div>
+            <p className="text-[10px] text-slate-400 leading-relaxed">
+              Complete inspections Sun, Tue, Thu. Dispatches weekly certified PDF to client only after Thursday cleaning with all 3 shifts.
+            </p>
+          </button>
+
+          {/* Option 3 */}
+          <button
+            type="button"
+            onClick={() => handleCadenceChange('every-visit')}
+            className={`p-3 rounded-xl border text-left transition relative ${
+              cadence === 'every-visit'
+                ? 'bg-purple-950/60 border-purple-500 shadow-md ring-1 ring-purple-500/50'
+                : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'
+            }`}
+          >
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-xs font-bold text-white">Option 3</span>
+              <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-amber-950 border border-amber-500/40 text-amber-300">
+                Problem Accounts
+              </span>
+            </div>
+            <div className="text-[11px] font-semibold text-amber-300 mb-1">
+              Every Visit to Client
+            </div>
+            <p className="text-[10px] text-slate-400 leading-relaxed">
+              Direct email to Jennifer Johnson after every Sun, Tue, and Thu shift. Used for new accounts, complaints, or contract renewals.
+            </p>
+          </button>
+        </div>
+
+        {/* Dynamic Cadence Notice Banner */}
+        {cadence === 'monthly-summary' && (
+          <div className="p-3 rounded-lg bg-purple-950/30 border border-purple-800/40 flex items-start gap-2.5 text-xs text-purple-200">
+            <Info className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
+            <div>
+              <span className="font-bold text-white">
+                Active Routing: Shift PDF will be sent to Ronald Ephard only.
+              </span>
+              <span className="text-slate-300 ml-1">
+                Anytime Fitness manager (Jennifer Johnson) will NOT receive individual shift emails. All shifts are logged into history and compiled into the Monthly QA Summary.
+              </span>
+            </div>
+          </div>
+        )}
+
+        {cadence === 'weekly-summary' && (
+          <div className="p-3 rounded-lg bg-slate-900 border border-slate-800 flex items-start gap-2.5 text-xs text-slate-300">
+            <Calendar className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
+            <div>
+              <span className="font-bold text-white">
+                Weekly Cadence Active:
+              </span>
+              <span className="text-slate-300 ml-1">
+                {record.activeDay === 'thursday'
+                  ? 'Thursday shift active: PDF report will be delivered to Jennifer Johnson & Ronald.'
+                  : `${record.activeDay.toUpperCase()} shift: Stored in app and emailed internally to Ronald.`}
+              </span>
+            </div>
+          </div>
+        )}
+
+        {cadence === 'every-visit' && (
+          <div className="p-3 rounded-lg bg-amber-950/30 border border-amber-800/40 flex items-start gap-2.5 text-xs text-amber-200">
+            <AlertCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+            <div>
+              <span className="font-bold text-white">
+                Every-Visit Delivery Active:
+              </span>
+              <span className="text-amber-100 ml-1">
+                This shift audit will be emailed directly to client Jennifer Johnson (jen.johnson@anytimefitness.ca) upon clicking Send.
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* Recipient Routing & Customization Box */}
       <div className="rounded-xl bg-slate-950/80 border border-slate-800 p-4 space-y-3 text-xs">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <Mail className="w-4 h-4 text-purple-400" />
             <span className="text-xs font-bold uppercase tracking-wider text-purple-200">
-              Email Dispatch Routing (Resend API)
+              Shift Email Dispatch Routing
             </span>
             {isCustomized && (
               <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full bg-cyan-950/80 border border-cyan-500/40 text-cyan-300">
@@ -332,32 +595,44 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
             </div>
           </div>
         )}
-
-        <p className="text-[11px] text-slate-400">
-          Emails are routed exclusively to the addresses configured above. It does not go to any other email.
-        </p>
       </div>
 
-      {/* Primary Dispatch Action Button */}
-      <div className="pt-2">
+      {/* Primary Dispatch Action Buttons */}
+      <div className="pt-2 flex flex-wrap items-center gap-3">
         <button
           id="send-inspection-button"
           onClick={handleSendResendEmail}
           disabled={isSending}
-          className="w-full sm:w-auto min-w-[280px] flex items-center justify-center gap-2.5 px-6 py-3 rounded-xl bg-gradient-to-r from-purple-700 via-purple-600 to-indigo-600 hover:from-purple-600 hover:to-indigo-500 text-white font-bold text-sm shadow-lg shadow-purple-950/60 transition active:scale-[0.98] disabled:opacity-50"
+          className="flex-1 sm:flex-initial min-w-[280px] flex items-center justify-center gap-2.5 px-6 py-3 rounded-xl bg-gradient-to-r from-purple-700 via-purple-600 to-indigo-600 hover:from-purple-600 hover:to-indigo-500 text-white font-bold text-sm shadow-lg shadow-purple-950/60 transition active:scale-[0.98] disabled:opacity-50"
         >
           {isSending ? (
             <>
               <Loader2 className="w-4 h-4 animate-spin" />
-              <span>Generating PDF & Transmitting via Resend...</span>
+              <span>Certifying Audit &amp; Transmitting...</span>
             </>
           ) : (
             <>
               <Send className="w-4 h-4" />
-              <span>Send Certified Inspection PDF via Resend</span>
+              <span>
+                {cadence === 'monthly-summary'
+                  ? 'Save & Send Shift Audit to Ronald (Internal Record)'
+                  : 'Send Certified Inspection PDF via Resend'}
+              </span>
             </>
           )}
         </button>
+
+        {onOpenMonthlySummary && (
+          <button
+            type="button"
+            onClick={onOpenMonthlySummary}
+            className="flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-750 border border-purple-700/60 text-purple-200 font-bold text-sm transition"
+          >
+            <FileText className="w-4 h-4 text-purple-400" />
+            <span>Generate Client Monthly QA Report</span>
+            <ArrowRight className="w-4 h-4 text-purple-400" />
+          </button>
+        )}
       </div>
 
       {/* Result feedback */}
@@ -385,7 +660,7 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
                 <>
                   <p>
                     Certified PDF for Anytime Fitness North Vancouver (<strong>{record.activeDay.toUpperCase()} Shift</strong>)
-                    has been processed.
+                    has been saved to the Monthly Record and dispatched.
                   </p>
                   <p className="text-[11px] text-emerald-300 font-mono">
                     Routing: {recipientTo} {recipientCc ? `(Cc: ${recipientCc})` : ''}
@@ -393,6 +668,11 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
                   {sendResult.messageId && (
                     <p className="text-[11px] opacity-80 font-mono">
                       Tracking Reference ID: {sendResult.messageId}
+                    </p>
+                  )}
+                  {cadence === 'monthly-summary' && (
+                    <p className="text-[11px] text-purple-300 font-medium mt-1">
+                      ✓ Logged to Monthly QA Summary. Jennifer Johnson will receive this shift compiled into the executive report on the First Friday of next month.
                     </p>
                   )}
                   {sendResult.note && (
@@ -421,3 +701,4 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
     </div>
   );
 };
+

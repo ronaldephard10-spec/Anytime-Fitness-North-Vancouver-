@@ -1,5 +1,6 @@
 export type DayOfWeek = 'sunday' | 'tuesday' | 'thursday';
 export type ActiveTab = 'sunday' | 'tuesday' | 'thursday' | 'full-audit';
+export type ReportingCadence = 'monthly-summary' | 'weekly-summary' | 'every-visit';
 
 export type ItemStatus = 'pass' | 'fail' | 'pending' | 'na';
 
@@ -96,4 +97,11 @@ export const RECIPIENT_CONFIG = {
   to: 'ronaldephard10@gmail.com',
   cc: 'ronald@marketingdo.net',
   from: '"Clean Audit Pro" <inspections@cleanaudit.pro>',
+};
+
+export const CLIENT_REPORT_RECIPIENTS = {
+  to: 'jen.johnson@anytimefitness.ca',
+  cc: 'ronaldephard10@gmail.com, ronald@marketingdo.net',
+  clientName: 'Jennifer Johnson',
+  clubName: 'Anytime Fitness North Vancouver',
 };
