@@ -144,26 +144,10 @@ export const ScheduleRadarBanner: React.FC<ScheduleRadarBannerProps> = ({
           </div>
 
           <div className="shrink-0 flex items-center gap-2">
-            {allTonightActivated ? (
-              <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-300 bg-emerald-950/80 px-3 py-1.5 rounded-lg border border-emerald-700">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                Active in Tonight&apos;s Checklist
-              </span>
-            ) : (
-              <button
-                onClick={() => {
-                  tasksDueTonight.forEach((t) => {
-                    if (!monthlyToggles[t.toggleKey]) {
-                      onToggleMonthly(t.toggleKey);
-                    }
-                  });
-                }}
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-900 bg-amber-400 hover:bg-amber-300 px-3 py-1.5 rounded-lg shadow-sm transition"
-              >
-                <CheckCircle2 className="w-3.5 h-3.5 text-slate-900" />
-                <span>Apply to Checklist (+1 Item)</span>
-              </button>
-            )}
+            <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-300 bg-emerald-950/80 px-3 py-1.5 rounded-lg border border-emerald-700">
+              <CheckCircle2 className="w-3.5 h-3.5" />
+              <span>Included in Tonight&apos;s Due Checklist</span>
+            </span>
           </div>
         </div>
       ) : (
@@ -171,7 +155,7 @@ export const ScheduleRadarBanner: React.FC<ScheduleRadarBannerProps> = ({
           <div className="flex items-center gap-2">
             <Clock className="w-3.5 h-3.5 text-purple-400" />
             <span>
-              <strong>Tonight&apos;s Protocol:</strong> Core Daily Services (17 items) +{' '}
+              <strong>Tonight&apos;s Protocol:</strong> Core Daily Services (9 items) +{' '}
               {scheduleSummary.dayTab ? `${scheduleSummary.dayOfWeekName} Weekly Specifics` : 'Next scheduled 11:00 PM shift'}.
             </span>
           </div>

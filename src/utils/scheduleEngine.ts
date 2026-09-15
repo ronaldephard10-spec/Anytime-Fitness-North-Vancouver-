@@ -1,10 +1,32 @@
-import { ActiveTab, DayOfWeek } from '../types/inspection';
+import { ActiveTab, DayOfWeek, InspectionItem } from '../types/inspection';
 import {
   CORE_SERVICES,
   SUNDAY_SPECIFIC,
+  SUNDAY_MONTHLY,
   TUESDAY_SPECIFIC,
+  TUESDAY_MONTHLY,
   THURSDAY_SPECIFIC,
+  THURSDAY_MONTHLY,
 } from '../data/checklistItems';
+
+export interface DueInspectionDetails {
+  date: Date;
+  dateFormatted: string;
+  dayName: string;
+  isScheduledDay: boolean;
+  shiftDay: DayOfWeek;
+  coreItems: InspectionItem[];
+  shiftSpecificItems: InspectionItem[];
+  monthlyDueItems: InspectionItem[];
+  allDueItems: InspectionItem[];
+  monthlyTaskDue: ScheduledMonthlyTask | null;
+  scheduledTime: string;
+  nextScheduledShift: {
+    dayName: string;
+    shiftDay: DayOfWeek;
+    time: string;
+  };
+}
 
 export interface ScheduledMonthlyTask {
   toggleKey: string;
@@ -333,3 +355,107 @@ export const INITIAL_PERIODIC_SERVICES: PeriodicServiceRecord[] = [
     notes: 'Sanitizes cloth fibers and eliminates odors.',
   },
 ];
+
+/**
+ * Returns strictly what is due for a specific date and shift, filtering out all other days and inactive monthly rotations.
+ */
+export function getDueInspectionForDate(
+  date: Date = new Date(),
+  shiftOverride?: DayOfWeek | null
+): DueInspectionDetails {
+  const dayNum = date.getDay(); // 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
+  const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const dayName = dayNames[dayNum];
+
+  // Determine natural scheduled shift for this calendar day
+  let naturalShiftDay: DayOfWeek | null = null;
+  if (dayNum === 0) naturalShiftDay = 'sunday';
+  else if (dayNum === 2) naturalShiftDay = 'tuesday';
+  else if (dayNum === 4) naturalShiftDay = 'thursday';
+
+  const isScheduledDay = naturalShiftDay !== null;
+
+  // Next scheduled shift if today is an off-day (or looking forward)
+  let nextShiftDay: DayOfWeek = 'sunday';
+  let nextShiftName = 'Sunday';
+  if (dayNum === 0) {
+    nextShiftDay = 'tuesday';
+    nextShiftName = 'Tuesday';
+  } else if (dayNum === 1 || dayNum === 2) {
+    nextShiftDay = dayNum === 1 ? 'tuesday' : 'thursday';
+    nextShiftName = dayNum === 1 ? 'Tuesday' : 'Thursday';
+  } else if (dayNum === 3 || dayNum === 4) {
+    nextShiftDay = dayNum === 3 ? 'thursday' : 'sunday';
+    nextShiftName = dayNum === 3 ? 'Thursday' : 'Sunday';
+  } else {
+    // Friday or Saturday -> Sunday
+    nextShiftDay = 'sunday';
+    nextShiftName = 'Sunday';
+  }
+
+  // Active shift: override if specified, otherwise natural shift if scheduled, or nextShiftDay
+  const activeShift: DayOfWeek = shiftOverride || naturalShiftDay || nextShiftDay;
+
+  // 1. Core items: due every cleaning shift
+  const coreItems = [...CORE_SERVICES];
+
+  // 2. Shift-specific items (only for the active shift)
+  let shiftSpecificItems: InspectionItem[] = [];
+  if (activeShift === 'sunday') {
+    shiftSpecificItems = [...SUNDAY_SPECIFIC];
+  } else if (activeShift === 'tuesday') {
+    shiftSpecificItems = [...TUESDAY_SPECIFIC];
+  } else if (activeShift === 'thursday') {
+    shiftSpecificItems = [...THURSDAY_SPECIFIC];
+  }
+
+  // 3. Monthly items: strictly ONLY if scheduled for today according to the Coverall monthly rotation rules
+  const scheduledMonthlyTasks = getMonthlyTasksDueForDate(date);
+  const monthlyDueItems: InspectionItem[] = [];
+  let monthlyTaskDue: ScheduledMonthlyTask | null = null;
+
+  scheduledMonthlyTasks.forEach((mTask) => {
+    if (mTask.dayOfWeek === activeShift) {
+      monthlyTaskDue = mTask;
+      if (activeShift === 'sunday') {
+        const found = SUNDAY_MONTHLY.find((i) => i.id === mTask.toggleKey);
+        if (found) monthlyDueItems.push(found);
+      } else if (activeShift === 'tuesday') {
+        const found = TUESDAY_MONTHLY.find((i) => i.id === mTask.toggleKey);
+        if (found) monthlyDueItems.push(found);
+      } else if (activeShift === 'thursday') {
+        const found = THURSDAY_MONTHLY.find((i) => i.id === mTask.toggleKey);
+        if (found) monthlyDueItems.push(found);
+      }
+    }
+  });
+
+  const allDueItems = [...coreItems, ...shiftSpecificItems, ...monthlyDueItems];
+
+  const dateFormatted = date.toLocaleDateString('en-US', {
+    weekday: 'long',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+
+  return {
+    date,
+    dateFormatted,
+    dayName,
+    isScheduledDay,
+    shiftDay: activeShift,
+    coreItems,
+    shiftSpecificItems,
+    monthlyDueItems,
+    allDueItems,
+    monthlyTaskDue,
+    scheduledTime: '11:00 PM',
+    nextScheduledShift: {
+      dayName: nextShiftName,
+      shiftDay: nextShiftDay,
+      time: '11:00 PM',
+    },
+  };
+}
+

@@ -286,7 +286,7 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
 
   return (
     <div
-      id="audit-submission-card"
+      id="submission-section"
       className="w-full bg-gradient-to-b from-slate-900 to-purple-950/40 border border-purple-900/50 rounded-2xl p-4 sm:p-6 shadow-xl space-y-5"
     >
       {/* Header */}

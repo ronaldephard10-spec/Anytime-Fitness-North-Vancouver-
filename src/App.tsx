@@ -18,7 +18,7 @@ import {
   THURSDAY_MONTHLY,
 } from './data/checklistItems';
 import { getTodayInspectionDay, formatInspectionTimestamp } from './utils/dayDetector';
-import { getMonthlyTasksDueForDate } from './utils/scheduleEngine';
+import { getMonthlyTasksDueForDate, getDueInspectionForDate } from './utils/scheduleEngine';
 import { Header } from './components/Header';
 import { TabBar } from './components/TabBar';
 import { ComplianceScoreCard } from './components/ComplianceScoreCard';
@@ -30,7 +30,9 @@ import { ScheduleRadarBanner } from './components/ScheduleRadarBanner';
 import { SourceDocumentModal } from './components/SourceDocumentModal';
 import { PeriodicServicesModal } from './components/PeriodicServicesModal';
 import { MonthlySummaryModal } from './components/MonthlySummaryModal';
+import { VoiceAssistantBar } from './components/VoiceAssistantBar';
 import { useOnlineStatus } from './hooks/useOnlineStatus';
+import { useVoiceWalkthrough } from './hooks/useVoiceWalkthrough';
 
 const STORAGE_KEY = 'af_inspection_audit_state_v1';
 
@@ -132,6 +134,9 @@ export default function App() {
     } catch (e) {}
     return '';
   });
+
+  // State to toggle optional ad-hoc / unscheduled monthly deep clean tasks
+  const [showAdHocMonthly, setShowAdHocMonthly] = useState<boolean>(false);
 
   // Save to localStorage whenever critical state updates
   useEffect(() => {
@@ -259,58 +264,53 @@ export default function App() {
     });
   };
 
-  // Helper to determine which items belong to a given tab
+  // Calculate strictly what is due for the active shift and date!
+  const dueInspection = useMemo(() => {
+    const shiftOverride =
+      activeTab === 'sunday' || activeTab === 'tuesday' || activeTab === 'thursday'
+        ? activeTab
+        : null;
+    return getDueInspectionForDate(new Date(), shiftOverride);
+  }, [activeTab]);
+
+  // Helper to determine which items belong to a given tab strictly for that day/shift
   const getItemsForTab = (tab: ActiveTab): InspectionItem[] => {
-    if (tab === 'sunday') {
-      const base = [...CORE_SERVICES, ...SUNDAY_SPECIFIC];
-      if (monthlyToggles['sun-monthly-refrigerator']) {
-        base.push(SUNDAY_MONTHLY[0]);
+    const shift: DayOfWeek =
+      tab === 'sunday' || tab === 'tuesday' || tab === 'thursday'
+        ? tab
+        : 'tuesday';
+
+    const dueInfo = getDueInspectionForDate(new Date(), shift);
+    const items = [...dueInfo.allDueItems];
+
+    // If an inspector manually opted into an unscheduled ad-hoc monthly task, include it
+    if (shift === 'sunday') {
+      if (monthlyToggles['sun-monthly-refrigerator'] && !items.some((i) => i.id === 'sun-monthly-refrigerator')) {
+        items.push(SUNDAY_MONTHLY[0]);
       }
-      if (monthlyToggles['sun-monthly-partition-detail']) {
-        base.push(SUNDAY_MONTHLY[1]);
+      if (monthlyToggles['sun-monthly-partition-detail'] && !items.some((i) => i.id === 'sun-monthly-partition-detail')) {
+        items.push(SUNDAY_MONTHLY[1]);
       }
-      return base;
+    } else if (shift === 'tuesday') {
+      if (monthlyToggles['tue-monthly-blinds-entrance'] && !items.some((i) => i.id === 'tue-monthly-blinds-entrance')) {
+        items.push(TUESDAY_MONTHLY[0]);
+      }
+      if (monthlyToggles['tue-monthly-vents-fixtures'] && !items.some((i) => i.id === 'tue-monthly-vents-fixtures')) {
+        items.push(TUESDAY_MONTHLY[1]);
+      }
+    } else if (shift === 'thursday') {
+      if (monthlyToggles['thu-monthly-detail-edge-vacuum'] && !items.some((i) => i.id === 'thu-monthly-detail-edge-vacuum')) {
+        items.push(THURSDAY_MONTHLY[0]);
+      }
+      if (monthlyToggles['thu-monthly-fabric-furniture'] && !items.some((i) => i.id === 'thu-monthly-fabric-furniture')) {
+        items.push(THURSDAY_MONTHLY[1]);
+      }
     }
 
-    if (tab === 'tuesday') {
-      const base = [...CORE_SERVICES, ...TUESDAY_SPECIFIC];
-      if (monthlyToggles['tue-monthly-blinds-entrance']) {
-        base.push(TUESDAY_MONTHLY[0]);
-      }
-      if (monthlyToggles['tue-monthly-vents-fixtures']) {
-        base.push(TUESDAY_MONTHLY[1]);
-      }
-      return base;
-    }
-
-    if (tab === 'thursday') {
-      const base = [...CORE_SERVICES, ...THURSDAY_SPECIFIC];
-      if (monthlyToggles['thu-monthly-detail-edge-vacuum']) {
-        base.push(THURSDAY_MONTHLY[0]);
-      }
-      if (monthlyToggles['thu-monthly-fabric-furniture']) {
-        base.push(THURSDAY_MONTHLY[1]);
-      }
-      return base;
-    }
-
-    // Full Audit Tab
-    const full = [
-      ...CORE_SERVICES,
-      ...SUNDAY_SPECIFIC,
-      ...TUESDAY_SPECIFIC,
-      ...THURSDAY_SPECIFIC,
-    ];
-    if (monthlyToggles['sun-monthly-refrigerator']) full.push(SUNDAY_MONTHLY[0]);
-    if (monthlyToggles['sun-monthly-partition-detail']) full.push(SUNDAY_MONTHLY[1]);
-    if (monthlyToggles['tue-monthly-blinds-entrance']) full.push(TUESDAY_MONTHLY[0]);
-    if (monthlyToggles['tue-monthly-vents-fixtures']) full.push(TUESDAY_MONTHLY[1]);
-    if (monthlyToggles['thu-monthly-detail-edge-vacuum']) full.push(THURSDAY_MONTHLY[0]);
-    if (monthlyToggles['thu-monthly-fabric-furniture']) full.push(THURSDAY_MONTHLY[1]);
-    return full;
+    return items;
   };
 
-  // Active items for the currently selected tab
+  // Active items strictly for what is due that day!
   const activeItems = useMemo(() => getItemsForTab(activeTab), [activeTab, monthlyToggles]);
 
   // Scoring calculation strictly for the active tab's items
@@ -344,7 +344,7 @@ export default function App() {
 
   // Stats for the TabBar badges
   const dayStats = useMemo(() => {
-    const tabs: ActiveTab[] = ['sunday', 'tuesday', 'thursday', 'full-audit'];
+    const tabs: ActiveTab[] = ['sunday', 'tuesday', 'thursday'];
     const res: Record<ActiveTab, { total: number; passed: number; score: number }> = {
       sunday: { total: 0, passed: 0, score: 0 },
       tuesday: { total: 0, passed: 0, score: 0 },
@@ -435,9 +435,21 @@ export default function App() {
     return Object.values(monthlyToggles).filter(Boolean).length;
   }, [activeTab, monthlyToggles]);
 
+  // Hands-free Voice Walkthrough Assistant hook
+  const voiceState = useVoiceWalkthrough({
+    activeItems,
+    evaluations,
+    onUpdateStatus: handleUpdateStatus,
+    onUpdateNotes: handleUpdateNotes,
+    onPassAll: handlePassAllShiftItems,
+    activeTab,
+    onChangeTab: setActiveTab,
+    compliancePercentage: activeScore.percentage,
+  });
+
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-purple-600 selection:text-white pb-16">
-      {/* Header with facility metadata, PWA install prompt, network indicator */}
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-purple-600 selection:text-white pb-24">
+      {/* Header with facility metadata, PWA install prompt, network indicator, voice toggle */}
       <Header
         currentDayName={todayInfo.dayName}
         formattedDate={timestamp.formattedDate}
@@ -446,19 +458,49 @@ export default function App() {
         isCompleted={activeScore.percentage >= 85}
         onOpenSourceDoc={() => setIsSourceDocOpen(true)}
         onOpenMonthlySummary={() => setIsMonthlySummaryOpen(true)}
+        isVoiceListening={voiceState.isListening}
+        onToggleVoice={voiceState.toggleListening}
+        isVoiceSupported={voiceState.isSupported}
       />
 
-      {/* Top Tab Bar: [Sunday | Tuesday | Thursday | Full Audit] */}
+      {/* Top Shift Tab Bar */}
       <TabBar
         activeTab={activeTab}
         onSelectTab={setActiveTab}
         matchedDay={todayInfo.matchedInspectionDay}
         dayCounts={dayStats}
+        currentDayName={todayInfo.dayName}
       />
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-6 sm:px-6 space-y-6">
-        {/* Coverall Schedule Radar Banner: tells what monthly/weekly/daily task is due tonight */}
+        {/* Off-Schedule Notice if today is not a routine cleaning shift */}
+        {!todayInfo.isScheduledDay && (
+          <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center shrink-0 text-amber-400 font-bold text-xs">
+                OFF
+              </div>
+              <div>
+                <div className="font-bold text-slate-100">
+                  Today is {todayInfo.dayName} (No Routine Shift Scheduled)
+                </div>
+                <div className="text-xs text-slate-400 mt-0.5">
+                  Anytime Fitness #3007 is serviced 3x weekly: Sunday, Tuesday & Thursday at 11:00 PM. Displaying due items for the{' '}
+                  <span className="text-purple-300 font-semibold">{dueInspection.shiftDay.toUpperCase()} Shift</span>.
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="text-xs text-slate-400">Next Scheduled:</span>
+              <span className="text-xs font-bold text-purple-300 bg-purple-950/80 px-2.5 py-1 rounded-md border border-purple-800">
+                {dueInspection.nextScheduledShift.dayName} @ {dueInspection.nextScheduledShift.time}
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* Coverall Schedule Radar Banner */}
         <ScheduleRadarBanner
           activeTab={activeTab}
           monthlyToggles={monthlyToggles}
@@ -476,14 +518,14 @@ export default function App() {
           monthlyCountActive={activeMonthlyCount}
         />
 
-        {/* Dynamic Checklist Sections according to Active Tab */}
+        {/* Dynamic Checklist Sections: Strictly What Is Due That Day */}
         <div className="space-y-6">
-          {/* 1. "Daily Core Services" - Loads on all days */}
+          {/* 1. Daily Core Services (9 items) */}
           <ChecklistSection
             title="Daily Core Services"
-            badgeText="Required All Days"
-            subtitle="Entrance & foyer detailing, office cleaning & organization, restrooms disinfection, gym mirrors, trash removal, and hard floor mopping."
-            items={CORE_SERVICES}
+            badgeText="Required All Shifts (Due Tonight)"
+            subtitle="Entrance foyer detailing, office cleaning, restroom disinfection, gym mirrors, trash removal, and hard floor mopping."
+            items={dueInspection.coreItems}
             evaluations={evaluations}
             onUpdateStatus={handleUpdateStatus}
             onUpdateNotes={handleUpdateNotes}
@@ -493,112 +535,84 @@ export default function App() {
             activeTab={activeTab}
           />
 
-          {/* 2. Sunday Specific Section */}
-          {(activeTab === 'sunday' || activeTab === 'full-audit') && (
-            <div className="space-y-4">
-              <ChecklistSection
-                title="Sunday Specific Services"
-                badgeText="Sunday Shift"
-                subtitle="Microwave interior, partition glass dusting, high-traffic vacuuming."
-                items={SUNDAY_SPECIFIC}
-                evaluations={evaluations}
-                onUpdateStatus={handleUpdateStatus}
-                onUpdateNotes={handleUpdateNotes}
-                onAttachPhoto={handleAttachPhoto}
-                onAddPhoto={handleAddPhoto}
-                onRemovePhoto={handleRemovePhoto}
-                activeTab={activeTab}
-              />
+          {/* 2. Shift Specific Services (Due Tonight) */}
+          {dueInspection.shiftSpecificItems.length > 0 && (
+            <ChecklistSection
+              title={`${dueInspection.shiftDay.charAt(0).toUpperCase() + dueInspection.shiftDay.slice(1)} Specific Services`}
+              badgeText={`${dueInspection.shiftDay.charAt(0).toUpperCase() + dueInspection.shiftDay.slice(1)} Shift (Due Tonight)`}
+              subtitle={
+                dueInspection.shiftDay === 'sunday'
+                  ? 'Microwave interior cleaning, partition glass dusting, high-traffic vacuuming.'
+                  : dueInspection.shiftDay === 'tuesday'
+                  ? 'High/Low dusting (up to 6ft) and surface dusting of fixtures, desks, counters, display units & ledges.'
+                  : 'Damp wipe office desks & furniture, sanitize phones, carpet spot vacuuming & desk mats, full floor carpet vacuum, traffic vacuum.'
+              }
+              items={dueInspection.shiftSpecificItems}
+              evaluations={evaluations}
+              onUpdateStatus={handleUpdateStatus}
+              onUpdateNotes={handleUpdateNotes}
+              onAttachPhoto={handleAttachPhoto}
+              onAddPhoto={handleAddPhoto}
+              onRemovePhoto={handleRemovePhoto}
+              activeTab={activeTab}
+            />
+          )}
 
-              {/* Sunday Monthly Toggles */}
-              <ChecklistSection
-                title="Sunday Monthly Deep Clean Toggles"
-                badgeText="Monthly Detail"
-                subtitle="Toggle on when monthly rotation is due. Adds to active day score calculation."
-                items={SUNDAY_MONTHLY}
-                evaluations={evaluations}
-                onUpdateStatus={handleUpdateStatus}
-                onUpdateNotes={handleUpdateNotes}
-                onAttachPhoto={handleAttachPhoto}
-                onAddPhoto={handleAddPhoto}
-                onRemovePhoto={handleRemovePhoto}
-                monthlyToggles={monthlyToggles}
-                onToggleMonthly={handleToggleMonthly}
-                activeTab={activeTab}
-              />
+          {/* 3. Monthly Deep Clean Section: Only rendered if scheduled for tonight! */}
+          {dueInspection.monthlyDueItems.length > 0 ? (
+            <ChecklistSection
+              title={`Scheduled Monthly Rotation: ${dueInspection.monthlyTaskDue?.name || 'Deep Clean'}`}
+              badgeText={`Due Tonight • ${dueInspection.monthlyTaskDue?.occurrenceText || 'Monthly Rotation'}`}
+              subtitle={`${dueInspection.monthlyTaskDue?.description || 'Scheduled commercial deep clean service'} (Included in tonight's due audit).`}
+              items={dueInspection.monthlyDueItems}
+              evaluations={evaluations}
+              onUpdateStatus={handleUpdateStatus}
+              onUpdateNotes={handleUpdateNotes}
+              onAttachPhoto={handleAttachPhoto}
+              onAddPhoto={handleAddPhoto}
+              onRemovePhoto={handleRemovePhoto}
+              activeTab={activeTab}
+            />
+          ) : (
+            <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-400">
+              <div className="flex items-center gap-2.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span>
+                  <strong>Monthly Rotation:</strong> No monthly deep clean is scheduled for tonight ({dueInspection.dayName}, Week {Math.ceil(new Date().getDate() / 7)}).
+                </span>
+              </div>
+              <button
+                onClick={() => setShowAdHocMonthly(!showAdHocMonthly)}
+                className="text-purple-400 hover:text-purple-300 font-semibold flex items-center gap-1 shrink-0 underline decoration-purple-500/50"
+              >
+                {showAdHocMonthly ? 'Hide Extra Tasks' : '+ Log Unscheduled / Ad-Hoc Monthly Deep Clean'}
+              </button>
             </div>
           )}
 
-          {/* 3. Tuesday Specific Section */}
-          {(activeTab === 'tuesday' || activeTab === 'full-audit') && (
-            <div className="space-y-4">
-              <ChecklistSection
-                title="Tuesday Specific Services"
-                badgeText="Tuesday Shift"
-                subtitle="High/Low dusting (up to 6ft) and surface dusting of fixtures, desks, counters, display units & ledges."
-                items={TUESDAY_SPECIFIC}
-                evaluations={evaluations}
-                onUpdateStatus={handleUpdateStatus}
-                onUpdateNotes={handleUpdateNotes}
-                onAttachPhoto={handleAttachPhoto}
-                onAddPhoto={handleAddPhoto}
-                onRemovePhoto={handleRemovePhoto}
-                activeTab={activeTab}
-              />
-
-              {/* Tuesday Monthly Toggles */}
-              <ChecklistSection
-                title="Tuesday Monthly Deep Clean Toggles"
-                badgeText="Monthly Detail"
-                subtitle="Toggle on when monthly blinds/glass or ceiling vents/fixtures deep cleaning is scheduled."
-                items={TUESDAY_MONTHLY}
-                evaluations={evaluations}
-                onUpdateStatus={handleUpdateStatus}
-                onUpdateNotes={handleUpdateNotes}
-                onAttachPhoto={handleAttachPhoto}
-                onAddPhoto={handleAddPhoto}
-                onRemovePhoto={handleRemovePhoto}
-                monthlyToggles={monthlyToggles}
-                onToggleMonthly={handleToggleMonthly}
-                activeTab={activeTab}
-              />
-            </div>
-          )}
-
-          {/* 4. Thursday Specific Section */}
-          {(activeTab === 'thursday' || activeTab === 'full-audit') && (
-            <div className="space-y-4">
-              <ChecklistSection
-                title="Thursday Specific Services"
-                badgeText="Thursday Shift"
-                subtitle="Damp wipe office desks & furniture, sanitize phones, carpet spot vacuuming & desk mats, full floor carpet vacuum, traffic vacuum."
-                items={THURSDAY_SPECIFIC}
-                evaluations={evaluations}
-                onUpdateStatus={handleUpdateStatus}
-                onUpdateNotes={handleUpdateNotes}
-                onAttachPhoto={handleAttachPhoto}
-                onAddPhoto={handleAddPhoto}
-                onRemovePhoto={handleRemovePhoto}
-                activeTab={activeTab}
-              />
-
-              {/* Thursday Monthly Toggles */}
-              <ChecklistSection
-                title="Thursday Monthly Deep Clean Toggles"
-                badgeText="Monthly Detail"
-                subtitle="Toggle on when monthly detail edge vacuuming or fabric furniture vacuuming is scheduled."
-                items={THURSDAY_MONTHLY}
-                evaluations={evaluations}
-                onUpdateStatus={handleUpdateStatus}
-                onUpdateNotes={handleUpdateNotes}
-                onAttachPhoto={handleAttachPhoto}
-                onAddPhoto={handleAddPhoto}
-                onRemovePhoto={handleRemovePhoto}
-                monthlyToggles={monthlyToggles}
-                onToggleMonthly={handleToggleMonthly}
-                activeTab={activeTab}
-              />
-            </div>
+          {/* 4. Optional Ad-Hoc / Unscheduled Monthly Deep Clean (Only shown if inspector opts in) */}
+          {showAdHocMonthly && (
+            <ChecklistSection
+              title={`${dueInspection.shiftDay.charAt(0).toUpperCase() + dueInspection.shiftDay.slice(1)} Ad-Hoc Monthly Deep Clean`}
+              badgeText="Optional / Extra"
+              subtitle="Select and evaluate any monthly rotation items completed out of normal cycle."
+              items={
+                dueInspection.shiftDay === 'sunday'
+                  ? SUNDAY_MONTHLY
+                  : dueInspection.shiftDay === 'tuesday'
+                  ? TUESDAY_MONTHLY
+                  : THURSDAY_MONTHLY
+              }
+              evaluations={evaluations}
+              onUpdateStatus={handleUpdateStatus}
+              onUpdateNotes={handleUpdateNotes}
+              onAttachPhoto={handleAttachPhoto}
+              onAddPhoto={handleAddPhoto}
+              onRemovePhoto={handleRemovePhoto}
+              monthlyToggles={monthlyToggles}
+              onToggleMonthly={handleToggleMonthly}
+              activeTab={activeTab}
+            />
           )}
         </div>
 
@@ -643,6 +657,16 @@ export default function App() {
       <MonthlySummaryModal
         isOpen={isMonthlySummaryOpen}
         onClose={() => setIsMonthlySummaryOpen(false)}
+      />
+
+      {/* Hands-free Voice Walkthrough Assistant Floating HUD */}
+      <VoiceAssistantBar
+        voiceState={voiceState}
+        activeShiftName={
+          activeTab === 'full-audit'
+            ? 'Full Facility Audit'
+            : `${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Shift`
+        }
       />
 
       {/* Offline Connectivity Toast */}

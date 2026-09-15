@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Phone, ShieldCheck, Clock, Wifi, WifiOff, FileText, Key } from 'lucide-react';
+import { MapPin, Phone, ShieldCheck, Clock, Wifi, WifiOff, FileText, Key, Mic, Radio } from 'lucide-react';
 import { FACILITY_INFO } from '../types/inspection';
 import { PWAInstallBanner } from './PWAInstallBanner';
 import { useOnlineStatus } from '../hooks/useOnlineStatus';
@@ -12,6 +12,9 @@ interface HeaderProps {
   isCompleted: boolean;
   onOpenSourceDoc?: () => void;
   onOpenMonthlySummary?: () => void;
+  isVoiceListening?: boolean;
+  onToggleVoice?: () => void;
+  isVoiceSupported?: boolean;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -21,6 +24,9 @@ export const Header: React.FC<HeaderProps> = ({
   onResetAudit,
   onOpenSourceDoc,
   onOpenMonthlySummary,
+  isVoiceListening,
+  onToggleVoice,
+  isVoiceSupported,
 }) => {
   const isOnline = useOnlineStatus();
 
@@ -53,8 +59,40 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </div>
 
-          {/* Right utility buttons: Source Document, PWA install, connectivity, reset */}
+          {/* Right utility buttons: Voice Assistant, Monthly Summary, Source Document, PWA install, connectivity, reset */}
           <div className="flex items-center gap-2.5 ml-auto">
+            {/* Hands-Free Voice Walkthrough Toggle */}
+            {isVoiceSupported && onToggleVoice && (
+              <button
+                onClick={onToggleVoice}
+                id="header-voice-assistant-btn"
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-bold transition shadow-sm relative ${
+                  isVoiceListening
+                    ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white border-purple-400 ring-2 ring-purple-400/40 shadow-purple-900/50'
+                    : 'bg-slate-800 hover:bg-slate-750 text-slate-200 border-slate-700'
+                }`}
+                title={isVoiceListening ? 'Hands-Free Voice Active (Tap to pause)' : 'Activate Hands-Free Voice Walkthrough'}
+              >
+                {isVoiceListening ? (
+                  <>
+                    <span className="relative flex h-2.5 w-2.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400"></span>
+                    </span>
+                    <Radio className="w-3.5 h-3.5 text-white animate-pulse" />
+                    <span className="hidden sm:inline">Voice Active</span>
+                    <span className="sm:hidden">Voice</span>
+                  </>
+                ) : (
+                  <>
+                    <Mic className="w-3.5 h-3.5 text-purple-400" />
+                    <span className="hidden sm:inline">Voice Walkthrough</span>
+                    <span className="sm:hidden">Voice</span>
+                  </>
+                )}
+              </button>
+            )}
+
             {/* Monthly Client Summary Report button */}
             {onOpenMonthlySummary && (
               <button
