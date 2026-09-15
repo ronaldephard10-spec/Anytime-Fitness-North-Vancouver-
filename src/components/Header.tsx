@@ -1,5 +1,19 @@
-import React from 'react';
-import { MapPin, Phone, ShieldCheck, Clock, Wifi, WifiOff, FileText, Key, Mic, Radio } from 'lucide-react';
+import React, { useState } from 'react';
+import {
+  MapPin,
+  Phone,
+  ShieldCheck,
+  Clock,
+  Wifi,
+  WifiOff,
+  FileText,
+  Key,
+  Mic,
+  Radio,
+  Download,
+  Save,
+  Check,
+} from 'lucide-react';
 import { FACILITY_INFO } from '../types/inspection';
 import { PWAInstallBanner } from './PWAInstallBanner';
 import { useOnlineStatus } from '../hooks/useOnlineStatus';
@@ -15,6 +29,9 @@ interface HeaderProps {
   isVoiceListening?: boolean;
   onToggleVoice?: () => void;
   isVoiceSupported?: boolean;
+  onDownloadReport?: () => void;
+  onSaveReport?: () => void;
+  lastSavedText?: string;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -27,8 +44,29 @@ export const Header: React.FC<HeaderProps> = ({
   isVoiceListening,
   onToggleVoice,
   isVoiceSupported,
+  onDownloadReport,
+  onSaveReport,
+  lastSavedText,
 }) => {
   const isOnline = useOnlineStatus();
+  const [downloadSuccess, setDownloadSuccess] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+
+  const handleDownloadClick = () => {
+    if (onDownloadReport) {
+      onDownloadReport();
+      setDownloadSuccess(true);
+      setTimeout(() => setDownloadSuccess(false), 3000);
+    }
+  };
+
+  const handleSaveClick = () => {
+    if (onSaveReport) {
+      onSaveReport();
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 3000);
+    }
+  };
 
   return (
     <header id="facility-header" className="w-full bg-slate-900/90 border-b border-purple-900/40 backdrop-blur-md sticky top-0 z-30 shadow-lg">
@@ -145,14 +183,67 @@ export const Header: React.FC<HeaderProps> = ({
             {/* PWA Install */}
             <PWAInstallBanner />
 
-            {/* Reset button */}
+            {/* Quick Save Report Button */}
+            {onSaveReport && (
+              <button
+                id="header-save-report-btn"
+                onClick={handleSaveClick}
+                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg border text-xs font-semibold transition ${
+                  saveSuccess
+                    ? 'bg-emerald-950 border-emerald-500 text-emerald-300'
+                    : 'bg-slate-800 hover:bg-slate-750 border-slate-700 text-slate-200'
+                }`}
+                title="Save current audit to local inspection history"
+              >
+                {saveSuccess ? (
+                  <>
+                    <Check className="w-3.5 h-3.5 text-emerald-400" />
+                    <span className="hidden md:inline">Saved!</span>
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-3.5 h-3.5 text-purple-400" />
+                    <span className="hidden md:inline">Save</span>
+                  </>
+                )}
+              </button>
+            )}
+
+            {/* Quick Download Report (PDF) Button */}
+            {onDownloadReport && (
+              <button
+                id="header-download-report-btn"
+                onClick={handleDownloadClick}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-bold transition shadow-sm ${
+                  downloadSuccess
+                    ? 'bg-emerald-950 border-emerald-500 text-emerald-300'
+                    : 'bg-purple-900/60 hover:bg-purple-800/80 border-purple-600 text-purple-100 shadow-purple-950/40'
+                }`}
+                title="Download today's inspection report as certified PDF"
+              >
+                {downloadSuccess ? (
+                  <>
+                    <Check className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Downloaded!</span>
+                  </>
+                ) : (
+                  <>
+                    <Download className="w-3.5 h-3.5 text-purple-300" />
+                    <span className="hidden sm:inline">Download Report</span>
+                    <span className="sm:hidden">PDF</span>
+                  </>
+                )}
+              </button>
+            )}
+
+            {/* Reset / New Shift button */}
             <button
               id="reset-audit-button"
               onClick={onResetAudit}
               className="text-xs px-2.5 py-1.5 rounded-lg border border-slate-700 hover:border-slate-600 bg-slate-800 hover:bg-slate-750 text-slate-300 hover:text-white transition"
               title="Reset today's checklist state"
             >
-              New Audit
+              Reset
             </button>
           </div>
         </div>

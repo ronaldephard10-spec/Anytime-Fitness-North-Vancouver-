@@ -17,8 +17,10 @@ import {
   THURSDAY_SPECIFIC,
   THURSDAY_MONTHLY,
 } from './data/checklistItems';
-import { getTodayInspectionDay, formatInspectionTimestamp } from './utils/dayDetector';
+import { getTodayInspectionDay, formatInspectionTimestamp, getLocalDateIso } from './utils/dayDetector';
 import { getMonthlyTasksDueForDate, getDueInspectionForDate } from './utils/scheduleEngine';
+import { downloadInspectionPDF } from './utils/pdfGenerator';
+import { saveCompletedInspection, CompletedInspection } from './utils/inspectionHistory';
 import { Header } from './components/Header';
 import { TabBar } from './components/TabBar';
 import { ComplianceScoreCard } from './components/ComplianceScoreCard';
@@ -31,6 +33,8 @@ import { SourceDocumentModal } from './components/SourceDocumentModal';
 import { PeriodicServicesModal } from './components/PeriodicServicesModal';
 import { MonthlySummaryModal } from './components/MonthlySummaryModal';
 import { VoiceAssistantBar } from './components/VoiceAssistantBar';
+import { NewDayRolloverBanner } from './components/NewDayRolloverBanner';
+import { ResetConfirmModal } from './components/ResetConfirmModal';
 import { useOnlineStatus } from './hooks/useOnlineStatus';
 import { useVoiceWalkthrough } from './hooks/useVoiceWalkthrough';
 
@@ -59,18 +63,8 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
-  // 2. State for Checklist evaluations & monthly toggles
-  const [evaluations, setEvaluations] = useState<Record<string, ItemEvaluation>>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed.evaluations) return parsed.evaluations;
-      }
-    } catch (e) {
-      console.error('Failed to load stored state', e);
-    }
-    // Default: initialize all core and specific items to 'pass' for rapid, seamless audits
+  // Helper to generate fresh evaluations object for new sessions/days
+  const getFreshEvaluations = (): Record<string, ItemEvaluation> => {
     const initial: Record<string, ItemEvaluation> = {};
     const allKnown = [
       ...CORE_SERVICES,
@@ -82,6 +76,52 @@ export default function App() {
       initial[item.id] = { id: item.id, status: 'pass' };
     });
     return initial;
+  };
+
+  const DEFAULT_MONTHLY_TOGGLES: Record<string, boolean> = {
+    'sun-monthly-refrigerator': false,
+    'sun-monthly-partition-detail': false,
+    'tue-monthly-blinds-entrance': false,
+    'tue-monthly-vents-fixtures': false,
+    'thu-monthly-detail-edge-vacuum': false,
+    'thu-monthly-fabric-furniture': false,
+  };
+
+  // 2. Track date of current audit session for rollover detection
+  const [sessionDate, setSessionDate] = useState<string>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.sessionDate) return parsed.sessionDate;
+      }
+    } catch (e) {}
+    return getLocalDateIso(new Date());
+  });
+
+  // Rollover notice state when a new day is detected
+  const [rolloverNotice, setRolloverNotice] = useState<{
+    previousDate: string;
+    previousShift: string;
+    archivedRecord: CompletedInspection | null;
+  } | null>(null);
+
+  // Modal state for manual reset confirmation
+  const [isResetModalOpen, setIsResetModalOpen] = useState<boolean>(false);
+
+  // State for Checklist evaluations & monthly toggles
+  const [evaluations, setEvaluations] = useState<Record<string, ItemEvaluation>>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.evaluations) return parsed.evaluations;
+      }
+    } catch (e) {
+      console.error('Failed to load stored state', e);
+    }
+    // Default: initialize all core and specific items to 'pass' for rapid, seamless audits
+    return getFreshEvaluations();
   });
 
   const [monthlyToggles, setMonthlyToggles] = useState<Record<string, boolean>>(() => {
@@ -92,14 +132,7 @@ export default function App() {
         if (parsed.monthlyToggles) return parsed.monthlyToggles;
       }
     } catch (e) {}
-    return {
-      'sun-monthly-refrigerator': false,
-      'sun-monthly-partition-detail': false,
-      'tue-monthly-blinds-entrance': false,
-      'tue-monthly-vents-fixtures': false,
-      'thu-monthly-detail-edge-vacuum': false,
-      'thu-monthly-fabric-furniture': false,
-    };
+    return { ...DEFAULT_MONTHLY_TOGGLES };
   });
 
   // Sign-off state
@@ -142,6 +175,8 @@ export default function App() {
   useEffect(() => {
     try {
       const stateToSave = {
+        sessionDate,
+        sessionDateFormatted: timestamp.formattedDate,
         evaluations,
         monthlyToggles,
         inspectorName,
@@ -155,6 +190,8 @@ export default function App() {
       console.warn('Could not save state to localStorage', e);
     }
   }, [
+    sessionDate,
+    timestamp.formattedDate,
     evaluations,
     monthlyToggles,
     inspectorName,
@@ -383,26 +420,6 @@ export default function App() {
     });
   };
 
-  // Reset audit state
-  const handleResetAudit = () => {
-    if (window.confirm('Start a fresh inspection session? Current checks will be reset.')) {
-      const fresh: Record<string, ItemEvaluation> = {};
-      const allKnown = [
-        ...CORE_SERVICES,
-        ...SUNDAY_SPECIFIC,
-        ...TUESDAY_SPECIFIC,
-        ...THURSDAY_SPECIFIC,
-      ];
-      allKnown.forEach((item) => {
-        fresh[item.id] = { id: item.id, status: 'pass' };
-      });
-      setEvaluations(fresh);
-      setOverallNotes('Routine after-hours disinfection completed. Gym floor mopped, restrooms sanitized, and water dispensers polished.');
-      setSignatureDataUrl('');
-      localStorage.removeItem(STORAGE_KEY);
-    }
-  };
-
   // Build the current complete inspection record
   const currentRecord: InspectionRecord = {
     id: `audit-${Date.now()}`,
@@ -420,6 +437,172 @@ export default function App() {
     completedPeriodicServices: [],
     score: activeScore,
   };
+
+  // Download active inspection PDF
+  const handleDownloadCurrentReport = () => {
+    try {
+      downloadInspectionPDF(currentRecord, activeItems);
+    } catch (e) {
+      console.error('Failed to download current report', e);
+    }
+  };
+
+  // Save active inspection to history storage
+  const handleSaveCurrentReport = () => {
+    try {
+      const completedAudit: CompletedInspection = {
+        id: currentRecord.id || `insp_${Date.now()}`,
+        date: currentRecord.inspectionDate,
+        isoDate: sessionDate,
+        time: currentRecord.inspectionTime,
+        shift: currentRecord.activeDay,
+        score: activeScore.percentage,
+        passedCount: activeScore.passedCount,
+        failedCount: activeScore.failedCount,
+        naCount: activeScore.naCount,
+        totalEvaluated: activeScore.totalEvaluated,
+        inspectorName: currentRecord.inspectorName || 'Ronald Ephard',
+        supervisorName: currentRecord.supervisorName || 'Jennifer Johnson',
+        notes: currentRecord.overallNotes || 'Inspection certified compliant.',
+        monthlyTasksCompleted: Object.keys(monthlyToggles).filter((k) => monthlyToggles[k]),
+        deficiencies: activeItems
+          .filter((it) => evaluations[it.id]?.status === 'fail')
+          .map((it) => ({
+            itemName: it.name,
+            notes: evaluations[it.id]?.notes || 'Remediation completed on-site.',
+            resolved: true,
+          })),
+        photoCount: (Object.values(evaluations) as ItemEvaluation[]).reduce<number>(
+          (acc, ev) => acc + (ev?.photos?.length || (ev?.photoUrl ? 1 : 0)),
+          0
+        ),
+        cadenceMode: 'monthly-summary',
+        createdAt: new Date().toISOString(),
+      };
+
+      saveCompletedInspection(completedAudit);
+    } catch (e) {
+      console.error('Failed to save current report', e);
+    }
+  };
+
+  // Open reset confirmation modal (with options to download, save, or reset)
+  const handleResetAudit = () => {
+    setIsResetModalOpen(true);
+  };
+
+  const handleConfirmResetOnly = () => {
+    const fresh = getFreshEvaluations();
+    setEvaluations(fresh);
+    setOverallNotes('Routine after-hours disinfection completed. Gym floor mopped, restrooms sanitized, and water dispensers polished.');
+    setSignatureDataUrl('');
+    setMonthlyToggles({ ...DEFAULT_MONTHLY_TOGGLES });
+    setIsResetModalOpen(false);
+  };
+
+  const handleSaveAndReset = () => {
+    handleSaveCurrentReport();
+    handleConfirmResetOnly();
+  };
+
+  const handleDownloadAndReset = () => {
+    handleDownloadCurrentReport();
+    handleSaveCurrentReport();
+    handleConfirmResetOnly();
+  };
+
+  // Automatic New Day Detection & Reset
+  const checkAndHandleNewDay = (forceSimulate = false) => {
+    const currentIso = getLocalDateIso(new Date());
+    try {
+      const savedRaw = localStorage.getItem(STORAGE_KEY);
+      if (!savedRaw && !forceSimulate) return;
+      const saved = savedRaw ? JSON.parse(savedRaw) : null;
+      const recordedDate = saved?.sessionDate || sessionDate;
+
+      if ((recordedDate && recordedDate !== currentIso) || forceSimulate) {
+        const prevShift: ActiveTab = saved?.activeTab || activeTab;
+        const prevEvaluations = saved?.evaluations || evaluations;
+        const prevFormattedDate = saved?.sessionDateFormatted || (forceSimulate ? 'Previous Shift' : recordedDate);
+
+        // Calculate score for previous session
+        const prevItems = getItemsForTab(prevShift);
+        let passed = 0;
+        let failed = 0;
+        let na = 0;
+        prevItems.forEach((it) => {
+          const s = prevEvaluations[it.id]?.status;
+          if (s === 'pass') passed++;
+          else if (s === 'fail') failed++;
+          else if (s === 'na') na++;
+        });
+        const totalScorable = passed + failed;
+        const score = totalScorable > 0 ? Math.round((passed / totalScorable) * 100) : 100;
+
+        const archivedInspection: CompletedInspection = {
+          id: `insp-archived-${Date.now()}`,
+          date: prevFormattedDate,
+          isoDate: recordedDate || '2026-09-14',
+          time: '11:00 PM',
+          shift: prevShift,
+          score,
+          passedCount: passed,
+          failedCount: failed,
+          naCount: na,
+          totalEvaluated: totalScorable,
+          inspectorName: saved?.inspectorName || inspectorName || 'Ronald Ephard',
+          supervisorName: saved?.supervisorName || supervisorName || 'Jennifer Johnson',
+          notes: saved?.overallNotes || 'Automatic shift archive on new day rollover.',
+          monthlyTasksCompleted: [],
+          deficiencies: prevItems
+            .filter((it) => prevEvaluations[it.id]?.status === 'fail')
+            .map((it) => ({
+              itemName: it.name,
+              notes: prevEvaluations[it.id]?.notes || 'Remediation completed on-site.',
+              resolved: true,
+            })),
+          photoCount: 0,
+          cadenceMode: 'monthly-summary',
+          createdAt: new Date().toISOString(),
+        };
+
+        // Save into certified history
+        saveCompletedInspection(archivedInspection);
+
+        // Reset state for today's new day
+        const fresh = getFreshEvaluations();
+        setEvaluations(fresh);
+        setSignatureDataUrl('');
+        setOverallNotes('Routine after-hours disinfection completed. Gym floor mopped, restrooms sanitized, and water dispensers polished.');
+        setMonthlyToggles({ ...DEFAULT_MONTHLY_TOGGLES });
+
+        const todayDetails = getTodayInspectionDay();
+        setActiveTab(todayDetails.recommendedTab);
+        setSessionDate(currentIso);
+
+        // Trigger the rollover banner with the download option
+        setRolloverNotice({
+          previousDate: prevFormattedDate,
+          previousShift: prevShift,
+          archivedRecord: archivedInspection,
+        });
+      }
+    } catch (e) {
+      console.error('Error during new day rollover check', e);
+    }
+  };
+
+  // Mount effect & interval for new day detection
+  useEffect(() => {
+    checkAndHandleNewDay(false);
+
+    // Periodically verify if midnight has passed
+    const dayCheckInterval = setInterval(() => {
+      checkAndHandleNewDay(false);
+    }, 30000);
+
+    return () => clearInterval(dayCheckInterval);
+  }, []);
 
   // Active monthly count for current tab
   const activeMonthlyCount = useMemo(() => {
@@ -461,6 +644,8 @@ export default function App() {
         isVoiceListening={voiceState.isListening}
         onToggleVoice={voiceState.toggleListening}
         isVoiceSupported={voiceState.isSupported}
+        onDownloadReport={handleDownloadCurrentReport}
+        onSaveReport={handleSaveCurrentReport}
       />
 
       {/* Top Shift Tab Bar */}
@@ -474,6 +659,18 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-6 sm:px-6 space-y-6">
+        {/* New Day Rollover Notice Banner: Appears automatically when a new day starts */}
+        {rolloverNotice && (
+          <NewDayRolloverBanner
+            previousDate={rolloverNotice.previousDate}
+            previousShift={rolloverNotice.previousShift}
+            archivedRecord={rolloverNotice.archivedRecord}
+            currentDayName={todayInfo.dayName}
+            onDismiss={() => setRolloverNotice(null)}
+            onOpenHistory={() => setIsMonthlySummaryOpen(true)}
+          />
+        )}
+
         {/* Off-Schedule Notice if today is not a routine cleaning shift */}
         {!todayInfo.isScheduledDay && (
           <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm">
@@ -508,6 +705,7 @@ export default function App() {
           onOpenSourceDoc={() => setIsSourceDocOpen(true)}
           onOpenPeriodicServices={() => setIsPeriodicModalOpen(true)}
           onOpenMonthlySummary={() => setIsMonthlySummaryOpen(true)}
+          onSimulateNewDay={() => checkAndHandleNewDay(true)}
         />
 
         {/* Compliance Score Card */}
@@ -516,6 +714,8 @@ export default function App() {
           activeTab={activeTab}
           onPassAll={handlePassAllShiftItems}
           monthlyCountActive={activeMonthlyCount}
+          onDownloadReport={handleDownloadCurrentReport}
+          onSaveReport={handleSaveCurrentReport}
         />
 
         {/* Dynamic Checklist Sections: Strictly What Is Due That Day */}
@@ -667,6 +867,21 @@ export default function App() {
             ? 'Full Facility Audit'
             : `${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Shift`
         }
+      />
+
+      {/* Reset Confirmation Modal with Download & Save Options */}
+      <ResetConfirmModal
+        isOpen={isResetModalOpen}
+        onClose={() => setIsResetModalOpen(false)}
+        onConfirmResetOnly={handleConfirmResetOnly}
+        onSaveAndReset={handleSaveAndReset}
+        onDownloadAndReset={handleDownloadAndReset}
+        activeShiftName={
+          activeTab === 'full-audit'
+            ? 'Full Facility Audit'
+            : `${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Shift`
+        }
+        scorePercentage={activeScore.percentage}
       />
 
       {/* Offline Connectivity Toast */}

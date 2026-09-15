@@ -5,7 +5,7 @@ export type ReportingCadence = 'monthly-summary' | 'weekly-summary' | 'every-vis
 export interface CompletedInspection {
   id: string;
   date: string; // e.g. "Sep 13, 2026"
-  isoDate: string; // e.g. "2026-09-13"
+  isoDate?: string; // e.g. "2026-09-13"
   time: string; // e.g. "11:00 PM"
   shift: ActiveTab; // 'sunday' | 'tuesday' | 'thursday' | 'full-audit'
   score: number; // e.g. 98

@@ -19,6 +19,7 @@ import {
   Sparkles,
   ArrowRight,
   Info,
+  Save,
 } from 'lucide-react';
 import {
   InspectionRecord,
@@ -272,6 +273,40 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
       });
     } finally {
       setIsSending(false);
+    }
+  };
+
+  const [savedToHistory, setSavedToHistory] = useState(false);
+
+  const handleSaveToHistory = () => {
+    try {
+      const completedAudit: CompletedInspection = {
+        id: record.id || `insp_${Date.now()}`,
+        date: record.inspectionDate,
+        isoDate: new Date().toISOString().split('T')[0],
+        time: record.inspectionTime,
+        shift: record.activeDay,
+        score: record.score.percentage,
+        passedCount: record.score.passedCount,
+        failedCount: record.score.failedCount,
+        naCount: record.score.naCount,
+        totalEvaluated: record.score.totalEvaluated,
+        inspectorName: record.inspectorName || 'Ronald Ephard',
+        supervisorName: record.supervisorName || 'Jennifer Johnson',
+        notes: record.overallNotes || 'Inspection certified compliant.',
+        monthlyTasksCompleted: getActiveMonthlyTasksCompleted(),
+        deficiencies: getDeficienciesList(),
+        photoCount: totalPhotos,
+        dispatchedTo: recipientTo,
+        cadenceMode: cadence,
+        createdAt: new Date().toISOString(),
+      };
+
+      saveCompletedInspection(completedAudit);
+      setSavedToHistory(true);
+      setTimeout(() => setSavedToHistory(false), 4000);
+    } catch (e) {
+      console.error('Failed to save inspection:', e);
     }
   };
 
@@ -603,7 +638,7 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
           id="send-inspection-button"
           onClick={handleSendResendEmail}
           disabled={isSending}
-          className="flex-1 sm:flex-initial min-w-[280px] flex items-center justify-center gap-2.5 px-6 py-3 rounded-xl bg-gradient-to-r from-purple-700 via-purple-600 to-indigo-600 hover:from-purple-600 hover:to-indigo-500 text-white font-bold text-sm shadow-lg shadow-purple-950/60 transition active:scale-[0.98] disabled:opacity-50"
+          className="flex-1 sm:flex-initial min-w-[260px] flex items-center justify-center gap-2.5 px-6 py-3 rounded-xl bg-gradient-to-r from-purple-700 via-purple-600 to-indigo-600 hover:from-purple-600 hover:to-indigo-500 text-white font-bold text-sm shadow-lg shadow-purple-950/60 transition active:scale-[0.98] disabled:opacity-50"
         >
           {isSending ? (
             <>
@@ -622,14 +657,49 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
           )}
         </button>
 
+        {/* Dedicated Save Audit to History */}
+        <button
+          type="button"
+          onClick={handleSaveToHistory}
+          className={`flex items-center gap-2 px-4 py-3 rounded-xl border font-bold text-sm transition active:scale-95 ${
+            savedToHistory
+              ? 'bg-emerald-950 border-emerald-500 text-emerald-300'
+              : 'bg-slate-800 hover:bg-slate-750 border-slate-700 text-slate-200'
+          }`}
+          title="Save audit to local inspection history"
+        >
+          {savedToHistory ? (
+            <>
+              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              <span>Saved to History!</span>
+            </>
+          ) : (
+            <>
+              <Save className="w-4 h-4 text-purple-400" />
+              <span>Save to History</span>
+            </>
+          )}
+        </button>
+
+        {/* Dedicated Download Report PDF */}
+        <button
+          type="button"
+          onClick={handleDownloadPDF}
+          className="flex items-center gap-2 px-4 py-3 rounded-xl bg-purple-950/70 hover:bg-purple-900/80 border border-purple-600 text-purple-100 font-bold text-sm transition active:scale-95 shadow-md shadow-purple-950/50"
+          title="Download certified PDF directly"
+        >
+          <Download className="w-4 h-4 text-purple-300" />
+          <span>Download Report (PDF)</span>
+        </button>
+
         {onOpenMonthlySummary && (
           <button
             type="button"
             onClick={onOpenMonthlySummary}
-            className="flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-750 border border-purple-700/60 text-purple-200 font-bold text-sm transition"
+            className="flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-750 border border-purple-700/60 text-purple-200 font-bold text-sm transition ml-auto"
           >
             <FileText className="w-4 h-4 text-purple-400" />
-            <span>Generate Client Monthly QA Report</span>
+            <span>Client Monthly QA</span>
             <ArrowRight className="w-4 h-4 text-purple-400" />
           </button>
         )}

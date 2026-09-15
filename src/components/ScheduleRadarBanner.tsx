@@ -26,6 +26,7 @@ interface ScheduleRadarBannerProps {
   onOpenSourceDoc: () => void;
   onOpenPeriodicServices: () => void;
   onOpenMonthlySummary?: () => void;
+  onSimulateNewDay?: () => void;
 }
 
 export const ScheduleRadarBanner: React.FC<ScheduleRadarBannerProps> = ({
@@ -35,6 +36,7 @@ export const ScheduleRadarBanner: React.FC<ScheduleRadarBannerProps> = ({
   onOpenSourceDoc,
   onOpenPeriodicServices,
   onOpenMonthlySummary,
+  onSimulateNewDay,
 }) => {
   const [isLookaheadOpen, setIsLookaheadOpen] = useState(false);
   const now = new Date();
@@ -117,6 +119,17 @@ export const ScheduleRadarBanner: React.FC<ScheduleRadarBannerProps> = ({
             <FileText className="w-3.5 h-3.5" />
             <span>View Source Agreement</span>
           </button>
+
+          {onSimulateNewDay && (
+            <button
+              onClick={onSimulateNewDay}
+              className="px-2.5 py-1.5 rounded-lg bg-indigo-950/70 hover:bg-indigo-900 border border-indigo-700/60 text-indigo-300 text-xs font-semibold transition flex items-center gap-1.5 shadow-sm"
+              title="Test the midnight rollover & report download workflow"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+              <span>Simulate Day Rollover</span>
+            </button>
+          )}
         </div>
       </div>
 

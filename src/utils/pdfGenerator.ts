@@ -1,5 +1,15 @@
 import { jsPDF } from 'jspdf';
-import { InspectionRecord, InspectionItem } from '../types/inspection';
+import { InspectionRecord, InspectionItem, FACILITY_INFO, ItemEvaluation } from '../types/inspection';
+import {
+  CORE_SERVICES,
+  SUNDAY_SPECIFIC,
+  SUNDAY_MONTHLY,
+  TUESDAY_SPECIFIC,
+  TUESDAY_MONTHLY,
+  THURSDAY_SPECIFIC,
+  THURSDAY_MONTHLY,
+} from '../data/checklistItems';
+import type { CompletedInspection } from './inspectionHistory';
 
 export function generateInspectionPDF(
   record: InspectionRecord,
@@ -465,4 +475,101 @@ export function generateInspectionPDF(
   const filename = `Anytime_Fitness_Northwoods_${record.activeDay}_Audit_${dateSlug}.pdf`;
 
   return { doc, base64, filename };
+}
+
+/**
+ * Download an active inspection record as PDF directly to user's device.
+ */
+export function downloadInspectionPDF(
+  record: InspectionRecord,
+  activeItems: InspectionItem[]
+): { filename: string } {
+  const { doc, filename } = generateInspectionPDF(record, activeItems);
+  doc.save(filename);
+  return { filename };
+}
+
+/**
+ * Reconstruct and download a historical completed inspection as PDF.
+ */
+export function downloadCompletedInspectionPDF(comp: CompletedInspection): { filename: string } {
+  const shift = comp.shift === 'full-audit' ? 'tuesday' : comp.shift;
+  const shiftSpecific =
+    shift === 'sunday'
+      ? SUNDAY_SPECIFIC
+      : shift === 'tuesday'
+      ? TUESDAY_SPECIFIC
+      : THURSDAY_SPECIFIC;
+
+  const activeItems: InspectionItem[] = [...CORE_SERVICES, ...shiftSpecific];
+
+  // Include any monthly deep clean tasks that were recorded
+  const monthlyItems =
+    shift === 'sunday'
+      ? SUNDAY_MONTHLY
+      : shift === 'tuesday'
+      ? TUESDAY_MONTHLY
+      : THURSDAY_MONTHLY;
+
+  if (comp.monthlyTasksCompleted && comp.monthlyTasksCompleted.length > 0) {
+    monthlyItems.forEach((mItem) => {
+      const isLogged = comp.monthlyTasksCompleted.some(
+        (t) =>
+          t.toLowerCase().includes(mItem.name.toLowerCase()) ||
+          mItem.name.toLowerCase().includes(t.toLowerCase())
+      );
+      if (isLogged && !activeItems.some((i) => i.id === mItem.id)) {
+        activeItems.push(mItem);
+      }
+    });
+  }
+
+  // Synthesize evaluation map
+  const itemsMap: Record<string, ItemEvaluation> = {};
+  activeItems.forEach((item) => {
+    const deficiency = comp.deficiencies?.find(
+      (d) => d.itemName.toLowerCase() === item.name.toLowerCase()
+    );
+    if (deficiency) {
+      itemsMap[item.id] = {
+        id: item.id,
+        status: 'fail',
+        notes: deficiency.notes,
+      };
+    } else {
+      itemsMap[item.id] = {
+        id: item.id,
+        status: 'pass',
+      };
+    }
+  });
+
+  const record: InspectionRecord = {
+    id: comp.id,
+    facility: FACILITY_INFO,
+    inspectionDate: comp.date,
+    inspectionTime: comp.time || '11:00 PM',
+    activeDay: comp.shift,
+    inspectorName: comp.inspectorName || 'Ronald Ephard',
+    supervisorName: comp.supervisorName || 'Jennifer Johnson',
+    supervisorSignature: '',
+    signedAt: `${comp.date} at ${comp.time || '11:00 PM'}`,
+    items: itemsMap,
+    monthlyToggles: {},
+    overallNotes: comp.notes,
+    completedPeriodicServices: [],
+    score: {
+      percentage: comp.score,
+      passedCount: comp.passedCount,
+      failedCount: comp.failedCount,
+      naCount: comp.naCount,
+      totalEvaluated: comp.totalEvaluated,
+      totalScorable: comp.totalEvaluated,
+    },
+    recipientTo: comp.dispatchedTo,
+  };
+
+  const { doc, filename } = generateInspectionPDF(record, activeItems);
+  doc.save(filename);
+  return { filename };
 }

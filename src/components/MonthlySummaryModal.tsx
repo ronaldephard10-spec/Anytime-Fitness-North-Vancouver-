@@ -31,6 +31,7 @@ import {
   MonthlyReportMetrics,
 } from '../utils/inspectionHistory';
 import { generateMonthlySummaryPDF } from '../utils/monthlySummaryPdfGenerator';
+import { downloadCompletedInspectionPDF } from '../utils/pdfGenerator';
 import { FACILITY_INFO } from '../types/inspection';
 
 interface MonthlySummaryModalProps {
@@ -524,13 +525,28 @@ export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
                           )}
                         </td>
                         <td className="p-3 text-right">
-                          <button
-                            onClick={() => handleDeleteInspection(insp.id)}
-                            className="p-1 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-slate-800 transition"
-                            title="Delete entry"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
+                          <div className="flex items-center justify-end gap-1.5">
+                            <button
+                              onClick={() => {
+                                try {
+                                  downloadCompletedInspectionPDF(insp);
+                                } catch (e) {
+                                  console.error('Failed to download PDF', e);
+                                }
+                              }}
+                              className="p-1 rounded-lg text-purple-400 hover:text-purple-200 hover:bg-purple-950/70 transition"
+                              title="Download certified PDF for this shift"
+                            >
+                              <Download className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteInspection(insp.id)}
+                              className="p-1 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-slate-800 transition"
+                              title="Delete entry"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}

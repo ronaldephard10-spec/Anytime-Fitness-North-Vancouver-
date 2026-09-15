@@ -1,5 +1,5 @@
-import React from 'react';
-import { Award, CheckCircle2, XCircle, MinusCircle, CheckCheck, AlertCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import { Award, CheckCircle2, XCircle, MinusCircle, CheckCheck, AlertCircle, Download, Save, Check } from 'lucide-react';
 import { ActiveTab } from '../types/inspection';
 
 interface ScoreBreakdown {
@@ -16,6 +16,8 @@ interface ComplianceScoreCardProps {
   activeTab: ActiveTab;
   onPassAll: () => void;
   monthlyCountActive: number;
+  onDownloadReport?: () => void;
+  onSaveReport?: () => void;
 }
 
 export const ComplianceScoreCard: React.FC<ComplianceScoreCardProps> = ({
@@ -23,7 +25,11 @@ export const ComplianceScoreCard: React.FC<ComplianceScoreCardProps> = ({
   activeTab,
   onPassAll,
   monthlyCountActive,
+  onDownloadReport,
+  onSaveReport,
 }) => {
+  const [downloadSuccess, setDownloadSuccess] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
   const isPassing = score.percentage >= 85;
   const isPerfect = score.percentage === 100 && score.totalScorable > 0;
 
@@ -115,12 +121,70 @@ export const ComplianceScoreCard: React.FC<ComplianceScoreCardProps> = ({
           <button
             id="mark-all-passed-button"
             onClick={onPassAll}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-700 hover:bg-purple-600 text-white text-xs font-semibold shadow-sm transition active:scale-95 ml-auto sm:ml-0"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-700 hover:bg-purple-600 text-white text-xs font-semibold shadow-sm transition active:scale-95"
             title="Mark all current shift items as passed"
           >
             <CheckCheck className="w-3.5 h-3.5" />
             <span>Pass All Shift Items</span>
           </button>
+
+          {/* Quick Save to History */}
+          {onSaveReport && (
+            <button
+              onClick={() => {
+                onSaveReport();
+                setSaveSuccess(true);
+                setTimeout(() => setSaveSuccess(false), 3000);
+              }}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold shadow-sm transition active:scale-95 ${
+                saveSuccess
+                  ? 'bg-emerald-950 border-emerald-500 text-emerald-300'
+                  : 'bg-slate-800 hover:bg-slate-750 border-slate-700 text-slate-200'
+              }`}
+              title="Save current audit into persistent history"
+            >
+              {saveSuccess ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Saved</span>
+                </>
+              ) : (
+                <>
+                  <Save className="w-3.5 h-3.5 text-purple-400" />
+                  <span>Save Report</span>
+                </>
+              )}
+            </button>
+          )}
+
+          {/* Quick Download PDF */}
+          {onDownloadReport && (
+            <button
+              onClick={() => {
+                onDownloadReport();
+                setDownloadSuccess(true);
+                setTimeout(() => setDownloadSuccess(false), 3000);
+              }}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border text-xs font-bold shadow-sm transition active:scale-95 ${
+                downloadSuccess
+                  ? 'bg-emerald-950 border-emerald-500 text-emerald-300'
+                  : 'bg-purple-900/60 hover:bg-purple-800/80 border-purple-600 text-purple-100'
+              }`}
+              title="Download official certified inspection PDF"
+            >
+              {downloadSuccess ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Downloaded!</span>
+                </>
+              ) : (
+                <>
+                  <Download className="w-3.5 h-3.5 text-purple-300" />
+                  <span>Download PDF</span>
+                </>
+              )}
+            </button>
+          )}
         </div>
       </div>
 
