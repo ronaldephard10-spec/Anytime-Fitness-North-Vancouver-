@@ -38,12 +38,14 @@ interface MonthlySummaryModalProps {
   isOpen: boolean;
   onClose: () => void;
   onAuditSubmitted?: (result: any) => void;
+  onOpenSourceDocCalendar?: () => void;
 }
 
 export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
   isOpen,
   onClose,
   onAuditSubmitted,
+  onOpenSourceDocCalendar,
 }) => {
   const [selectedMonth, setSelectedMonth] = useState<string>('2026-09');
   const [activeSubTab, setActiveSubTab] = useState<'overview' | 'audits' | 'dispatch'>('overview');
@@ -225,41 +227,56 @@ export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
             </select>
           </div>
 
-          <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-xl border border-slate-800">
-            <button
-              onClick={() => setActiveSubTab('overview')}
-              className={`px-3 py-1.5 rounded-lg font-semibold transition ${
-                activeSubTab === 'overview'
-                  ? 'bg-purple-700 text-white'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              Executive Overview
-            </button>
-            <button
-              onClick={() => setActiveSubTab('audits')}
-              className={`px-3 py-1.5 rounded-lg font-semibold transition flex items-center gap-1.5 ${
-                activeSubTab === 'audits'
-                  ? 'bg-purple-700 text-white'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <span>Shift Audit Trail</span>
-              <span className="px-1.5 py-0.2 rounded-full bg-slate-800 text-[10px] text-purple-300">
-                {metrics.inspectionsCount}
-              </span>
-            </button>
-            <button
-              onClick={() => setActiveSubTab('dispatch')}
-              className={`px-3 py-1.5 rounded-lg font-semibold transition flex items-center gap-1 ${
-                activeSubTab === 'dispatch'
-                  ? 'bg-purple-700 text-white'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <Mail className="w-3 h-3" />
-              <span>Client Dispatch</span>
-            </button>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-xl border border-slate-800">
+              <button
+                onClick={() => setActiveSubTab('overview')}
+                className={`px-3 py-1.5 rounded-lg font-semibold transition ${
+                  activeSubTab === 'overview'
+                    ? 'bg-purple-700 text-white'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                Executive Overview
+              </button>
+              <button
+                onClick={() => setActiveSubTab('audits')}
+                className={`px-3 py-1.5 rounded-lg font-semibold transition flex items-center gap-1.5 ${
+                  activeSubTab === 'audits'
+                    ? 'bg-purple-700 text-white'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                <span>Shift Audit Trail</span>
+                <span className="px-1.5 py-0.2 rounded-full bg-slate-800 text-[10px] text-purple-300">
+                  {metrics.inspectionsCount}
+                </span>
+              </button>
+              <button
+                onClick={() => setActiveSubTab('dispatch')}
+                className={`px-3 py-1.5 rounded-lg font-semibold transition flex items-center gap-1 ${
+                  activeSubTab === 'dispatch'
+                    ? 'bg-purple-700 text-white'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                <Mail className="w-3 h-3" />
+                <span>Client Dispatch</span>
+              </button>
+            </div>
+
+            {/* Dedicated Source Document (12-Mo Calendar) button in Monthly Report View */}
+            {onOpenSourceDocCalendar && (
+              <button
+                onClick={onOpenSourceDocCalendar}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-purple-900/80 to-indigo-900/80 hover:from-purple-800 hover:to-indigo-800 text-white border border-purple-500/50 font-bold transition shadow-sm cursor-pointer"
+                title="Open Source Document & 12-Month Commercial Cleaning Calendar (Unit 103 - 2180 Dollarton Hwy • 156 Visits)"
+              >
+                <Calendar className="w-3.5 h-3.5 text-purple-300" />
+                <span className="hidden sm:inline">Source Document (12-Mo Calendar)</span>
+                <span className="sm:hidden">12-Mo Cal</span>
+              </button>
+            )}
           </div>
         </div>
 
@@ -347,39 +364,33 @@ export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
                   {[
                     {
                       rotation: '1st Tuesday',
-                      name: 'Dust & Wipe Window Blinds',
-                      area: 'Lobby & Gym Windows',
-                      completed: metrics.monthlyRotationsCompleted.some((r) => r.toLowerCase().includes('blind')),
-                    },
-                    {
-                      rotation: '2nd Tuesday',
-                      name: 'Vacuum Air Return Grilles & Diffusers',
-                      area: 'Ceiling Vents & Light Diffusers',
-                      completed: metrics.monthlyRotationsCompleted.some((r) => r.toLowerCase().includes('grille') || r.toLowerCase().includes('vent') || r.toLowerCase().includes('diffuser')),
-                    },
-                    {
-                      rotation: '2nd Thursday',
-                      name: 'Perimeter Edge Vacuuming & Baseboards',
-                      area: 'Carpet Borders & Corners',
-                      completed: metrics.monthlyRotationsCompleted.some((r) => r.toLowerCase().includes('edge')),
-                    },
-                    {
-                      rotation: '3rd Sunday',
-                      name: 'Staff Refrigerator Interior Sanitization',
-                      area: 'Staff Breakroom Kitchen',
-                      completed: metrics.monthlyRotationsCompleted.some((r) => r.toLowerCase().includes('refrigerator')),
-                    },
-                    {
-                      rotation: '4th Sunday',
-                      name: 'Partition Glass & Plexiglass Wall Wash',
-                      area: 'Weight Room Glass & Office Partitions',
+                      name: 'Clean Partition Glass',
+                      area: 'Interior Glass Partitions & Conference Dividers',
                       completed: metrics.monthlyRotationsCompleted.some((r) => r.toLowerCase().includes('partition')),
                     },
                     {
-                      rotation: '4th Thursday',
-                      name: 'Vacuum Fabric Furniture & Upholstery',
-                      area: 'Manager Office & Reception Seating',
-                      completed: metrics.monthlyRotationsCompleted.some((r) => r.toLowerCase().includes('fabric') || r.toLowerCase().includes('furniture')),
+                      rotation: '2nd Saturday',
+                      name: 'Detail Edge Vacuuming & Vacuum Fabric Furniture',
+                      area: 'Baseboards, Crevices & Upholstered Seating',
+                      completed: metrics.monthlyRotationsCompleted.some((r) => r.toLowerCase().includes('edge') || r.toLowerCase().includes('fabric') || r.toLowerCase().includes('furniture')),
+                    },
+                    {
+                      rotation: '2nd Tuesday',
+                      name: 'Dust Light Fixtures & Ceiling Vents',
+                      area: 'Overhead Fixtures & Return Vents (6-10 ft)',
+                      completed: metrics.monthlyRotationsCompleted.some((r) => r.toLowerCase().includes('fixture') || r.toLowerCase().includes('vent') || r.toLowerCase().includes('diffuser')),
+                    },
+                    {
+                      rotation: '3rd Tuesday',
+                      name: 'Dust Blinds & Entrance Glass Doors',
+                      area: 'Window Blinds & Main Glass Entry Doors',
+                      completed: metrics.monthlyRotationsCompleted.some((r) => r.toLowerCase().includes('blind') || r.toLowerCase().includes('entrance') || r.toLowerCase().includes('door')),
+                    },
+                    {
+                      rotation: '4th Saturday',
+                      name: 'Deep Clean Inside of Refrigerators',
+                      area: 'Staff & Member Refrigerators (Sanitized)',
+                      completed: metrics.monthlyRotationsCompleted.some((r) => r.toLowerCase().includes('refrigerator')),
                     },
                   ].map((item, idx) => (
                     <div

@@ -1,10 +1,10 @@
 import { ActiveTab, DayOfWeek } from '../types/inspection';
 
 export const INSPECTION_SCHEDULE = {
-  days: ['Sunday', 'Tuesday', 'Thursday'] as const,
+  days: ['Tuesday', 'Thursday', 'Saturday'] as const,
   frequency: '3x / Week',
   time: '11:00 PM',
-  fullScheduleText: '3x / Week (Sunday, Tuesday, Thursday at 11:00 PM)',
+  fullScheduleText: '3x / Week (Tuesday, Thursday, Saturday at 11:00 PM — 156 Annual Visits)',
 };
 
 export function getTodayInspectionDay(): {
@@ -23,22 +23,22 @@ export function getTodayInspectionDay(): {
   const dayName = dayNames[dayNum];
 
   let matchedInspectionDay: DayOfWeek | null = null;
-  let recommendedTab: ActiveTab = 'sunday';
+  let recommendedTab: ActiveTab = 'tuesday';
 
-  if (dayNum === 0) {
-    matchedInspectionDay = 'sunday';
-    recommendedTab = 'sunday';
-  } else if (dayNum === 2) {
+  if (dayNum === 2) {
     matchedInspectionDay = 'tuesday';
     recommendedTab = 'tuesday';
   } else if (dayNum === 4) {
     matchedInspectionDay = 'thursday';
     recommendedTab = 'thursday';
+  } else if (dayNum === 6) {
+    matchedInspectionDay = 'saturday';
+    recommendedTab = 'saturday';
   } else {
-    // If it's another day, recommend the closest inspection shift
-    if (dayNum === 1) recommendedTab = 'tuesday';
+    // If it's an off-scheduled day, recommend the closest inspection shift
+    if (dayNum === 0 || dayNum === 1) recommendedTab = 'tuesday';
     else if (dayNum === 3) recommendedTab = 'thursday';
-    else if (dayNum === 5 || dayNum === 6) recommendedTab = 'sunday';
+    else if (dayNum === 5) recommendedTab = 'saturday';
   }
 
   const isScheduledDay = matchedInspectionDay !== null;

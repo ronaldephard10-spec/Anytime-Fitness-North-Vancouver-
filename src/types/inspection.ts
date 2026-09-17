@@ -1,5 +1,5 @@
-export type DayOfWeek = 'sunday' | 'tuesday' | 'thursday';
-export type ActiveTab = 'sunday' | 'tuesday' | 'thursday' | 'full-audit';
+export type DayOfWeek = 'tuesday' | 'thursday' | 'saturday' | 'sunday';
+export type ActiveTab = 'tuesday' | 'thursday' | 'saturday' | 'sunday' | 'full-audit';
 export type ReportingCadence = 'monthly-summary' | 'weekly-summary' | 'every-visit';
 
 export type ItemStatus = 'pass' | 'fail' | 'pending' | 'na';
@@ -17,8 +17,8 @@ export interface InspectionMethodGuide {
 export interface InspectionItem {
   id: string;
   name: string;
-  category: 'core' | 'sunday' | 'tuesday' | 'thursday' | 'monthly';
-  applicableDays: ('sunday' | 'tuesday' | 'thursday' | 'all')[];
+  category: 'core' | 'tuesday' | 'thursday' | 'saturday' | 'sunday' | 'monthly';
+  applicableDays: ('tuesday' | 'thursday' | 'saturday' | 'sunday' | 'all')[];
   isMonthly?: boolean;
   notesPrompt?: string;
   description?: string;
@@ -54,6 +54,9 @@ export interface FacilityMetadata {
   keysInfo?: string;
   franchiseeName?: string;
   monthlyBilling?: string;
+  printingDate?: string;
+  totalAnnualVisits?: number;
+  contractCycle?: string;
 }
 
 export interface InspectionRecord {
@@ -90,10 +93,10 @@ export interface InspectionRecord {
 }
 
 export const FACILITY_INFO: FacilityMetadata = {
-  facility: 'Anytime Fitness North Vancouver (Northwoods Village)',
+  facility: 'Anytime Fitness North Vancouver',
   unit: 'Unit 103',
-  address: '2180 Dollarton Hwy Unit 103, North Vancouver, BC V7H 0B5',
-  frequency: '3x / Week (Sunday, Tuesday, Thursday at 11:00 PM)',
+  address: '103 - 2180 Dollarton Hwy, North Vancouver, BC V7H 0B5',
+  frequency: '3x / Week (Tuesday, Thursday, Saturday at 11:00 PM — 156 Annual Visits)',
   contactName: 'Jennifer Johnson',
   contactPhone: '604-785-4857',
   accountNumber: '3007',
@@ -102,6 +105,9 @@ export const FACILITY_INFO: FacilityMetadata = {
   keysInfo: '1 Fob + 1 Key',
   franchiseeName: 'Ronald Ephard',
   monthlyBilling: '$685.00 / month',
+  printingDate: 'May 20, 2026',
+  totalAnnualVisits: 156,
+  contractCycle: 'Tuesday, Thursday, Saturday (156 Visits / Year)',
 };
 
 export const RECIPIENT_CONFIG = {

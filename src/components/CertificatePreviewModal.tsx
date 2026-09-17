@@ -15,7 +15,7 @@ import {
   Clock,
   Printer,
 } from 'lucide-react';
-import { InspectionRecord, InspectionItem, ItemEvaluation } from '../types/inspection';
+import { InspectionRecord, InspectionItem, ItemEvaluation, FACILITY_INFO } from '../types/inspection';
 import { generateInspectionPDF } from '../utils/pdfGenerator';
 
 interface CertificatePreviewModalProps {
@@ -213,19 +213,16 @@ export const CertificatePreviewModal: React.FC<CertificatePreviewModalProps> = (
                     <span>Facility Metadata</span>
                   </div>
                   <p className="font-bold text-slate-800 text-sm">
-                    Anytime Fitness North Vancouver
+                    {FACILITY_INFO.facility}
                   </p>
                   <p className="text-slate-600">
-                    Northwoods Village • Unit 103 • <span className="font-semibold text-emerald-800">Acct #3007</span>
-                  </p>
-                  <p className="text-slate-600">
-                    2180 Dollarton Hwy Unit 103, North Vancouver, BC
+                    {FACILITY_INFO.address} • <span className="font-semibold text-emerald-800">Acct #{FACILITY_INFO.accountNumber}</span>
                   </p>
                   <p className="text-purple-900 font-medium pt-0.5 text-xs">
-                    Schedule: 3x / Week (Sunday, Tuesday, Thursday at 11:00 PM)
+                    Schedule: 3x / Week (Tuesday, Thursday, Saturday at 11:00 PM — 156 Annual Visits)
                   </p>
                   <p className="text-slate-600 pt-0.5 text-xs">
-                    <span className="font-semibold text-slate-700">Contact:</span> Jennifer Johnson (604-785-4857) • Ref: Coverall Work Agreement #3007
+                    <span className="font-semibold text-slate-700">Contact:</span> {FACILITY_INFO.contactName} ({FACILITY_INFO.contactPhone}) • Ref: Coverall Work Agreement #{FACILITY_INFO.accountNumber}
                   </p>
                 </div>
 
@@ -502,8 +499,8 @@ export const CertificatePreviewModal: React.FC<CertificatePreviewModalProps> = (
 
               {/* 7. Bottom Certificate Verification Footer */}
               <div className="pt-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between text-[10px] text-slate-400 text-center sm:text-left gap-1">
-                <span>Clean Audit Pro System • Anytime Fitness North Vancouver (Northwoods Village)</span>
-                <span>Unit 103 • 2180 Dollarton Hwy • North Vancouver, BC</span>
+                <span>Clean Audit Pro System • {FACILITY_INFO.facility}</span>
+                <span>{FACILITY_INFO.address}</span>
               </div>
             </div>
           </div>

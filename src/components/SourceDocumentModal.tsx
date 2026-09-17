@@ -13,6 +13,8 @@ import {
   DollarSign,
   Search,
   ChevronRight,
+  ChevronLeft,
+  RotateCcw,
   ExternalLink,
   Layers,
   Wrench,
@@ -23,9 +25,17 @@ import {
   ClipboardList,
   Check,
   Info,
+  CalendarDays,
+  ArrowRight,
 } from 'lucide-react';
 import { ORIGINAL_SOURCE_DOCUMENT, WORK_SCHEDULE_ITEMS, ServiceFrequencyItem } from '../data/sourceDocument';
-import { INITIAL_PERIODIC_SERVICES, MONTHLY_SERVICE_RULES } from '../utils/scheduleEngine';
+import {
+  INITIAL_PERIODIC_SERVICES,
+  MONTHLY_SERVICE_RULES,
+  getMonthlyContractVisits,
+  getMonthlyTasksDueForDate,
+  getWeekdayOccurrenceInMonth,
+} from '../utils/scheduleEngine';
 import {
   CORE_SERVICES,
   SUNDAY_SPECIFIC,
@@ -34,6 +44,8 @@ import {
   TUESDAY_MONTHLY,
   THURSDAY_SPECIFIC,
   THURSDAY_MONTHLY,
+  SATURDAY_SPECIFIC,
+  SATURDAY_MONTHLY,
 } from '../data/checklistItems';
 import { InspectionItem } from '../types/inspection';
 
@@ -42,6 +54,8 @@ interface SourceDocumentModalProps {
   onClose: () => void;
   onSelectMonthlyTask?: (toggleKey: string) => void;
   initialTab?: TabType;
+  onSelectDateAndLoadWalkthrough?: (date: Date) => void;
+  inspectedDate?: Date;
 }
 
 type TabType = 'qa-guide' | 'schedule' | 'calendar' | 'account' | 'areas' | 'special';
@@ -51,19 +65,35 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
   onClose,
   onSelectMonthlyTask,
   initialTab,
+  onSelectDateAndLoadWalkthrough,
+  inspectedDate,
 }) => {
   const [activeTab, setActiveTab] = useState<TabType>(initialTab || 'qa-guide');
 
+  // 12-month calendar selector: year & month index (0-11)
+  const [calYear, setCalYear] = useState<number>(() =>
+    inspectedDate ? inspectedDate.getFullYear() : new Date().getFullYear()
+  );
+  const [calMonth, setCalMonth] = useState<number>(() =>
+    inspectedDate ? inspectedDate.getMonth() : new Date().getMonth()
+  );
+
   React.useEffect(() => {
-    if (isOpen && initialTab) {
-      setActiveTab(initialTab);
+    if (isOpen) {
+      if (initialTab) {
+        setActiveTab(initialTab);
+      }
+      if (inspectedDate) {
+        setCalYear(inspectedDate.getFullYear());
+        setCalMonth(inspectedDate.getMonth());
+      }
     }
-  }, [isOpen, initialTab]);
+  }, [isOpen, initialTab, inspectedDate]);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [qaCategoryFilter, setQaCategoryFilter] = useState<string>('all');
   const [qaExpandedItem, setQaExpandedItem] = useState<string | null>(null);
   const [frequencyFilter, setFrequencyFilter] = useState<string>('all');
-  const [selectedCalendarMonth, setSelectedCalendarMonth] = useState<number>(9); // 9 = Oct 2026, 8 = Sep 2026
 
   if (!isOpen) return null;
 
@@ -71,12 +101,14 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
 
   const allInspectionItems: InspectionItem[] = [
     ...CORE_SERVICES,
-    ...SUNDAY_SPECIFIC,
-    ...SUNDAY_MONTHLY,
+    ...SATURDAY_SPECIFIC,
+    ...SATURDAY_MONTHLY,
     ...TUESDAY_SPECIFIC,
     ...TUESDAY_MONTHLY,
     ...THURSDAY_SPECIFIC,
     ...THURSDAY_MONTHLY,
+    ...SUNDAY_SPECIFIC,
+    ...SUNDAY_MONTHLY,
   ];
 
   const filteredQaItems = allInspectionItems.filter((item) => {
@@ -138,7 +170,7 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                 Coverall Health-Based Cleaning System • Work Agreement & Schedule
               </h2>
               <p className="text-xs text-purple-200/80">
-                Anytime Fitness North Vancouver (Northwoods Village) • Executed Sept 13, 2026
+                {doc.customerName} • {doc.customerAddress} • Printed: {doc.printingDate} • {doc.totalAnnualVisits} Visits
               </p>
             </div>
           </div>
@@ -685,219 +717,457 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
           )}
 
           {/* TAB 2: MONTHLY ROTATION CALENDAR */}
-          {activeTab === 'calendar' && (
-            <div className="space-y-5">
-              <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700/60">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div>
-                    <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-purple-400" />
-                      12-Month Official Rotation Matrix (Coverall Contract Pages 7-19)
-                    </h3>
-                    <p className="text-xs text-slate-400 mt-0.5">
-                      Exact calendar breakdown of when each monthly deep clean service is scheduled across all 12 contract months.
+          {activeTab === 'calendar' && (() => {
+            const CONTRACT_MONTHS = [
+              { year: 2026, month: 4, label: 'May 2026 (Contract Print: May 20, 2026)' },
+              { year: 2026, month: 5, label: 'June 2026' },
+              { year: 2026, month: 6, label: 'July 2026' },
+              { year: 2026, month: 7, label: 'August 2026' },
+              { year: 2026, month: 8, label: 'September 2026 (Contract Start)' },
+              { year: 2026, month: 9, label: 'October 2026' },
+              { year: 2026, month: 10, label: 'November 2026' },
+              { year: 2026, month: 11, label: 'December 2026' },
+              { year: 2027, month: 0, label: 'January 2027' },
+              { year: 2027, month: 1, label: 'February 2027' },
+              { year: 2027, month: 2, label: 'March 2027' },
+              { year: 2027, month: 3, label: 'April 2027' },
+              { year: 2027, month: 4, label: 'May 2027 (Annual Renewal)' },
+            ];
+
+            const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+            const firstDayOfWeek = new Date(calYear, calMonth, 1).getDay(); // 0 = Sun
+            const contractVisitsData = getMonthlyContractVisits(calYear, calMonth);
+            const monthlyVisitsTotal = contractVisitsData.targetVisits;
+            const monthName = new Date(calYear, calMonth, 1).toLocaleString('en-US', { month: 'long', year: 'numeric' });
+
+            const handlePrevMonth = () => {
+              if (calMonth === 0) {
+                setCalYear((prev) => prev - 1);
+                setCalMonth(11);
+              } else {
+                setCalMonth((prev) => prev - 1);
+              }
+            };
+
+            const handleNextMonth = () => {
+              if (calMonth === 11) {
+                setCalYear((prev) => prev + 1);
+                setCalMonth(0);
+              } else {
+                setCalMonth((prev) => prev + 1);
+              }
+            };
+
+            const handleCurrentMonth = () => {
+              const now = new Date();
+              setCalYear(now.getFullYear());
+              setCalMonth(now.getMonth());
+            };
+
+            // Compute calendar days
+            let scheduledCounter = 0;
+            const calendarDays = [];
+            for (let i = 0; i < firstDayOfWeek; i++) {
+              calendarDays.push(null);
+            }
+            for (let d = 1; d <= daysInMonth; d++) {
+              const dateObj = new Date(calYear, calMonth, d);
+              const dayOfWeek = dateObj.getDay();
+              const isScheduled = dayOfWeek === 2 || dayOfWeek === 4 || dayOfWeek === 6; // Tue, Thu, Sat
+              let visitNumber = 0;
+              if (isScheduled) {
+                scheduledCounter++;
+                visitNumber = scheduledCounter;
+              }
+
+              const occurrence = getWeekdayOccurrenceInMonth(dateObj);
+              const isFirstTuesday = dayOfWeek === 2 && occurrence === 1;
+              const isSecondSaturday = dayOfWeek === 6 && occurrence === 2;
+              const isSecondTuesday = dayOfWeek === 2 && occurrence === 2;
+              const isThirdTuesday = dayOfWeek === 2 && occurrence === 3;
+              const isFourthSaturday = dayOfWeek === 6 && occurrence === 4;
+              const isSecondThursday = dayOfWeek === 4 && occurrence === 2;
+              const isThirdThursday = dayOfWeek === 4 && occurrence === 3;
+
+              const isSelectedDate = Boolean(
+                inspectedDate &&
+                dateObj.getFullYear() === inspectedDate.getFullYear() &&
+                dateObj.getMonth() === inspectedDate.getMonth() &&
+                dateObj.getDate() === inspectedDate.getDate()
+              );
+
+              const isToday =
+                dateObj.getFullYear() === new Date().getFullYear() &&
+                dateObj.getMonth() === new Date().getMonth() &&
+                dateObj.getDate() === new Date().getDate();
+
+              calendarDays.push({
+                day: d,
+                date: dateObj,
+                dayOfWeek,
+                isScheduled,
+                visitNumber,
+                occurrence,
+                isFirstTuesday,
+                isSecondSaturday,
+                isSecondTuesday,
+                isThirdTuesday,
+                isFourthSaturday,
+                isSecondThursday,
+                isThirdThursday,
+                isSelectedDate,
+                isToday,
+              });
+            }
+
+            return (
+              <div className="space-y-5">
+                {/* Facility & Contract Terms Header */}
+                <div className="bg-gradient-to-r from-purple-950/70 via-slate-900 to-indigo-950/70 p-4 sm:p-5 rounded-2xl border border-purple-800/50 shadow-lg space-y-3">
+                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+                    <div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="px-2.5 py-0.5 rounded-full bg-purple-900 border border-purple-500/60 text-purple-200 text-xs font-bold uppercase tracking-wider">
+                          Official Source Agreement Calendar
+                        </span>
+                        <span className="px-2.5 py-0.5 rounded-full bg-emerald-950 border border-emerald-500/50 text-emerald-300 text-xs font-semibold">
+                          156 Annual Contract Visits
+                        </span>
+                        <span className="px-2.5 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-300 text-xs">
+                          Printed: {doc.printingDate}
+                        </span>
+                      </div>
+                      <h3 className="text-base sm:text-lg font-bold text-white mt-1.5 flex items-center gap-2">
+                        <Building2 className="w-5 h-5 text-purple-400" />
+                        {doc.customerName} • {doc.customerAddress}
+                      </h3>
+                      <p className="text-xs text-slate-300 mt-0.5">
+                        Cadence: <strong className="text-purple-200">3x / Week (Tuesday, Thursday, Saturday @ 11:00 PM)</strong> • Account #{doc.accountNumber}
+                      </p>
+                    </div>
+
+                    {/* Month Picker Controls with Prev/Next Navigation */}
+                    <div className="flex flex-wrap items-center gap-2 bg-slate-950/90 p-2 rounded-xl border border-purple-800/60 shadow-inner">
+                      <div className="flex items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={handlePrevMonth}
+                          className="p-1.5 rounded-lg bg-slate-900 hover:bg-purple-900/60 text-slate-300 hover:text-white border border-slate-700/70 hover:border-purple-500/50 transition"
+                          title="Previous Month"
+                        >
+                          <ChevronLeft className="w-4 h-4" />
+                        </button>
+                        <select
+                          id="calendar-month-select"
+                          value={`${calYear}-${calMonth}`}
+                          onChange={(e) => {
+                            const [y, m] = e.target.value.split('-').map(Number);
+                            setCalYear(y);
+                            setCalMonth(m);
+                          }}
+                          className="bg-slate-900 text-purple-200 text-xs font-bold px-2.5 py-1.5 rounded-lg border border-purple-700/60 focus:outline-none focus:ring-1 focus:ring-purple-400 cursor-pointer"
+                        >
+                          {CONTRACT_MONTHS.map((item) => (
+                            <option key={`${item.year}-${item.month}`} value={`${item.year}-${item.month}`}>
+                              {item.label}
+                            </option>
+                          ))}
+                        </select>
+                        <button
+                          type="button"
+                          onClick={handleNextMonth}
+                          className="p-1.5 rounded-lg bg-slate-900 hover:bg-purple-900/60 text-slate-300 hover:text-white border border-slate-700/70 hover:border-purple-500/50 transition"
+                          title="Next Month"
+                        >
+                          <ChevronRight className="w-4 h-4" />
+                        </button>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={handleCurrentMonth}
+                        className="flex items-center gap-1 text-[11px] font-semibold text-purple-300 hover:text-white px-2 py-1.5 rounded-lg bg-purple-950/60 hover:bg-purple-900/80 border border-purple-700/50 transition"
+                        title="Jump to Today's Month"
+                      >
+                        <RotateCcw className="w-3 h-3 text-purple-400" />
+                        <span>Today</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Summary Bar */}
+                  <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-purple-900/40 text-xs">
+                    <div className="flex items-center gap-2 text-slate-200">
+                      <span className="font-semibold text-white">{monthName}:</span>
+                      <span className="bg-purple-900/50 px-2.5 py-0.5 rounded border border-purple-700/60 font-bold text-purple-200">
+                        {monthlyVisitsTotal} Scheduled Contract Visits
+                      </span>
+                      <span className="text-slate-400 hidden sm:inline">• Click any calendar day below to instantly load its walkthrough</span>
+                    </div>
+                    <div className="text-[11px] text-purple-300">
+                      Weekly Schedule: Tuesday, Thursday, Saturday @ 11:00 PM
+                    </div>
+                  </div>
+                </div>
+
+                {/* Calendar Grid */}
+                <div className="bg-slate-900/80 rounded-2xl border border-slate-800 overflow-hidden shadow-xl">
+                  {/* Day headers */}
+                  <div className="grid grid-cols-7 bg-slate-950 border-b border-slate-800 text-center py-2 text-[11px] font-bold text-slate-400">
+                    <div>SUN</div>
+                    <div>MON</div>
+                    <div className="text-purple-300">TUE (Service)</div>
+                    <div>WED</div>
+                    <div className="text-purple-300">THU (Service)</div>
+                    <div>FRI</div>
+                    <div className="text-purple-300">SAT (Service)</div>
+                  </div>
+
+                  {/* Calendar cells */}
+                  <div className="grid grid-cols-7 gap-1.5 p-2 sm:p-3 bg-slate-950/40">
+                    {calendarDays.map((cell, idx) => {
+                      if (!cell) {
+                        return <div key={`empty-${idx}`} className="min-h-[100px] rounded-xl bg-slate-900/20 border border-slate-800/30" />;
+                      }
+
+                      const isServiceDay = cell.isScheduled;
+
+                      return (
+                        <div
+                          key={`day-${cell.day}`}
+                          role="button"
+                          tabIndex={0}
+                          onClick={() => {
+                            if (onSelectDateAndLoadWalkthrough) {
+                              onSelectDateAndLoadWalkthrough(cell.date);
+                              onClose();
+                            }
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
+                              if (onSelectDateAndLoadWalkthrough) {
+                                onSelectDateAndLoadWalkthrough(cell.date);
+                                onClose();
+                              }
+                            }
+                          }}
+                          className={`min-h-[110px] sm:min-h-[120px] rounded-xl p-2 border transition-all flex flex-col justify-between cursor-pointer group focus:outline-none focus:ring-2 focus:ring-purple-400 ${
+                            cell.isSelectedDate
+                              ? 'bg-purple-900/60 border-purple-400 ring-2 ring-purple-400/80 shadow-lg shadow-purple-950/80'
+                              : isServiceDay
+                              ? 'bg-gradient-to-b from-purple-950/40 to-slate-900 border-purple-700/60 hover:border-purple-400 hover:shadow-lg hover:shadow-purple-950/50 hover:from-purple-900/50'
+                              : 'bg-slate-900/30 border-slate-800/60 hover:border-slate-700 text-slate-500 hover:bg-slate-850/40'
+                          }`}
+                          title={`Click to load walkthrough for ${cell.date.toLocaleDateString()}`}
+                        >
+                          {/* Cell Header */}
+                          <div>
+                            <div className="flex items-center justify-between gap-1 flex-wrap">
+                              <div className="flex items-center gap-1">
+                                <span
+                                  className={`text-xs font-black rounded-md px-1.5 py-0.5 ${
+                                    cell.isSelectedDate
+                                      ? 'bg-purple-600 text-white font-extrabold shadow-sm'
+                                      : isServiceDay
+                                      ? 'bg-purple-900/90 text-purple-100 border border-purple-600/60'
+                                      : 'text-slate-400'
+                                  }`}
+                                >
+                                  {cell.day}
+                                </span>
+                                {cell.isSelectedDate && (
+                                  <span className="text-[8.5px] font-bold uppercase tracking-wider text-purple-200 bg-purple-950 px-1 py-0.2 rounded border border-purple-500/80">
+                                    Active
+                                  </span>
+                                )}
+                                {cell.isToday && !cell.isSelectedDate && (
+                                  <span className="text-[8.5px] font-bold text-amber-300 bg-amber-950/90 px-1 py-0.2 rounded border border-amber-600/70">
+                                    Today
+                                  </span>
+                                )}
+                              </div>
+
+                              {isServiceDay ? (
+                                <span className="text-[10px] font-bold text-emerald-400 bg-emerald-950/80 px-1.5 py-0.2 rounded border border-emerald-800/60">
+                                  #{cell.visitNumber}/{monthlyVisitsTotal}
+                                </span>
+                              ) : (
+                                <span className="text-[9px] text-slate-600 font-medium">Off-Day</span>
+                              )}
+                            </div>
+
+                            {/* Service Badges & Monthly Rotations */}
+                            <div className="mt-1.5 space-y-1">
+                              {isServiceDay && (
+                                <div className="text-[10px] font-semibold text-purple-300 flex items-center gap-1">
+                                  <Clock className="w-2.5 h-2.5 text-purple-400" />
+                                  <span>11:00 PM</span>
+                                </div>
+                              )}
+
+                              {cell.isFirstTuesday && (
+                                <div className="p-1 rounded bg-amber-950/90 border border-amber-500/70 text-amber-200 text-[10px] font-extrabold leading-tight shadow-sm">
+                                  <div className="flex items-center gap-1">
+                                    <Sparkles className="w-3 h-3 text-amber-400 shrink-0" />
+                                    <span>1st Tue Mandated:</span>
+                                  </div>
+                                  <span className="text-[9.5px] font-semibold text-white block mt-0.5">
+                                    Clean partition glass
+                                  </span>
+                                </div>
+                              )}
+
+                              {cell.isSecondSaturday && (
+                                <div className="p-1 rounded bg-indigo-950/90 border border-indigo-400/80 text-indigo-200 text-[10px] font-extrabold leading-tight shadow-sm">
+                                  <div className="flex items-center gap-1">
+                                    <Sparkles className="w-3 h-3 text-indigo-300 shrink-0" />
+                                    <span>2nd Sat Mandated:</span>
+                                  </div>
+                                  <span className="text-[9.5px] font-semibold text-white block mt-0.5">
+                                    Detail edge vac & fabric furniture
+                                  </span>
+                                </div>
+                              )}
+
+                              {cell.isSecondTuesday && (
+                                <div className="p-1 rounded bg-purple-950/80 border border-purple-600/60 text-purple-200 text-[9px] font-bold">
+                                  2nd Tue: Fixtures & Vents (6-10 ft)
+                                </div>
+                              )}
+
+                              {cell.isThirdTuesday && (
+                                <div className="p-1 rounded bg-purple-950/80 border border-purple-600/60 text-purple-200 text-[9px] font-bold">
+                                  3rd Tue: Blinds & Glass Doors
+                                </div>
+                              )}
+
+                              {cell.isSecondThursday && (
+                                <div className="p-1 rounded bg-purple-950/80 border border-purple-600/60 text-purple-200 text-[9px] font-bold">
+                                  2nd Thu: Fabric & Leather Furniture
+                                </div>
+                              )}
+
+                              {cell.isThirdThursday && (
+                                <div className="p-1 rounded bg-purple-950/80 border border-purple-600/60 text-purple-200 text-[9px] font-bold">
+                                  3rd Thu: Detail Edge Vacuuming
+                                </div>
+                              )}
+
+                              {cell.isFourthSaturday && (
+                                <div className="p-1 rounded bg-purple-950/80 border border-purple-600/60 text-purple-200 text-[9px] font-bold">
+                                  4th Sat: Inside Refrigerators
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Hover / Click Prompt */}
+                          <div className="mt-1 pt-1 border-t border-slate-800/60 flex items-center justify-between text-[9px] text-slate-400 group-hover:text-purple-300">
+                            <span>{cell.isSelectedDate ? 'Active Day' : isServiceDay ? 'Load Walkthrough' : 'Load Shift'}</span>
+                            <ArrowRight className="w-2.5 h-2.5 transition transform group-hover:translate-x-0.5" />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Mandated Monthly Rotation Protocols (Exact Contract Alignment) */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* 1st Tuesday Mandate */}
+                  <div className="p-4 rounded-xl bg-amber-950/30 border border-amber-500/50 space-y-2">
+                    <div className="flex items-center gap-2">
+                      <span className="px-2 py-0.5 rounded bg-amber-900 border border-amber-400 text-amber-200 text-[11px] font-black uppercase">
+                        1st Tuesday Mandate
+                      </span>
+                      <h4 className="text-sm font-bold text-white">Clean Partition Glass</h4>
+                    </div>
+                    <p className="text-xs text-slate-300">
+                      <strong>Contract Requirement:</strong> Mandates "Clean partition glass" on the 1st Tuesday of every month. Thoroughly clean all interior glass partition walls, conference dividers, and glass sidelites to streak-free clarity using hospital-grade glass cleaner.
                     </p>
+                    <div className="text-[11px] text-amber-300 bg-amber-950/80 p-2 rounded-lg border border-amber-800/60">
+                      ✓ Automatically activated when walkthrough date is set to the 1st Tuesday of any month.
+                    </div>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-slate-400 font-medium">Select Month:</span>
-                    <select
-                      value={selectedCalendarMonth}
-                      onChange={(e) => setSelectedCalendarMonth(Number(e.target.value))}
-                      className="bg-slate-900 text-white text-xs px-3 py-1.5 rounded-lg border border-slate-700 focus:outline-none focus:border-purple-400"
-                    >
-                      <option value={8}>September 2026 (Contract Start)</option>
-                      <option value={9}>October 2026</option>
-                      <option value={10}>November 2026</option>
-                      <option value={11}>December 2026</option>
-                      <option value={0}>January 2027</option>
-                      <option value={1}>February 2027</option>
-                      <option value={2}>March 2027</option>
-                      <option value={3}>April 2027</option>
-                      <option value={4}>May 2027</option>
-                      <option value={5}>June 2027</option>
-                      <option value={6}>July 2027</option>
-                      <option value={7}>August 2027</option>
-                      <option value={8.5}>September 2027 (Annual Renewal)</option>
-                    </select>
+                  {/* 2nd Saturday Mandate */}
+                  <div className="p-4 rounded-xl bg-indigo-950/30 border border-indigo-400/50 space-y-2">
+                    <div className="flex items-center gap-2">
+                      <span className="px-2 py-0.5 rounded bg-indigo-900 border border-indigo-400 text-indigo-200 text-[11px] font-black uppercase">
+                        2nd Saturday Mandate
+                      </span>
+                      <h4 className="text-sm font-bold text-white">Detail Edge Vacuuming & Furniture</h4>
+                    </div>
+                    <p className="text-xs text-slate-300">
+                      <strong>Contract Requirement:</strong> Mandates "Detail edge vacuuming & Vacuum fabric furniture" on the 2nd Saturday of every month. Crevice-tool vacuum all baseboard edges, acoustic panels, tight corners, and HEPA vacuum all upholstered chairs and sofas.
+                    </p>
+                    <div className="text-[11px] text-indigo-300 bg-indigo-950/80 p-2 rounded-lg border border-indigo-800/60">
+                      ✓ Automatically activated when walkthrough date is set to the 2nd Saturday of any month.
+                    </div>
+                  </div>
+                </div>
+
+                {/* 12-Month Rotation Matrix Table */}
+                <div className="border border-slate-800 rounded-xl overflow-hidden bg-slate-950/60 p-4">
+                  <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider mb-3 flex items-center justify-between">
+                    <span>Summary Table: All Monthly Services & Exact Cadence</span>
+                    <span className="text-[11px] font-semibold text-purple-300 normal-case">156 Annual Visits Total</span>
+                  </h4>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-xs text-left">
+                      <thead className="bg-slate-900 text-slate-300 uppercase text-[10px] font-semibold">
+                        <tr>
+                          <th className="py-2.5 px-3">Service Name</th>
+                          <th className="py-2.5 px-3">Scheduled Timing</th>
+                          <th className="py-2.5 px-3">Cadence Day</th>
+                          <th className="py-2.5 px-3">Cleaning Protocol</th>
+                          <th className="py-2.5 px-3">Contract Ref</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-800 text-slate-300">
+                        <tr className="bg-amber-950/20">
+                          <td className="py-2.5 px-3 font-bold text-amber-300">Clean Partition Glass</td>
+                          <td className="py-2.5 px-3 font-semibold text-white">1st Tuesday of Month</td>
+                          <td className="py-2.5 px-3 text-purple-300">Tuesday 11:00 PM</td>
+                          <td className="py-2.5 px-3 text-slate-300">Clean partition glass, conference dividers & sidelites (streak-free squeegee)</td>
+                          <td className="py-2.5 px-3 text-slate-400">Pg 5, 7</td>
+                        </tr>
+                        <tr className="bg-indigo-950/20">
+                          <td className="py-2.5 px-3 font-bold text-indigo-300">Detail Edge Vacuuming & Vacuum Fabric Furniture</td>
+                          <td className="py-2.5 px-3 font-semibold text-white">2nd Saturday of Month</td>
+                          <td className="py-2.5 px-3 text-purple-300">Saturday 11:00 PM</td>
+                          <td className="py-2.5 px-3 text-slate-300">Crevice tool edge vacuum baseboards + HEPA vacuum upholstered furniture</td>
+                          <td className="py-2.5 px-3 text-slate-400">Pg 3, 7</td>
+                        </tr>
+                        <tr>
+                          <td className="py-2.5 px-3 font-semibold text-purple-300">Dust Light Fixtures & Ceiling Vents</td>
+                          <td className="py-2.5 px-3">2nd Tuesday of Month</td>
+                          <td className="py-2.5 px-3 text-purple-300">Tuesday 11:00 PM</td>
+                          <td className="py-2.5 px-3 text-slate-300">Extension pole microfiber duster on high fixtures & return vents (6-10 ft)</td>
+                          <td className="py-2.5 px-3 text-slate-400">Pg 4, 8</td>
+                        </tr>
+                        <tr>
+                          <td className="py-2.5 px-3 font-semibold text-purple-300">Dust Blinds & Entrance Glass Doors</td>
+                          <td className="py-2.5 px-3">3rd Tuesday of Month</td>
+                          <td className="py-2.5 px-3 text-purple-300">Tuesday 11:00 PM</td>
+                          <td className="py-2.5 px-3 text-slate-300">Dust window horizontal blinds + clean entrance exterior/interior glass & polish frame</td>
+                          <td className="py-2.5 px-3 text-slate-400">Pg 3, 7</td>
+                        </tr>
+                        <tr>
+                          <td className="py-2.5 px-3 font-semibold text-purple-300">Clean Inside of Refrigerators</td>
+                          <td className="py-2.5 px-3">4th Saturday of Month</td>
+                          <td className="py-2.5 px-3 text-purple-300">Saturday 11:00 PM</td>
+                          <td className="py-2.5 px-3 text-slate-300">Empty shelves, sanitize interior walls & racks with hospital-grade disinfectant</td>
+                          <td className="py-2.5 px-3 text-slate-400">Pg 4, 7</td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>
-
-              {/* Visual 4-Week Schedule Matrix */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                {/* Week 1 */}
-                <div className="bg-slate-800/40 border border-slate-700/70 rounded-xl p-4 space-y-3">
-                  <div className="border-b border-slate-700/70 pb-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-purple-400 bg-purple-950/70 px-2 py-0.5 rounded border border-purple-800/50">
-                      Week 1 of Month
-                    </span>
-                    <h4 className="text-sm font-bold text-white mt-1.5">1st Tuesday Shift</h4>
-                  </div>
-                  <div className="space-y-2 text-xs">
-                    <div className="p-2.5 rounded-lg bg-amber-950/30 border border-amber-800/40">
-                      <div className="font-bold text-amber-300">1. Entrance Glass Doors</div>
-                      <p className="text-slate-300 text-[11px] mt-0.5">
-                        Clean glass doors interior & exterior with glass cleaner; polish trim.
-                      </p>
-                    </div>
-                    <div className="p-2.5 rounded-lg bg-amber-950/30 border border-amber-800/40">
-                      <div className="font-bold text-amber-300">2. Dust Blinds</div>
-                      <p className="text-slate-300 text-[11px] mt-0.5">
-                        Dust all window blinds throughout gym & offices.
-                      </p>
-                    </div>
-                    <div className="text-[11px] text-slate-400 pt-1">
-                      + Regular Daily Services (3x/wk) & High/Low dusting.
-                    </div>
-                  </div>
-                </div>
-
-                {/* Week 2 */}
-                <div className="bg-slate-800/40 border border-slate-700/70 rounded-xl p-4 space-y-3">
-                  <div className="border-b border-slate-700/70 pb-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-purple-400 bg-purple-950/70 px-2 py-0.5 rounded border border-purple-800/50">
-                      Week 2 of Month
-                    </span>
-                    <h4 className="text-sm font-bold text-white mt-1.5">2nd Tue & 2nd Thu</h4>
-                  </div>
-                  <div className="space-y-2 text-xs">
-                    <div className="p-2.5 rounded-lg bg-amber-950/30 border border-amber-800/40">
-                      <div className="font-bold text-amber-300">2nd Tue: Dust Fixtures & Vents</div>
-                      <p className="text-slate-300 text-[11px] mt-0.5">
-                        Dust light fixtures, ceiling vents & 6ft-10ft areas & corners.
-                      </p>
-                    </div>
-                    <div className="p-2.5 rounded-lg bg-amber-950/30 border border-amber-800/40">
-                      <div className="font-bold text-amber-300">2nd Thu: Vacuum Furniture</div>
-                      <p className="text-slate-300 text-[11px] mt-0.5">
-                        Vacuum fabric furniture, wipe plastic & leather chairs with disinfectant.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Week 3 */}
-                <div className="bg-slate-800/40 border border-slate-700/70 rounded-xl p-4 space-y-3">
-                  <div className="border-b border-slate-700/70 pb-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-purple-400 bg-purple-950/70 px-2 py-0.5 rounded border border-purple-800/50">
-                      Week 3 of Month
-                    </span>
-                    <h4 className="text-sm font-bold text-white mt-1.5">3rd Thu & 3rd Sun</h4>
-                  </div>
-                  <div className="space-y-2 text-xs">
-                    <div className="p-2.5 rounded-lg bg-amber-950/30 border border-amber-800/40">
-                      <div className="font-bold text-amber-300">3rd Thu: Edge Vacuum</div>
-                      <p className="text-slate-300 text-[11px] mt-0.5">
-                        Detail edge vacuuming around all furniture, baseboards, and walls.
-                      </p>
-                    </div>
-                    <div className="p-2.5 rounded-lg bg-amber-950/30 border border-amber-800/40">
-                      <div className="font-bold text-amber-300">3rd Sun: Clean Part. Glass</div>
-                      <p className="text-slate-300 text-[11px] mt-0.5">
-                        Deep squeegee and wipe all glass partition panels & doors.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Week 4 */}
-                <div className="bg-slate-800/40 border border-slate-700/70 rounded-xl p-4 space-y-3">
-                  <div className="border-b border-slate-700/70 pb-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-purple-400 bg-purple-950/70 px-2 py-0.5 rounded border border-purple-800/50">
-                      Week 4 / Last Week
-                    </span>
-                    <h4 className="text-sm font-bold text-white mt-1.5">4th Sunday Shift</h4>
-                  </div>
-                  <div className="space-y-2 text-xs">
-                    <div className="p-2.5 rounded-lg bg-amber-950/30 border border-amber-800/40">
-                      <div className="font-bold text-amber-300">4th Sun: Refrigerators</div>
-                      <p className="text-slate-300 text-[11px] mt-0.5">
-                        Deep clean inside of refrigerators using hospital disinfectant.
-                      </p>
-                    </div>
-                    <div className="p-2.5 rounded-lg bg-slate-900/60 border border-slate-700">
-                      <div className="font-bold text-slate-300">Every Sunday Routine:</div>
-                      <p className="text-slate-400 text-[11px] mt-0.5">
-                        Microwave interior clean + Traffic vacuuming + Daily Services.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Monthly Rotation Rule Summary Table */}
-              <div className="border border-slate-800 rounded-xl overflow-hidden bg-slate-950/40 p-4">
-                <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3">
-                  Summary Table: When Monthly Services Must Be Performed
-                </h4>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-xs text-left">
-                    <thead className="bg-slate-800/70 text-slate-300 uppercase text-[10px] font-semibold">
-                      <tr>
-                        <th className="py-2.5 px-3">Service Name</th>
-                        <th className="py-2.5 px-3">Scheduled Timing</th>
-                        <th className="py-2.5 px-3">Day of Week</th>
-                        <th className="py-2.5 px-3">Protocol</th>
-                        <th className="py-2.5 px-3">Contract Ref</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-800 text-slate-300">
-                      <tr>
-                        <td className="py-2.5 px-3 font-semibold text-purple-300">Clean Glass Entrance Doors & Trim</td>
-                        <td className="py-2.5 px-3">1st Tuesday of Month</td>
-                        <td className="py-2.5 px-3">Tuesday 11:00 PM</td>
-                        <td className="py-2.5 px-3 text-slate-400">Microfiber & Glass Cleaner</td>
-                        <td className="py-2.5 px-3 text-slate-500">Pg 3, 7</td>
-                      </tr>
-                      <tr>
-                        <td className="py-2.5 px-3 font-semibold text-purple-300">Dust Blinds</td>
-                        <td className="py-2.5 px-3">1st Tuesday of Month</td>
-                        <td className="py-2.5 px-3">Tuesday 11:00 PM</td>
-                        <td className="py-2.5 px-3 text-slate-400">Blind duster / vacuum</td>
-                        <td className="py-2.5 px-3 text-slate-500">Pg 4, 7</td>
-                      </tr>
-                      <tr>
-                        <td className="py-2.5 px-3 font-semibold text-purple-300">Dust Light Fixtures & Ceiling Vents</td>
-                        <td className="py-2.5 px-3">2nd Tuesday of Month</td>
-                        <td className="py-2.5 px-3">Tuesday 11:00 PM</td>
-                        <td className="py-2.5 px-3 text-slate-400">High-reach pole (6-10 ft)</td>
-                        <td className="py-2.5 px-3 text-slate-500">Pg 4, 8</td>
-                      </tr>
-                      <tr>
-                        <td className="py-2.5 px-3 font-semibold text-purple-300">Vacuum Furniture (Fabric & Leather)</td>
-                        <td className="py-2.5 px-3">2nd Thursday of Month</td>
-                        <td className="py-2.5 px-3">Thursday 11:00 PM</td>
-                        <td className="py-2.5 px-3 text-slate-400">Upholstery vacuum & disinfectant</td>
-                        <td className="py-2.5 px-3 text-slate-500">Pg 3, 8</td>
-                      </tr>
-                      <tr>
-                        <td className="py-2.5 px-3 font-semibold text-purple-300">Detail Edge Vacuuming (Perimeter)</td>
-                        <td className="py-2.5 px-3">3rd Thursday of Month</td>
-                        <td className="py-2.5 px-3">Thursday 11:00 PM</td>
-                        <td className="py-2.5 px-3 text-slate-400">Crevice tool vacuuming</td>
-                        <td className="py-2.5 px-3 text-slate-500">Pg 3, 7</td>
-                      </tr>
-                      <tr>
-                        <td className="py-2.5 px-3 font-semibold text-purple-300">Clean Partition Glass & Plexi Sections</td>
-                        <td className="py-2.5 px-3">3rd Sunday of Month</td>
-                        <td className="py-2.5 px-3">Sunday 11:00 PM</td>
-                        <td className="py-2.5 px-3 text-slate-400">Squeegee & streak-free wipe</td>
-                        <td className="py-2.5 px-3 text-slate-500">Pg 5, 7</td>
-                      </tr>
-                      <tr>
-                        <td className="py-2.5 px-3 font-semibold text-purple-300">Clean Inside of Refrigerators</td>
-                        <td className="py-2.5 px-3">4th Sunday of Month</td>
-                        <td className="py-2.5 px-3">Sunday 11:00 PM</td>
-                        <td className="py-2.5 px-3 text-slate-400">Disinfectant & shelf sanitizing</td>
-                        <td className="py-2.5 px-3 text-slate-500">Pg 4, 7</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          )}
+            );
+          })()}
 
           {/* TAB 3: ACCOUNT & SECURITY SPECS */}
           {activeTab === 'account' && (
@@ -917,33 +1187,41 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                   <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-xs">
                     <div>
                       <dt className="text-slate-400 font-medium">Company Name</dt>
-                      <dd className="font-semibold text-slate-200 mt-0.5">Anytime Fitness North</dd>
+                      <dd className="font-semibold text-slate-200 mt-0.5">{doc.customerName}</dd>
                     </div>
                     <div>
                       <dt className="text-slate-400 font-medium">Account Number</dt>
-                      <dd className="font-semibold text-emerald-400 mt-0.5">#3007</dd>
+                      <dd className="font-semibold text-emerald-400 mt-0.5">#{doc.accountNumber}</dd>
                     </div>
                     <div className="col-span-2">
                       <dt className="text-slate-400 font-medium">Facility Address</dt>
                       <dd className="font-semibold text-slate-200 mt-0.5">
-                        2180 Dollarton Hwy Unit 103, North Vancouver, BC V7H 0B5
+                        {doc.customerAddress}
                       </dd>
                     </div>
                     <div>
-                      <dt className="text-slate-400 font-medium">Frequency</dt>
-                      <dd className="font-semibold text-purple-300 mt-0.5">3x / Week (Sun, Tue, Thu)</dd>
+                      <dt className="text-slate-400 font-medium">Weekly Frequency</dt>
+                      <dd className="font-semibold text-purple-300 mt-0.5">{doc.facilityDetails.frequency}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-slate-400 font-medium">Annual Visits</dt>
+                      <dd className="font-semibold text-emerald-400 mt-0.5">{doc.totalAnnualVisits} Visits / Year</dd>
                     </div>
                     <div>
                       <dt className="text-slate-400 font-medium">Shift Time</dt>
-                      <dd className="font-semibold text-purple-300 mt-0.5">11:00 PM (After Hours)</dd>
+                      <dd className="font-semibold text-purple-300 mt-0.5">{doc.facilityDetails.cleaningHours}</dd>
                     </div>
                     <div>
                       <dt className="text-slate-400 font-medium">Monthly Billing</dt>
-                      <dd className="font-semibold text-emerald-400 mt-0.5">$685.00 / month</dd>
+                      <dd className="font-semibold text-emerald-400 mt-0.5">{doc.facilityDetails.billingMonthly}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-slate-400 font-medium">Printing Date</dt>
+                      <dd className="font-semibold text-purple-300 mt-0.5">{doc.printingDate}</dd>
                     </div>
                     <div>
                       <dt className="text-slate-400 font-medium">Contract Start Date</dt>
-                      <dd className="font-semibold text-slate-200 mt-0.5">September 13, 2026</dd>
+                      <dd className="font-semibold text-slate-200 mt-0.5">{doc.facilityDetails.startDate}</dd>
                     </div>
                     <div>
                       <dt className="text-slate-400 font-medium">Initial Clean</dt>

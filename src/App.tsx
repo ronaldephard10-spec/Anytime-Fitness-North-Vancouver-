@@ -16,6 +16,8 @@ import {
   TUESDAY_MONTHLY,
   THURSDAY_SPECIFIC,
   THURSDAY_MONTHLY,
+  SATURDAY_SPECIFIC,
+  SATURDAY_MONTHLY,
 } from './data/checklistItems';
 import { getTodayInspectionDay, formatInspectionTimestamp, getLocalDateIso } from './utils/dayDetector';
 import { getMonthlyTasksDueForDate, getDueInspectionForDate } from './utils/scheduleEngine';
@@ -23,6 +25,7 @@ import { downloadInspectionPDF } from './utils/pdfGenerator';
 import { saveCompletedInspection, CompletedInspection } from './utils/inspectionHistory';
 import { Header } from './components/Header';
 import { TabBar } from './components/TabBar';
+import { InteractiveDateSwitcher } from './components/InteractiveDateSwitcher';
 import { ComplianceScoreCard } from './components/ComplianceScoreCard';
 import { ChecklistSection } from './components/ChecklistSection';
 import { SupervisorSignaturePad } from './components/SupervisorSignaturePad';
@@ -51,6 +54,9 @@ export default function App() {
   const [isPeriodicModalOpen, setIsPeriodicModalOpen] = useState<boolean>(false);
   const [isMonthlySummaryOpen, setIsMonthlySummaryOpen] = useState<boolean>(false);
 
+  // Inspected Date (Allows user to inspect and verify any scheduled date across the 12-month calendar)
+  const [inspectedDate, setInspectedDate] = useState<Date>(() => new Date());
+
   // 1. Detect Day of week
   const todayInfo = useMemo(() => getTodayInspectionDay(), []);
   const [activeTab, setActiveTab] = useState<ActiveTab>(todayInfo.recommendedTab);
@@ -61,19 +67,20 @@ export default function App() {
   useEffect(() => {
     // Refresh time on interval
     const interval = setInterval(() => {
-      setTimestamp(formatInspectionTimestamp());
+      setTimestamp(formatInspectionTimestamp(inspectedDate));
     }, 60000);
     return () => clearInterval(interval);
-  }, []);
+  }, [inspectedDate]);
 
   // Helper to generate fresh evaluations object for new sessions/days
   const getFreshEvaluations = (): Record<string, ItemEvaluation> => {
     const initial: Record<string, ItemEvaluation> = {};
     const allKnown = [
       ...CORE_SERVICES,
-      ...SUNDAY_SPECIFIC,
+      ...SATURDAY_SPECIFIC,
       ...TUESDAY_SPECIFIC,
       ...THURSDAY_SPECIFIC,
+      ...SUNDAY_SPECIFIC,
     ];
     allKnown.forEach((item) => {
       initial[item.id] = { id: item.id, status: 'pass' };
@@ -82,12 +89,14 @@ export default function App() {
   };
 
   const DEFAULT_MONTHLY_TOGGLES: Record<string, boolean> = {
-    'sun-monthly-refrigerator': false,
-    'sun-monthly-partition-detail': false,
+    'sat-monthly-edge-fabric': false,
+    'sat-monthly-refrigerator': false,
     'tue-monthly-blinds-entrance': false,
     'tue-monthly-vents-fixtures': false,
     'thu-monthly-detail-edge-vacuum': false,
     'thu-monthly-fabric-furniture': false,
+    'sun-monthly-refrigerator': false,
+    'sun-monthly-partition-detail': false,
   };
 
   // 2. Track date of current audit session for rollover detection
@@ -304,32 +313,74 @@ export default function App() {
     });
   };
 
-  // Calculate strictly what is due for the active shift and date!
+  // Handle selecting any date across the 12-month commercial cleaning calendar
+  const handleSelectDateAndLoadWalkthrough = (selectedDate: Date) => {
+    setInspectedDate(selectedDate);
+    const isoDate = getLocalDateIso(selectedDate);
+    setSessionDate(isoDate);
+    setTimestamp(formatInspectionTimestamp(selectedDate));
+
+    // Determine day of week
+    const d = selectedDate.getDay();
+    let tabToSelect: ActiveTab = 'tuesday';
+    if (d === 2) tabToSelect = 'tuesday';
+    else if (d === 4) tabToSelect = 'thursday';
+    else if (d === 6) tabToSelect = 'saturday';
+    else {
+      // Off schedule, recommend closest
+      if (d === 0 || d === 1) tabToSelect = 'tuesday';
+      else if (d === 3) tabToSelect = 'thursday';
+      else if (d === 5) tabToSelect = 'saturday';
+    }
+    setActiveTab(tabToSelect);
+
+    // Check if a monthly rotation task is due for this specific date
+    const monthlyDue = getMonthlyTasksDueForDate(selectedDate);
+    const updatedToggles: Record<string, boolean> = {};
+    monthlyDue.forEach((task) => {
+      updatedToggles[task.toggleKey] = true;
+    });
+    setMonthlyToggles(updatedToggles);
+
+    if (monthlyDue.length > 0) {
+      setEvaluations((prev) => {
+        const updated = { ...prev };
+        monthlyDue.forEach((task) => {
+          if (!updated[task.toggleKey]) {
+            updated[task.toggleKey] = { id: task.toggleKey, status: 'pass' };
+          }
+        });
+        return updated;
+      });
+    }
+  };
+
+  // Calculate strictly what is due for the active shift and inspected date!
   const dueInspection = useMemo(() => {
     const shiftOverride =
-      activeTab === 'sunday' || activeTab === 'tuesday' || activeTab === 'thursday'
+      activeTab === 'saturday' || activeTab === 'tuesday' || activeTab === 'thursday' || activeTab === 'sunday'
         ? activeTab
         : null;
-    return getDueInspectionForDate(new Date(), shiftOverride);
-  }, [activeTab]);
+    return getDueInspectionForDate(inspectedDate, shiftOverride);
+  }, [activeTab, inspectedDate]);
 
   // Helper to determine which items belong to a given tab strictly for that day/shift
   const getItemsForTab = (tab: ActiveTab): InspectionItem[] => {
     const shift: DayOfWeek =
-      tab === 'sunday' || tab === 'tuesday' || tab === 'thursday'
+      tab === 'saturday' || tab === 'tuesday' || tab === 'thursday' || tab === 'sunday'
         ? tab
         : 'tuesday';
 
-    const dueInfo = getDueInspectionForDate(new Date(), shift);
+    const dueInfo = getDueInspectionForDate(inspectedDate, shift);
     const items = [...dueInfo.allDueItems];
 
     // If an inspector manually opted into an unscheduled ad-hoc monthly task, include it
-    if (shift === 'sunday') {
-      if (monthlyToggles['sun-monthly-refrigerator'] && !items.some((i) => i.id === 'sun-monthly-refrigerator')) {
-        items.push(SUNDAY_MONTHLY[0]);
+    if (shift === 'saturday') {
+      if (monthlyToggles['sat-monthly-edge-fabric'] && !items.some((i) => i.id === 'sat-monthly-edge-fabric')) {
+        items.push(SATURDAY_MONTHLY[0]);
       }
-      if (monthlyToggles['sun-monthly-partition-detail'] && !items.some((i) => i.id === 'sun-monthly-partition-detail')) {
-        items.push(SUNDAY_MONTHLY[1]);
+      if (monthlyToggles['sat-monthly-refrigerator'] && !items.some((i) => i.id === 'sat-monthly-refrigerator')) {
+        items.push(SATURDAY_MONTHLY[1]);
       }
     } else if (shift === 'tuesday') {
       if (monthlyToggles['tue-monthly-blinds-entrance'] && !items.some((i) => i.id === 'tue-monthly-blinds-entrance')) {
@@ -345,13 +396,20 @@ export default function App() {
       if (monthlyToggles['thu-monthly-fabric-furniture'] && !items.some((i) => i.id === 'thu-monthly-fabric-furniture')) {
         items.push(THURSDAY_MONTHLY[1]);
       }
+    } else if (shift === 'sunday') {
+      if (monthlyToggles['sun-monthly-refrigerator'] && !items.some((i) => i.id === 'sun-monthly-refrigerator')) {
+        items.push(SUNDAY_MONTHLY[0]);
+      }
+      if (monthlyToggles['sun-monthly-partition-detail'] && !items.some((i) => i.id === 'sun-monthly-partition-detail')) {
+        items.push(SUNDAY_MONTHLY[1]);
+      }
     }
 
     return items;
   };
 
   // Active items strictly for what is due that day!
-  const activeItems = useMemo(() => getItemsForTab(activeTab), [activeTab, monthlyToggles]);
+  const activeItems = useMemo(() => getItemsForTab(activeTab), [activeTab, monthlyToggles, inspectedDate]);
 
   // Scoring calculation strictly for the active tab's items
   const activeScore = useMemo(() => {
@@ -384,11 +442,12 @@ export default function App() {
 
   // Stats for the TabBar badges
   const dayStats = useMemo(() => {
-    const tabs: ActiveTab[] = ['sunday', 'tuesday', 'thursday'];
+    const tabs: ActiveTab[] = ['tuesday', 'thursday', 'saturday', 'sunday'];
     const res: Record<ActiveTab, { total: number; passed: number; score: number }> = {
-      sunday: { total: 0, passed: 0, score: 0 },
       tuesday: { total: 0, passed: 0, score: 0 },
       thursday: { total: 0, passed: 0, score: 0 },
+      saturday: { total: 0, passed: 0, score: 0 },
+      sunday: { total: 0, passed: 0, score: 0 },
       'full-audit': { total: 0, passed: 0, score: 0 },
     };
 
@@ -650,6 +709,10 @@ export default function App() {
           setSourceDocInitialTab('schedule');
           setIsSourceDocOpen(true);
         }}
+        onOpenSourceDocCalendar={() => {
+          setSourceDocInitialTab('calendar');
+          setIsSourceDocOpen(true);
+        }}
         onOpenMonthlySummary={() => setIsMonthlySummaryOpen(true)}
         isVoiceListening={voiceState.isListening}
         onToggleVoice={voiceState.toggleListening}
@@ -669,6 +732,16 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-6 sm:px-6 space-y-6">
+        {/* Interactive Date Switcher & Contract Status Banner */}
+        <InteractiveDateSwitcher
+          currentDate={inspectedDate}
+          onSelectDate={handleSelectDateAndLoadWalkthrough}
+          onOpen12MonthCalendar={() => {
+            setSourceDocInitialTab('calendar');
+            setIsSourceDocOpen(true);
+          }}
+        />
+
         {/* New Day Rollover Notice Banner: Appears automatically when a new day starts */}
         {rolloverNotice && (
           <NewDayRolloverBanner
@@ -693,7 +766,7 @@ export default function App() {
                   Today is {todayInfo.dayName} (No Routine Shift Scheduled)
                 </div>
                 <div className="text-xs text-slate-400 mt-0.5">
-                  Anytime Fitness #3007 is serviced 3x weekly: Sunday, Tuesday & Thursday at 11:00 PM. Displaying due items for the{' '}
+                  Anytime Fitness North Vancouver (Unit 103) is serviced 3x weekly: Tuesday, Thursday & Saturday at 11:00 PM (156 Visits/Year). Displaying due items for the{' '}
                   <span className="text-purple-300 font-semibold">{dueInspection.shiftDay.toUpperCase()} Shift</span>.
                 </div>
               </div>
@@ -751,11 +824,13 @@ export default function App() {
               title={`${dueInspection.shiftDay.charAt(0).toUpperCase() + dueInspection.shiftDay.slice(1)} Specific Services`}
               badgeText={`${dueInspection.shiftDay.charAt(0).toUpperCase() + dueInspection.shiftDay.slice(1)} Shift (Due Tonight)`}
               subtitle={
-                dueInspection.shiftDay === 'sunday'
-                  ? 'Microwave interior cleaning, partition glass dusting, high-traffic vacuuming.'
+                dueInspection.shiftDay === 'saturday'
+                  ? 'Gym perimeter vacuuming, rubber flooring extraction, equipment wipe-down, sanitization.'
                   : dueInspection.shiftDay === 'tuesday'
                   ? 'High/Low dusting (up to 6ft) and surface dusting of fixtures, desks, counters, display units & ledges.'
-                  : 'Damp wipe office desks & furniture, sanitize phones, carpet spot vacuuming & desk mats, full floor carpet vacuum, traffic vacuum.'
+                  : dueInspection.shiftDay === 'thursday'
+                  ? 'Damp wipe office desks & furniture, sanitize phones, carpet spot vacuuming & desk mats, full floor carpet vacuum, traffic vacuum.'
+                  : 'Microwave interior cleaning, partition glass dusting, high-traffic vacuuming.'
               }
               items={dueInspection.shiftSpecificItems}
               evaluations={evaluations}
@@ -788,7 +863,7 @@ export default function App() {
               <div className="flex items-center gap-2.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
                 <span>
-                  <strong>Monthly Rotation:</strong> No monthly deep clean is scheduled for tonight ({dueInspection.dayName}, Week {Math.ceil(new Date().getDate() / 7)}).
+                  <strong>Monthly Rotation:</strong> No monthly deep clean is scheduled for tonight ({dueInspection.dayName}, Week {Math.ceil(inspectedDate.getDate() / 7)}).
                 </span>
               </div>
               <button
@@ -807,11 +882,13 @@ export default function App() {
               badgeText="Optional / Extra"
               subtitle="Select and evaluate any monthly rotation items completed out of normal cycle."
               items={
-                dueInspection.shiftDay === 'sunday'
-                  ? SUNDAY_MONTHLY
+                dueInspection.shiftDay === 'saturday'
+                  ? SATURDAY_MONTHLY
                   : dueInspection.shiftDay === 'tuesday'
                   ? TUESDAY_MONTHLY
-                  : THURSDAY_MONTHLY
+                  : dueInspection.shiftDay === 'thursday'
+                  ? THURSDAY_MONTHLY
+                  : SUNDAY_MONTHLY
               }
               evaluations={evaluations}
               onUpdateStatus={handleUpdateStatus}
@@ -853,6 +930,8 @@ export default function App() {
         onClose={() => setIsSourceDocOpen(false)}
         onSelectMonthlyTask={(key) => handleToggleMonthly(key)}
         initialTab={sourceDocInitialTab}
+        onSelectDateAndLoadWalkthrough={handleSelectDateAndLoadWalkthrough}
+        inspectedDate={inspectedDate}
       />
 
       {/* Annual & Periodic Special Services Manager Modal */}
@@ -868,6 +947,11 @@ export default function App() {
       <MonthlySummaryModal
         isOpen={isMonthlySummaryOpen}
         onClose={() => setIsMonthlySummaryOpen(false)}
+        onOpenSourceDocCalendar={() => {
+          setIsMonthlySummaryOpen(false);
+          setSourceDocInitialTab('calendar');
+          setIsSourceDocOpen(true);
+        }}
       />
 
       {/* Hands-free Voice Walkthrough Assistant Floating HUD */}

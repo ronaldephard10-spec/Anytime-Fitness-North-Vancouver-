@@ -7,6 +7,8 @@ import {
   TUESDAY_MONTHLY,
   THURSDAY_SPECIFIC,
   THURSDAY_MONTHLY,
+  SATURDAY_SPECIFIC,
+  SATURDAY_MONTHLY,
 } from '../data/checklistItems';
 
 export interface DueInspectionDetails {
@@ -21,6 +23,8 @@ export interface DueInspectionDetails {
   allDueItems: InspectionItem[];
   monthlyTaskDue: ScheduledMonthlyTask | null;
   scheduledTime: string;
+  visitNumberInMonth?: number;
+  totalVisitsInMonth?: number;
   nextScheduledShift: {
     dayName: string;
     shiftDay: DayOfWeek;
@@ -34,7 +38,7 @@ export interface ScheduledMonthlyTask {
   description: string;
   dayOfWeek: DayOfWeek;
   occurrenceText: string;
-  category: 'tuesday' | 'thursday' | 'sunday';
+  category: 'tuesday' | 'thursday' | 'saturday' | 'sunday';
 }
 
 export interface DayScheduleSummary {
@@ -49,6 +53,9 @@ export interface DayScheduleSummary {
   weeklyServicesCount: number;
   monthlyTasksDueTonight: ScheduledMonthlyTask[];
   annualPeriodicRecommended?: string[];
+  visitNumberInMonth?: number;
+  totalVisitsInMonth?: number;
+  totalAnnualVisits: number;
 }
 
 /**
@@ -84,26 +91,62 @@ export function getTotalWeekdayOccurrencesInMonth(year: number, month: number, d
 }
 
 /**
- * Coverall Health-Based Cleaning System Monthly Services Schedule Rules (Pages 7-19 of Source Agreement)
+ * Calculates contract visits target for any month (Tuesday, Thursday, Saturday cycle)
+ * Total 156 visits annually across 12 months.
+ */
+export function getMonthlyContractVisits(year: number, month: number): {
+  targetVisits: number;
+  scheduledDates: Date[];
+  visitNumberMap: Record<number, number>; // date day -> visit number (1-indexed)
+  totalAnnualVisits: number;
+} {
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const scheduledDates: Date[] = [];
+  const visitNumberMap: Record<number, number> = {};
+
+  let visitCounter = 0;
+  for (let d = 1; d <= daysInMonth; d++) {
+    const testDate = new Date(year, month, d);
+    const dayOfWeek = testDate.getDay();
+    // Scheduled days are Tuesday (2), Thursday (4), and Saturday (6)
+    if (dayOfWeek === 2 || dayOfWeek === 4 || dayOfWeek === 6) {
+      visitCounter++;
+      scheduledDates.push(testDate);
+      visitNumberMap[d] = visitCounter;
+    }
+  }
+
+  return {
+    targetVisits: visitCounter,
+    scheduledDates,
+    visitNumberMap,
+    totalAnnualVisits: 156,
+  };
+}
+
+/**
+ * Coverall Health-Based Cleaning System Monthly Services Schedule Rules (Unit 103 - 2180 Dollarton Hwy • 156 Visits)
+ * 1st Tuesday: "Clean partition glass" (interior glass partition walls, conference dividers, sidelites)
+ * 2nd Saturday: "Detail edge vacuuming & Vacuum fabric furniture" (baseboard crevice edging, acoustic panels, client seating)
  */
 export const MONTHLY_SERVICE_RULES: Record<string, {
   dayOfWeek: DayOfWeek;
-  dayNum: number; // 0=Sun, 2=Tue, 4=Thu
+  dayNum: number; // 2=Tue, 4=Thu, 6=Sat
   occurrence: number; // 1 = 1st, 2 = 2nd, 3 = 3rd, 4 = 4th
   name: string;
   toggleKey: string;
   occurrenceText: string;
   description: string;
-  category: 'tuesday' | 'thursday' | 'sunday';
+  category: 'tuesday' | 'thursday' | 'saturday' | 'sunday';
 }> = {
-  'tue-blinds-entrance': {
+  'tue-partition-glass': {
     dayOfWeek: 'tuesday',
     dayNum: 2,
     occurrence: 1,
-    name: 'Blinds & Entrance Glass Doors',
-    toggleKey: 'tue-monthly-blinds-entrance',
+    name: 'Clean partition glass',
+    toggleKey: 'tue-monthly-partition-glass',
     occurrenceText: '1st Tuesday of the Month',
-    description: 'Clean glass entrance doors (interior/exterior), polish trim & dust all window blinds.',
+    description: 'Clean interior glass partition walls, conference dividers, and sidelites.',
     category: 'tuesday',
   },
   'tue-vents-fixtures': {
@@ -115,6 +158,36 @@ export const MONTHLY_SERVICE_RULES: Record<string, {
     occurrenceText: '2nd Tuesday of the Month',
     description: 'Dust all light fixtures, ceiling HVAC vents and surfaces 6-10 ft high including corners.',
     category: 'tuesday',
+  },
+  'tue-blinds-entrance': {
+    dayOfWeek: 'tuesday',
+    dayNum: 2,
+    occurrence: 3,
+    name: 'Blinds & Entrance Glass Doors',
+    toggleKey: 'tue-monthly-blinds-entrance',
+    occurrenceText: '3rd Tuesday of the Month',
+    description: 'Clean glass entrance doors (interior/exterior), polish trim & dust all window blinds.',
+    category: 'tuesday',
+  },
+  'sat-edge-fabric': {
+    dayOfWeek: 'saturday',
+    dayNum: 6,
+    occurrence: 2,
+    name: 'Detail edge vacuuming & Vacuum fabric furniture',
+    toggleKey: 'sat-monthly-edge-fabric',
+    occurrenceText: '2nd Saturday of the Month',
+    description: 'Baseboard crevice edging, acoustic panels, client seating.',
+    category: 'saturday',
+  },
+  'sat-refrigerator': {
+    dayOfWeek: 'saturday',
+    dayNum: 6,
+    occurrence: 4,
+    name: 'Inside Refrigerator Deep Clean',
+    toggleKey: 'sat-monthly-refrigerator',
+    occurrenceText: '4th Saturday of the Month',
+    description: 'Deep clean inside of refrigerators: interior shelves, crisper bins, and door gaskets with hospital disinfectant.',
+    category: 'saturday',
   },
   'thu-fabric-furniture': {
     dayOfWeek: 'thursday',
@@ -135,26 +208,6 @@ export const MONTHLY_SERVICE_RULES: Record<string, {
     occurrenceText: '3rd Thursday of the Month',
     description: 'Detail crevice tool vacuuming around all baseboard perimeters, weight racks, and walls.',
     category: 'thursday',
-  },
-  'sun-partition-glass': {
-    dayOfWeek: 'sunday',
-    dayNum: 0,
-    occurrence: 3,
-    name: 'Partition Glass Detail Wash',
-    toggleKey: 'sun-monthly-partition-detail',
-    occurrenceText: '3rd Sunday of the Month',
-    description: 'Deep clean all partition glass/plexi-glass sections using streak-free glass cleaner.',
-    category: 'sunday',
-  },
-  'sun-refrigerator': {
-    dayOfWeek: 'sunday',
-    dayNum: 0,
-    occurrence: 4,
-    name: 'Inside Refrigerator Deep Clean',
-    toggleKey: 'sun-monthly-refrigerator',
-    occurrenceText: '4th Sunday of the Month',
-    description: 'Clean and disinfect interior shelves, crisper trays, and door seals of refrigerator.',
-    category: 'sunday',
   },
 };
 
@@ -188,15 +241,19 @@ export function getMonthlyTasksDueForDate(date: Date): ScheduledMonthlyTask[] {
 export function getShiftScheduleForDate(date: Date = new Date()): DayScheduleSummary {
   const dayNum = date.getDay();
   let dayTab: ActiveTab | null = null;
-  if (dayNum === 0) dayTab = 'sunday';
-  else if (dayNum === 2) dayTab = 'tuesday';
+  if (dayNum === 2) dayTab = 'tuesday';
   else if (dayNum === 4) dayTab = 'thursday';
+  else if (dayNum === 6) dayTab = 'saturday';
+  else if (dayNum === 0) dayTab = 'sunday';
 
-  const isScheduledShift = dayTab !== null;
+  // Scheduled shifts are strictly Tuesday, Thursday, Saturday
+  const isScheduledShift = dayNum === 2 || dayNum === 4 || dayNum === 6;
   const occurrence = getWeekdayOccurrenceInMonth(date);
   const monthlyTasks = getMonthlyTasksDueForDate(date);
 
   const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const monthVisits = getMonthlyContractVisits(date.getFullYear(), date.getMonth());
+  const visitNumberInMonth = monthVisits.visitNumberMap[date.getDate()];
 
   return {
     date,
@@ -208,14 +265,19 @@ export function getShiftScheduleForDate(date: Date = new Date()): DayScheduleSum
     scheduledTime: '11:00 PM',
     coreServicesCount: CORE_SERVICES.length,
     weeklyServicesCount:
-      dayTab === 'sunday'
-        ? SUNDAY_SPECIFIC.length
-        : dayTab === 'tuesday'
+      dayTab === 'tuesday'
         ? TUESDAY_SPECIFIC.length
         : dayTab === 'thursday'
         ? THURSDAY_SPECIFIC.length
+        : dayTab === 'saturday'
+        ? SATURDAY_SPECIFIC.length
+        : dayTab === 'sunday'
+        ? SUNDAY_SPECIFIC.length
         : 0,
     monthlyTasksDueTonight: monthlyTasks,
+    visitNumberInMonth: isScheduledShift ? visitNumberInMonth : undefined,
+    totalVisitsInMonth: monthVisits.targetVisits,
+    totalAnnualVisits: 156,
   };
 }
 
@@ -367,30 +429,30 @@ export function getDueInspectionForDate(
   const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const dayName = dayNames[dayNum];
 
-  // Determine natural scheduled shift for this calendar day
+  // Determine natural scheduled shift for this calendar day (Contract cycle: Tue, Thu, Sat)
   let naturalShiftDay: DayOfWeek | null = null;
-  if (dayNum === 0) naturalShiftDay = 'sunday';
-  else if (dayNum === 2) naturalShiftDay = 'tuesday';
+  if (dayNum === 2) naturalShiftDay = 'tuesday';
   else if (dayNum === 4) naturalShiftDay = 'thursday';
+  else if (dayNum === 6) naturalShiftDay = 'saturday';
 
   const isScheduledDay = naturalShiftDay !== null;
 
   // Next scheduled shift if today is an off-day (or looking forward)
-  let nextShiftDay: DayOfWeek = 'sunday';
-  let nextShiftName = 'Sunday';
-  if (dayNum === 0) {
+  let nextShiftDay: DayOfWeek = 'tuesday';
+  let nextShiftName = 'Tuesday';
+  if (dayNum === 0 || dayNum === 1) {
     nextShiftDay = 'tuesday';
     nextShiftName = 'Tuesday';
-  } else if (dayNum === 1 || dayNum === 2) {
-    nextShiftDay = dayNum === 1 ? 'tuesday' : 'thursday';
-    nextShiftName = dayNum === 1 ? 'Tuesday' : 'Thursday';
-  } else if (dayNum === 3 || dayNum === 4) {
-    nextShiftDay = dayNum === 3 ? 'thursday' : 'sunday';
-    nextShiftName = dayNum === 3 ? 'Thursday' : 'Sunday';
+  } else if (dayNum === 2 || dayNum === 3) {
+    nextShiftDay = 'thursday';
+    nextShiftName = 'Thursday';
+  } else if (dayNum === 4 || dayNum === 5) {
+    nextShiftDay = 'saturday';
+    nextShiftName = 'Saturday';
   } else {
-    // Friday or Saturday -> Sunday
-    nextShiftDay = 'sunday';
-    nextShiftName = 'Sunday';
+    // Saturday -> next shift is Tuesday
+    nextShiftDay = 'tuesday';
+    nextShiftName = 'Tuesday';
   }
 
   // Active shift: override if specified, otherwise natural shift if scheduled, or nextShiftDay
@@ -401,12 +463,14 @@ export function getDueInspectionForDate(
 
   // 2. Shift-specific items (only for the active shift)
   let shiftSpecificItems: InspectionItem[] = [];
-  if (activeShift === 'sunday') {
-    shiftSpecificItems = [...SUNDAY_SPECIFIC];
+  if (activeShift === 'saturday') {
+    shiftSpecificItems = [...SATURDAY_SPECIFIC];
   } else if (activeShift === 'tuesday') {
     shiftSpecificItems = [...TUESDAY_SPECIFIC];
   } else if (activeShift === 'thursday') {
     shiftSpecificItems = [...THURSDAY_SPECIFIC];
+  } else if (activeShift === 'sunday') {
+    shiftSpecificItems = [...SUNDAY_SPECIFIC];
   }
 
   // 3. Monthly items: strictly ONLY if scheduled for today according to the Coverall monthly rotation rules
@@ -417,14 +481,17 @@ export function getDueInspectionForDate(
   scheduledMonthlyTasks.forEach((mTask) => {
     if (mTask.dayOfWeek === activeShift) {
       monthlyTaskDue = mTask;
-      if (activeShift === 'sunday') {
-        const found = SUNDAY_MONTHLY.find((i) => i.id === mTask.toggleKey);
+      if (activeShift === 'saturday') {
+        const found = SATURDAY_MONTHLY.find((i) => i.id === mTask.toggleKey);
         if (found) monthlyDueItems.push(found);
       } else if (activeShift === 'tuesday') {
         const found = TUESDAY_MONTHLY.find((i) => i.id === mTask.toggleKey);
         if (found) monthlyDueItems.push(found);
       } else if (activeShift === 'thursday') {
         const found = THURSDAY_MONTHLY.find((i) => i.id === mTask.toggleKey);
+        if (found) monthlyDueItems.push(found);
+      } else if (activeShift === 'sunday') {
+        const found = SUNDAY_MONTHLY.find((i) => i.id === mTask.toggleKey);
         if (found) monthlyDueItems.push(found);
       }
     }
@@ -439,6 +506,9 @@ export function getDueInspectionForDate(
     year: 'numeric',
   });
 
+  const monthVisits = getMonthlyContractVisits(date.getFullYear(), date.getMonth());
+  const visitNumberInMonth = monthVisits.visitNumberMap[date.getDate()];
+
   return {
     date,
     dateFormatted,
@@ -451,6 +521,8 @@ export function getDueInspectionForDate(
     allDueItems,
     monthlyTaskDue,
     scheduledTime: '11:00 PM',
+    visitNumberInMonth: isScheduledDay ? visitNumberInMonth : undefined,
+    totalVisitsInMonth: monthVisits.targetVisits,
     nextScheduledShift: {
       dayName: nextShiftName,
       shiftDay: nextShiftDay,

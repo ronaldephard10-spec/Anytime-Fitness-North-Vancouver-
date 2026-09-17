@@ -18,9 +18,9 @@ export const TabBar: React.FC<TabBarProps> = ({
   currentDayName,
 }) => {
   const tabs: { id: ActiveTab; label: string; sub: string; dayIndex: number }[] = [
-    { id: 'sunday', label: 'Sunday Shift', sub: '11:00 PM • Weekend Deep Clean', dayIndex: 0 },
     { id: 'tuesday', label: 'Tuesday Shift', sub: '11:00 PM • Mid-Week Detail', dayIndex: 2 },
-    { id: 'thursday', label: 'Thursday Shift', sub: '11:00 PM • End-of-Week Disinfection', dayIndex: 4 },
+    { id: 'thursday', label: 'Thursday Shift', sub: '11:00 PM • Weekly Disinfection', dayIndex: 4 },
+    { id: 'saturday', label: 'Saturday Shift', sub: '11:00 PM • Weekend Deep Clean', dayIndex: 6 },
   ];
 
   const isTodayActive = matchedDay === activeTab;
@@ -50,7 +50,7 @@ export const TabBar: React.FC<TabBarProps> = ({
 
           <div className="text-[11px] text-slate-400 hidden sm:flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>Contract #3007: Sunday, Tuesday & Thursday @ 11:00 PM</span>
+            <span>Contract #3007: Tuesday, Thursday & Saturday @ 11:00 PM (156 Visits/Year)</span>
           </div>
         </div>
 

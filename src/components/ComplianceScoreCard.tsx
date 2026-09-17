@@ -34,9 +34,10 @@ export const ComplianceScoreCard: React.FC<ComplianceScoreCardProps> = ({
   const isPerfect = score.percentage === 100 && score.totalScorable > 0;
 
   const tabLabels: Record<ActiveTab, string> = {
-    sunday: 'Sunday Shift',
     tuesday: 'Tuesday Shift',
     thursday: 'Thursday Shift',
+    saturday: 'Saturday Shift',
+    sunday: 'Sunday Shift',
     'full-audit': 'Full Facility Audit',
   };
 

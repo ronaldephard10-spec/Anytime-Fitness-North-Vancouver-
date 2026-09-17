@@ -8,6 +8,8 @@ import {
   TUESDAY_MONTHLY,
   THURSDAY_SPECIFIC,
   THURSDAY_MONTHLY,
+  SATURDAY_SPECIFIC,
+  SATURDAY_MONTHLY,
 } from '../data/checklistItems';
 import type { CompletedInspection } from './inspectionHistory';
 
@@ -424,7 +426,7 @@ export function generateInspectionPDF(
       // Facility badge info
       doc.setFontSize(6.5);
       doc.setTextColor(130, 130, 130);
-      doc.text('Anytime Fitness North Vancouver • Unit 103 (Northwoods Village)', margin + 5, photoY + 50);
+      doc.text(`${FACILITY_INFO.facility} • ${FACILITY_INFO.address}`, margin + 5, photoY + 50);
 
       // Right image preview (60mm wide x 48mm high)
       const imgX = margin + contentWidth - 62;
@@ -463,7 +465,7 @@ export function generateInspectionPDF(
     doc.setFontSize(6.5);
     doc.setTextColor(150, 150, 150);
     doc.text(
-      'Clean Audit Pro • Confidential Facility Inspection Certificate • Anytime Fitness North Vancouver (Northwoods Village)',
+      `Clean Audit Pro • Confidential Facility Inspection Certificate • ${FACILITY_INFO.facility} (${FACILITY_INFO.address})`,
       margin,
       pageHeight - 5
     );
@@ -472,7 +474,7 @@ export function generateInspectionPDF(
 
   const base64 = doc.output('datauristring').split(',')[1];
   const dateSlug = record.inspectionDate.replace(/[^a-zA-Z0-9]/g, '_');
-  const filename = `Anytime_Fitness_Northwoods_${record.activeDay}_Audit_${dateSlug}.pdf`;
+  const filename = `Anytime_Fitness_North_Van_${record.activeDay}_Audit_${dateSlug}.pdf`;
 
   return { doc, base64, filename };
 }

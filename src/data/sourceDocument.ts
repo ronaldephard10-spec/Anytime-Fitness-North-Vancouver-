@@ -3,6 +3,8 @@ export interface CoverallDocumentInfo {
   accountNumber: string;
   customerName: string;
   customerAddress: string;
+  printingDate: string;
+  totalAnnualVisits: number;
   primaryContact: {
     name: string;
     phone: string;
@@ -31,10 +33,12 @@ export interface CoverallDocumentInfo {
 }
 
 export const ORIGINAL_SOURCE_DOCUMENT: CoverallDocumentInfo = {
-  documentTitle: "Coverall Health-Based Cleaning System Franchisee Work Agreement & Schedule",
+  documentTitle: "Coverall Health-Based Cleaning System Franchisee Work Agreement & 12-Month Schedule",
   accountNumber: "3007",
-  customerName: "Anytime Fitness North Vancouver (Northwoods Village)",
-  customerAddress: "2180 Dollarton Hwy Unit 103, North Vancouver, BC V7H 0B5",
+  customerName: "Anytime Fitness North Vancouver",
+  customerAddress: "103 - 2180 Dollarton Hwy, North Vancouver, BC V7H 0B5",
+  printingDate: "May 20, 2026",
+  totalAnnualVisits: 156,
   primaryContact: {
     name: "Jennifer Johnson",
     phone: "604-785-4857",
@@ -50,25 +54,25 @@ export const ORIGINAL_SOURCE_DOCUMENT: CoverallDocumentInfo = {
     officeFax: "(604) 434-7774",
   },
   facilityDetails: {
-    frequency: "3x / Week (Sunday, Tuesday, Thursday at 11:00 PM)",
+    frequency: "3x / Week (Tuesday, Thursday, Saturday at 11:00 PM — 156 Visits / Year)",
     cleaningHours: "11:00 PM (After Hours)",
-    scheduledDays: ["Sunday", "Tuesday", "Thursday"],
+    scheduledDays: ["Tuesday", "Thursday", "Saturday"],
     keysReceived: "1 Fob + 1 Key",
-    startDate: "September 13, 2026",
+    startDate: "May 20, 2026 (Agreement Printed: May 20, 2026 • 12-Month Schedule: 156 Visits)",
     initialCleanDone: true,
     billingMonthly: "$685.00 / month",
     suppliesOrderedBy: "Customer",
     areasToService: [
-      "Entrance Foyer & Front Lobby",
+      "Entrance Foyer & Front Lobby (Unit 103)",
       "Private Offices & Administrative Areas",
       "Restrooms & Locker Rooms",
-      "Showers",
-      "Kitchens & Breakrooms",
-      "Weight Room & Cardio Training Floor",
+      "Showers & Wet Change Areas",
+      "Kitchens & Staff Breakrooms",
+      "Weight Room, Functional Training & Cardio Floor",
       "Storage & Janitor's Closet Area",
-      "Entrance Doors & Exterior Glass",
-      "Window Blinds",
-      "Partition Glass & Plexiglass Panels",
+      "Entrance Doors & Glazing",
+      "Window Blinds & Perimeter Sills",
+      "Interior Glass Partition Walls & Conference Dividers",
     ],
   },
 };
@@ -373,68 +377,69 @@ export const WORK_SCHEDULE_ITEMS: ServiceFrequencyItem[] = [
   },
 
   // MONTHLY ROTATION SERVICES (Pages 7-19)
+  // MONTHLY ROTATING SERVICES (Coverall Commercial Cleaning Schedule • 156-Visit Contract)
   {
-    id: 'ws-month-entrance-glass',
-    section: 'Entrances & Glass',
-    task: 'Clean glass entrance doors, interior and exterior. Polish door trim.',
+    id: 'ws-month-partition-glass',
+    section: 'Internal Glass & Partition Walls',
+    task: 'Clean partition glass (interior glass partition walls, conference dividers, and sidelites).',
     frequency: '1x Month',
-    dayOrTiming: '1st Tuesday of the Month',
-    toolsSupplies: 'Color-coded microfiber cloths and all-purpose glass cleaner',
-    notes: 'Scheduled: Oct 6, Nov 3, Dec 1, Jan 5, Feb 2, Mar 2, May 4, Jun 1, Jul 6, Aug 3, Sep 7',
-  },
-  {
-    id: 'ws-month-blinds',
-    section: 'Window Coverings',
-    task: 'Dust all blinds.',
-    frequency: '1x Month',
-    dayOrTiming: '1st Tuesday of the Month',
-    toolsSupplies: 'Microfiber blind duster & vacuum attachment',
-    notes: 'Scheduled: Oct 6, Nov 3, Dec 1, Jan 5, Feb 2, Mar 2, May 4, Jun 1, Jul 6, Aug 3, Sep 7',
+    dayOrTiming: '1st Tuesday of every Month',
+    toolsSupplies: 'Color-coded microfiber cloths and streak-free professional glass cleaner',
+    notes: 'Mandated on 1st Tuesday. Cleans all conference glass sidelites and partition dividers.',
   },
   {
     id: 'ws-month-vents-fixtures',
     section: 'Ceilings & High Dusting',
     task: 'Dust all light fixtures, ceiling vents and areas above 6 ft. and up to 10 ft., such as corners and horizontal surfaces.',
     frequency: '1x Month',
-    dayOrTiming: '2nd Tuesday of the Month',
+    dayOrTiming: '2nd Tuesday of every Month',
     toolsSupplies: 'High reach vacuum pole & static microfiber duster (6-10 ft)',
-    notes: 'Scheduled: Oct 13, Nov 10, Dec 8, Jan 12, Feb 9, Mar 9, May 11, Jun 8, Jul 13, Aug 10, Sep 14',
+    notes: 'Scheduled: 2nd Tuesday of each month.',
+  },
+  {
+    id: 'ws-month-edge-fabric',
+    section: 'Floor Crevices & Seating',
+    task: 'Detail edge vacuuming & Vacuum fabric furniture (baseboard crevice edging, acoustic panels, client seating).',
+    frequency: '1x Month',
+    dayOrTiming: '2nd Saturday of every Month',
+    toolsSupplies: 'Crevice vacuum tool, HEPA backpack unit, upholstery brushes & hospital disinfectant',
+    notes: 'Mandated on 2nd Saturday. Baseboard perimeter edging, acoustic felt walls, client seating.',
+  },
+  {
+    id: 'ws-month-entrance-blinds',
+    section: 'Window Coverings & Entrance',
+    task: 'Clean glass entrance doors, polish trim, and dust all window blinds.',
+    frequency: '1x Month',
+    dayOrTiming: '3rd Tuesday of every Month',
+    toolsSupplies: 'Microfiber blind duster & vacuum attachment',
+    notes: 'Scheduled: 3rd Tuesday of each month.',
   },
   {
     id: 'ws-month-furniture-vacuum',
     section: 'Furniture & Seating',
     task: 'Vacuum all fabric type furniture. Wipe down plastic and leather furniture.',
     frequency: '1x Month',
-    dayOrTiming: '2nd Thursday of the Month',
+    dayOrTiming: '2nd Thursday of every Month',
     toolsSupplies: 'Color-coded microfiber cloths, upholstery vacuum attachment & hospital disinfectant',
-    notes: 'Scheduled: Oct 8, Nov 12, Dec 10, Jan 14, Feb 11, Mar 11, May 13, Jun 10, Jul 8, Aug 12, Sep 9',
+    notes: 'Scheduled: 2nd Thursday of each month.',
   },
   {
     id: 'ws-month-edge-vacuum',
     section: 'Floor Perimeter Detail',
     task: 'Detail edge vacuum around all furniture and walls.',
     frequency: '1x Month',
-    dayOrTiming: '3rd Thursday of the Month',
+    dayOrTiming: '3rd Thursday of every Month',
     toolsSupplies: 'Commercial crevice tool vacuuming',
-    notes: 'Scheduled: Sep 17, Oct 15, Nov 19, Dec 17, Jan 21, Feb 18, Mar 18, May 20, Jun 17, Jul 15, Aug 19, Sep 16',
-  },
-  {
-    id: 'ws-month-partition-glass',
-    section: 'Internal Glass & Partition Walls',
-    task: 'Clean all glass/plexi-glass sections of partitions and doors.',
-    frequency: '1x Month',
-    dayOrTiming: '3rd Sunday of the Month',
-    toolsSupplies: 'Color-coded microfiber cloths and professional glass cleaner',
-    notes: 'Scheduled: Sep 20, Oct 18, Nov 15, Dec 20, Jan 17, Feb 21, Mar 21, May 16, Jun 20, Jul 18, Aug 15, Sep 19',
+    notes: 'Scheduled: 3rd Thursday of each month.',
   },
   {
     id: 'ws-month-refrigerator',
     section: 'Kitchens / Breakrooms',
-    task: 'Clean inside of refrigerators.',
+    task: 'Clean inside of refrigerators (shelves, crisper bins, door gaskets).',
     frequency: '1x Month',
-    dayOrTiming: '4th Sunday of the Month (Last Sunday)',
+    dayOrTiming: '4th Saturday of every Month',
     toolsSupplies: 'Color-coded microfiber cloths and hospital grade disinfectant',
-    notes: 'Scheduled: Sep 27, Oct 25, Nov 22, Dec 27, Jan 24, Feb 28, Mar 28, May 23, Jun 27, Jul 25, Aug 22, Sep 26',
+    notes: 'Deep interior sanitation of refrigerator.',
   },
 
   // ANNUAL & PERIODIC SPECIAL SERVICES (Page 21)

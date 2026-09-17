@@ -453,7 +453,7 @@ export function generateMonthlySummaryPDF(
     doc.setFontSize(6.5);
     doc.setTextColor(150, 150, 150);
     doc.text(
-      'Clean Audit Pro • Monthly Quality Assurance Report • Anytime Fitness North Vancouver (Northwoods Village)',
+      `Clean Audit Pro • Monthly Quality Assurance Report • ${FACILITY_INFO.facility} (${FACILITY_INFO.address})`,
       margin,
       pageHeight - 5
     );

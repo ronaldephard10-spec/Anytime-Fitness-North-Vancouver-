@@ -359,6 +359,28 @@ export const TUESDAY_SPECIFIC: InspectionItem[] = [
 
 export const TUESDAY_MONTHLY: InspectionItem[] = [
   {
+    id: 'tue-monthly-partition-glass',
+    name: 'Clean partition glass',
+    category: 'monthly',
+    applicableDays: ['tuesday'],
+    isMonthly: true,
+    description: 'Clean interior glass partition walls, conference dividers, and sidelites. Mandated on the 1st Tuesday of every month.',
+    inspectionGuide: {
+      coverallSection: 'Office Areas & Detail Cleaning (Interior Partition Glass)',
+      inspectionProcedure: 'Inspect all interior glass partition walls, private office sidelites, and conference dividers under overhead illumination. Check from oblique angles for cloudiness, fingerprints, streaks, and examine bottom mounting frame channels.',
+      inspectionSteps: [
+        'Check interior glass partitions and office sidelites from a 45-degree angle for handprints, forehead oils, and chemical residue (Detail Cleaning Step 2).',
+        'Inspect glass edges meeting drywall and aluminum channels for squeegee border marks or dirty edges.',
+        'Wipe and inspect bottom and top frame tracks for accumulated settling dust and dirt.',
+        'Ensure glass surfaces are crystal streak-free without haze or lint fibers.',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): 100% streak-free, crystal-clear glass partition walls, dividers, and sidelites; polished frames; clean tracks.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Minor streak visible only from sharp angle, slight lint near bottom edge, light dust on upper frame.',
+      belowStandard: 'Grade 5 (Below Standards): Visible hand smudges, greasy film, cloudy wipe marks, or uncleaned glass dividers. Must be corrected within 24 hours.',
+      fboProTip: 'Mandated on the 1st Tuesday of every month. Check both sides of glass partitions—conference room sidelites collect handprints on the exterior and dust on the interior.',
+    },
+  },
+  {
     id: 'tue-monthly-blinds-entrance',
     name: 'Blinds/Entrance glass (Monthly)',
     category: 'monthly',
@@ -551,6 +573,121 @@ export const THURSDAY_MONTHLY: InspectionItem[] = [
       needsImprovementStandard: 'Grade 7 (Needs Improvement): Minor crumb in deep seam, slight lint on lower chair rung.',
       belowStandard: 'Grade 5 (Below Standards): Crumbs in cushion crevices, hair on upholstery, dust clinging to lower chair legs. Must be corrected within 24 hours.',
       fboProTip: 'Check under lobby chairs for dust (Detail Cleaning Step 8). Look in crevices between seat cushions where debris gathers out of sight.',
+    },
+  },
+];
+
+export const SATURDAY_SPECIFIC: InspectionItem[] = [
+  {
+    id: 'sat-microwave-interior',
+    name: 'Microwave interior & breakroom detail',
+    category: 'saturday',
+    applicableDays: ['saturday'],
+    description: 'Deep wipe and disinfect interior microwave turntable, ceiling, walls, door seal, and exterior breakroom counters.',
+    inspectionGuide: {
+      coverallSection: 'Restrooms & Breakroom (Interior Appliances)',
+      inspectionProcedure: 'Open microwave door, remove glass turntable tray, inspect underside and turntable guide wheels. Wipe ceiling, side walls, and door gasket with hospital disinfectant.',
+      inspectionSteps: [
+        'Inspect microwave turntable tray, underside, and roller track for dried food splatters.',
+        'Check microwave ceiling and interior walls for dried grease and sauce drips.',
+        'Wipe door seal and glass window inside and outside; ensure no food residue in door latches.',
+        'Wipe countertop surrounding microwave and toaster with surface disinfectant.',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): 100% clean interior turntable and cavity, food-splatter free ceiling, clean rubber door gasket.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Minor sauce splatter on inner ceiling, faint water smudge on interior glass.',
+      belowStandard: 'Grade 5 (Below Standards): Baked-on food residue, crusty turntable wheels, or sticky door handle. Must be corrected within 24 hours.',
+      fboProTip: 'Always remove the glass tray to inspect the bottom recess where spilled liquids crystallize.',
+    },
+  },
+  {
+    id: 'sat-refrigerator-wipe',
+    name: 'Refrigerator inspection & exterior wipe',
+    category: 'saturday',
+    applicableDays: ['saturday'],
+    description: 'Inspect refrigerator, wipe exterior handle and door surfaces, check freezer seal, verify trash/compost removal.',
+    inspectionGuide: {
+      coverallSection: 'Restrooms & Breakroom (Refrigerators & Waste)',
+      inspectionProcedure: 'Inspect exterior stainless steel/enamel door panels, door gaskets, handle touchpoint, and verify no expired open food spills inside.',
+      inspectionSteps: [
+        'Wipe refrigerator exterior handle and door front with disinfectant and microfiber cloth.',
+        'Inspect rubber door gasket folds for crumbs and mildew.',
+        'Check interior shelves for visible liquid spills or sticky containers needing wipe-down.',
+        'Ensure refrigerator top ledge is dusted and free of accumulated papers.',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): Spotless exterior doors, clean touch handle, sanitary door gasket, clean shelf surfaces.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Minor fingerprint near bottom edge of door, light dust on top edge.',
+      belowStandard: 'Grade 5 (Below Standards): Sticky door handle, dirty door seals, or uncleaned interior spill. Must be corrected within 24 hours.',
+      fboProTip: 'Touchpoints like refrigerator door handles carry high bacterial loads—ensure EPA hospital disinfectant dwell time is met.',
+    },
+  },
+  {
+    id: 'sat-weekend-traffic-vacuum',
+    name: 'Weekend high-traffic vacuum & threshold detail',
+    category: 'saturday',
+    applicableDays: ['saturday'],
+    description: 'Detailed vacuuming of heavy traffic corridors, entrance vestibule mats, and turf/rubber transition strips.',
+    inspectionGuide: {
+      coverallSection: 'Floors & Traffic Paths (Weekend Detailing)',
+      inspectionProcedure: 'Walk main lobby corridors, free-weight runway, and stretch area. Inspect mat recesses, transitions between rubber flooring and carpet tiles, and remove trapped grit.',
+      inspectionSteps: [
+        'Vacuum entrance scraper mats thoroughly, removing all trapped gravel and salt residue.',
+        'Check rubber-to-carpet transition strips and metal thresholds for trapped dust lines.',
+        'Inspect high-traffic center walking aisles for embedded chalk dust and hair.',
+        'Check corners around turnstile and keycard reader pedestal for loose dirt.',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): Uniform vacuum grooming lines, grit-free entrance walk-off mats, clean metal transition strips.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Minor gravel grain trapped in mat bevel, light dust line along transition strip.',
+      belowStandard: 'Grade 5 (Below Standards): Visible grit, chalk trails, or lint clinging to mats and traffic lanes. Must be corrected within 24 hours.',
+      fboProTip: 'HEPA backpack vacuums capture fine gym chalk and dead skin cells far better than standard uprights on rubber matting.',
+    },
+  },
+];
+
+export const SATURDAY_MONTHLY: InspectionItem[] = [
+  {
+    id: 'sat-monthly-edge-fabric',
+    name: 'Detail edge vacuuming & Vacuum fabric furniture',
+    category: 'monthly',
+    applicableDays: ['saturday'],
+    isMonthly: true,
+    description: 'Baseboard crevice edging, acoustic panels, client seating. Mandated on the 2nd Saturday of every month.',
+    inspectionGuide: {
+      coverallSection: 'Floors & Detail Cleaning (Perimeter Edging & Fabric Furniture)',
+      inspectionProcedure: 'Inspect baseboard edges with a high-intensity flashlight along all walls, equipment perimeters, and behind doors. Examine fabric seating, lounge armchairs, acoustic wall felt panels, and client chairs for embedded hair, crumbs, and lint.',
+      inspectionSteps: [
+        'Check corners and edges of carpet and hard floors along all baseboards using crevice tool standards (Floors Step 6).',
+        'Close doors and check behind door sweeps and hinge sides for hidden dust build-up (Floors Step 6).',
+        'Inspect baseboard crevice edging around workout equipment pods and structural columns.',
+        'Check acoustic wall panels and felt dividers for clinging dust whiskers and lint.',
+        'Check fabric upholstery on client seating: inspect seams and crevices between seat cushions and armrests for crumbs and dust (Detail Cleaning Step 8).',
+        'Check under lobby chairs, chair rungs, and caster wheels for hair and fibers (Detail Cleaning Step 8).',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): Pristine baseboard perimeter lines free of dust whiskers, clean behind all closed doors, thoroughly vacuumed acoustic felt panels, crumb-free fabric seating seams, and clean chair rungs.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Faint lint line in one short section of baseboard edge, minor lint on rear chair fabric.',
+      belowStandard: 'Grade 5 (Below Standards): Dark grey line of lint along baseboards, crumbs or hair in client seating cushions, unvacuumed acoustic panels. Must be corrected within 24 hours.',
+      fboProTip: 'Mandated on the 2nd Saturday of every month. Crevice tool attachment is mandatory for baseboard edges; pull cushions forward to vacuum hidden seams.',
+    },
+  },
+  {
+    id: 'sat-monthly-refrigerator',
+    name: 'Inside Refrigerator Deep Clean (Monthly)',
+    category: 'monthly',
+    applicableDays: ['saturday'],
+    isMonthly: true,
+    description: 'Deep clean inside of refrigerators: wipe interior shelving, crisper drawers, door bins, and gaskets with hospital-grade disinfectant.',
+    inspectionGuide: {
+      coverallSection: 'Breakroom (Interior Refrigeration Unit)',
+      inspectionProcedure: 'Open refrigerator, inspect each shelf level, crisper bins, door racks, and interior ceiling. Check for sticky residues, food stains, and mildew around door gaskets.',
+      inspectionSteps: [
+        'Inspect all interior glass and wire shelves for sticky rings and dried spills.',
+        'Check bottom floor below crisper bins where condensation and debris pool.',
+        'Inspect door condiment bins and egg trays for food splatters.',
+        'Disinfect and wipe flexible magnetic door gasket pleats.',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): Sparkling clean interior, sanitized shelves, clear crisper drawers, odor-free, disinfected door gaskets.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Minor water spot on lower glass shelf, faint smudge on inner door bin.',
+      belowStandard: 'Grade 5 (Below Standards): Sticky food stains, old sauce spills, unpleasant odor, or dirty door gaskets. Must be corrected within 24 hours.',
+      fboProTip: 'Spray Coverall hospital-grade disinfectant on shelves, allow 10-minute contact time, and dry with a clean microfiber cloth.',
     },
   },
 ];

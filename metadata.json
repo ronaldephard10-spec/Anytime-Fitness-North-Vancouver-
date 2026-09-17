@@ -1,6 +1,6 @@
 {
   "name": "Anytime Fitness Inspection Checklist",
-  "description": "Dedicated PWA inspection checklist for Anytime Fitness - North Vancouver (Northwoods Village) scheduled 3x weekly on Sunday, Tuesday, and Thursday at 11:00 PM with dynamic checklists, compliance scoring, signature sign-off, and PDF email audit reports.",
+  "description": "Commercial cleaning inspection audit application for Anytime Fitness (Unit 103 - 2180 Dollarton Hwy, North Vancouver, BC) scheduled 3x weekly on Tuesday, Thursday, and Saturday at 11:00 PM (156 annual visits) with 12-month calendar due date synchronization, Coverall FBO standards, compliance scoring, and certified PDF reporting.",
   "requestFramePermissions": ["camera", "microphone"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

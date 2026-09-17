@@ -14,6 +14,7 @@ import {
   Save,
   Check,
   BookOpen,
+  Calendar,
 } from 'lucide-react';
 import { FACILITY_INFO } from '../types/inspection';
 import { PWAInstallBanner } from './PWAInstallBanner';
@@ -26,6 +27,7 @@ interface HeaderProps {
   onResetAudit: () => void;
   isCompleted: boolean;
   onOpenSourceDoc?: () => void;
+  onOpenSourceDocCalendar?: () => void;
   onOpenQAGuide?: () => void;
   onOpenMonthlySummary?: () => void;
   isVoiceListening?: boolean;
@@ -42,6 +44,7 @@ export const Header: React.FC<HeaderProps> = ({
   formattedTime,
   onResetAudit,
   onOpenSourceDoc,
+  onOpenSourceDocCalendar,
   onOpenQAGuide,
   onOpenMonthlySummary,
   isVoiceListening,
@@ -161,16 +164,24 @@ export const Header: React.FC<HeaderProps> = ({
               </button>
             )}
 
-            {/* Source Document Reference button */}
-            {onOpenSourceDoc && (
+            {/* Source Document (12-Mo Calendar) Reference button */}
+            {(onOpenSourceDocCalendar || onOpenSourceDoc) && (
               <button
-                onClick={onOpenSourceDoc}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-900/40 hover:bg-purple-800/60 text-purple-200 border border-purple-700/50 text-xs font-semibold transition shadow-sm cursor-pointer"
-                title="View Coverall Health-Based Cleaning System Original Work Agreement & Schedule (Acct #3007)"
+                onClick={() => {
+                  if (onOpenSourceDocCalendar) {
+                    onOpenSourceDocCalendar();
+                  } else if (onOpenSourceDoc) {
+                    onOpenSourceDoc();
+                  }
+                }}
+                id="header-source-document-calendar-btn"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-900/70 to-indigo-900/70 hover:from-purple-800 hover:to-indigo-800 text-purple-100 border border-purple-500/50 text-xs font-bold transition shadow-sm cursor-pointer"
+                title="View Source Document & 12-Month Commercial Cleaning Calendar (Unit 103 - 2180 Dollarton Hwy • 156 Visits • Tue/Thu/Sat)"
               >
-                <FileText className="w-3.5 h-3.5 text-purple-300" />
-                <span className="hidden sm:inline">Source Agreement</span>
-                <span className="text-[10px] bg-purple-950 px-1 rounded border border-purple-800">Docs</span>
+                <Calendar className="w-3.5 h-3.5 text-purple-300" />
+                <span className="hidden sm:inline">Source Document (12-Mo Calendar)</span>
+                <span className="sm:hidden">12-Mo Cal</span>
+                <span className="text-[10px] bg-purple-950 px-1.5 py-0.2 rounded border border-purple-400/50 text-purple-200 font-extrabold">156</span>
               </button>
             )}
 
