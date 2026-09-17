@@ -13,6 +13,7 @@ import {
   Download,
   Save,
   Check,
+  BookOpen,
 } from 'lucide-react';
 import { FACILITY_INFO } from '../types/inspection';
 import { PWAInstallBanner } from './PWAInstallBanner';
@@ -25,6 +26,7 @@ interface HeaderProps {
   onResetAudit: () => void;
   isCompleted: boolean;
   onOpenSourceDoc?: () => void;
+  onOpenQAGuide?: () => void;
   onOpenMonthlySummary?: () => void;
   isVoiceListening?: boolean;
   onToggleVoice?: () => void;
@@ -40,6 +42,7 @@ export const Header: React.FC<HeaderProps> = ({
   formattedTime,
   onResetAudit,
   onOpenSourceDoc,
+  onOpenQAGuide,
   onOpenMonthlySummary,
   isVoiceListening,
   onToggleVoice,
@@ -145,11 +148,24 @@ export const Header: React.FC<HeaderProps> = ({
               </button>
             )}
 
+            {/* Coverall QA Inspection Method Guide button */}
+            {onOpenQAGuide && (
+              <button
+                onClick={onOpenQAGuide}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-900/60 to-purple-800/60 hover:from-purple-800/80 hover:to-purple-700/80 text-purple-200 border border-purple-600/60 text-xs font-semibold transition shadow-sm cursor-pointer"
+                title="Open Coverall QA Inspection Method Guide, Walkthrough Procedures & 9/7/5 Rating Rules"
+              >
+                <BookOpen className="w-3.5 h-3.5 text-purple-300" />
+                <span className="hidden sm:inline">QA Guide</span>
+                <span className="text-[10px] bg-purple-950 px-1 rounded border border-purple-800">FBO</span>
+              </button>
+            )}
+
             {/* Source Document Reference button */}
             {onOpenSourceDoc && (
               <button
                 onClick={onOpenSourceDoc}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-900/40 hover:bg-purple-800/60 text-purple-200 border border-purple-700/50 text-xs font-semibold transition shadow-sm"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-900/40 hover:bg-purple-800/60 text-purple-200 border border-purple-700/50 text-xs font-semibold transition shadow-sm cursor-pointer"
                 title="View Coverall Health-Based Cleaning System Original Work Agreement & Schedule (Acct #3007)"
               >
                 <FileText className="w-3.5 h-3.5 text-purple-300" />

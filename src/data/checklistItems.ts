@@ -7,6 +7,21 @@ export const CORE_SERVICES: InspectionItem[] = [
     category: 'core',
     applicableDays: ['all'],
     description: 'Clean entrance glass doors inside/out, sanitize door handles & push plates, wipe reception check-in counter, vacuum walk-on mats, and mop foyer floor.',
+    inspectionGuide: {
+      coverallSection: 'Entry & Common Areas',
+      inspectionProcedure: 'Stand at entrance doors and inspect glass panes inside and out at eye level and handle height; inspect door tracks and thresholds; lift walk-on mats to check underneath and edges; inspect reception check-in desk and small desktop accessories.',
+      inspectionSteps: [
+        'Check for smudges or streaks on the entrance glass as you open the door (Detail Cleaning Step 2).',
+        'Inspect entrance door tracks and metal thresholds for loose gravel, sand, and grit build-up.',
+        'Check walk-on entrance mats for loose debris and soil not removed during vacuuming (Floors Step 1).',
+        'Check reception counter, check-in touchscreen, and keyboard drawer for dust, spills, and fingerprints (Detail Cleaning Step 3).',
+        'Verify foyer floor and baseboards are free of mop splashes and sticky spots (Floors Step 4 & 5).',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): Crystal streak-free glass inside/out, clean tracks, vacuumed mats without sand or debris, sanitized reception counter dusted under accessories, polished floor.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Minor fingerprints or water spots on glass, slight grit in corners of tracks, light dust visible on counter corners.',
+      belowStandard: 'Grade 5 (Below Standards): Heavy grease smudges on glass, soiled/unvacuumed mats with tracked mud, sticky floor with visible debris. Must be corrected within 24 hours.',
+      fboProTip: 'Check for smudges or streaks on the entrance glass as you open the door. First impressions set the tone for the entire customer walk-through.',
+    },
   },
   {
     id: 'core-office-cleaning',
@@ -14,6 +29,21 @@ export const CORE_SERVICES: InspectionItem[] = [
     category: 'core',
     applicableDays: ['all'],
     description: 'Spot clean and sanitize desks, credenzas, tables, properly position office furniture, empty office trash with fresh liner, vacuum carpet, and turn off office lights.',
+    inspectionGuide: {
+      coverallSection: 'Office Areas & Detail Cleaning',
+      inspectionProcedure: 'Walk through manager and staff offices. Check desk surfaces, underneath small desk items, keyboard drawers, behind computer monitors, inside waste cans, and beneath desks around wiring.',
+      inspectionSteps: [
+        'Check desks - top, side, keyboard drawer for fingerprints, dust, spills; verify if small office items were dusted underneath (Detail Cleaning Step 3).',
+        'Check underneath desks for accumulation of debris or dust bunnies - especially trapped under power cords, computer cables, and garbage cans (Floors Step 7).',
+        'Check doors, door frames, and walls for fingerprints, marks, and spots/splash marks around garbage cans (Detail Cleaning Step 6).',
+        'Check clean garbage cans, fresh liner installed, and surrounding floor area for debris (Detail Cleaning Step 5).',
+        'Ensure office furniture is neatly positioned, computer monitors dusted, and office lights switched off upon exit.',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): Surfaces sanitized and dusted underneath items, wire channels free of dust bunnies, clean liner in wastebasket, orderly furniture, lights off.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Dust visible on sides of desks, items not lifted when dusting, minor fingerprints on door frame.',
+      belowStandard: 'Grade 5 (Below Standards): Debris/coffee rings on desk surfaces, heavy dust bunnies in computer cables, unemptied or unlined trash cans. Must be corrected within 24 hours.',
+      fboProTip: 'Have small office items been dusted underneath? Check keyboard trays and behind computer terminals where dust gathers out of plain view.',
+    },
   },
   {
     id: 'core-restrooms-showers',
@@ -21,6 +51,26 @@ export const CORE_SERVICES: InspectionItem[] = [
     category: 'core',
     applicableDays: ['all'],
     description: 'Disinfect all shower stalls, toilets, urinals, sink basins, fixtures, spot clean walls/partitions, and restock supplies.',
+    inspectionGuide: {
+      coverallSection: 'Restrooms & Showers',
+      inspectionProcedure: 'Enter restrooms and immediately assess for foul odors. Inspect floor corners and behind all toilets, undersides of seats, bowl faces, urinals, stall partitions, mirrors, sinks, soap/paper dispensers, and shower stalls.',
+      inspectionSteps: [
+        'Check that NO foul odors are present upon entry (Restrooms Step 1).',
+        'Check all corners of floors and behind toilets for visible dust, dirt, hair, and mop residue (Restrooms Step 2).',
+        'Check insides and outsides of all toilets and urinals for visible soil, especially on bowl faces and under toilet seats (Restrooms Step 3).',
+        'Inspect top edges of all partitions for soil and dust (Restrooms Step 4).',
+        'Check all mirrors and dispensers for a polished and sparkling appearance (Restrooms Step 5).',
+        'Check sink areas for soil and soap build-up (Restrooms Step 6).',
+        'Spot clean walls particularly around urinals, toilets, underneath paper towel dispensers, around garbage cans, and partition walls for graffiti (Restrooms Step 7).',
+        'Check paper supplies and that soap dispensers are full and working properly (Restrooms Step 8).',
+        'Check all chrome or stainless surfaces for hard water build-up or debris (Restrooms Step 9).',
+        'Check shower stalls, glass doors, tile walls, and drains for soap scum, hair, and hard water scale.',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): Completely odor-free, sparkling chrome/mirrors, zero hair/dirt behind commodes, pristine toilet seat undersides, fully stocked dispensers, clean showers.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Minor water spots on faucets, small hair or dust in remote corner behind toilet, slight soap residue in drain basin.',
+      belowStandard: 'Grade 5 (Below Standards): Foul odor detected, soiled toilet bowl/seat underside, empty soap or paper towel dispenser, soap scum/hair in shower drains. Must be corrected within 24 hours.',
+      fboProTip: 'If a customer says something is wrong mark a 7 even if you do not agree. Never point out defects in service to the customer, but quietly note them. Read the previous month\'s report for repeated issues.',
+    },
   },
   {
     id: 'core-mirrors-glass',
@@ -28,6 +78,20 @@ export const CORE_SERVICES: InspectionItem[] = [
     category: 'core',
     applicableDays: ['all'],
     description: 'Spot clean all weight room mirrors, training room glass, smudges, and splash marks.',
+    inspectionGuide: {
+      coverallSection: 'Entry & Common Areas / Restrooms',
+      inspectionProcedure: 'Walk along weight room mirror walls and training room glass partitions. View mirrors from multiple angles and under overhead lighting to spot hazing, streaks, or splash marks.',
+      inspectionSteps: [
+        'Check full mirror surfaces from a 45-degree angle to reveal streaks, smudges, or cloudy chemical film (Detail Cleaning Step 2).',
+        'Inspect mirror tops, frame ledges, and bottom mounting channels for settled dust or mop splash marks (Restrooms Step 5).',
+        'Inspect training room glass doors and partition glass for handprints and sweat smudges.',
+        'Verify no lint or towel wipe marks remain across reflective surfaces.',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): Crystal-clear, streak-free reflection from edge to edge; frame channels dusted; zero chemical haze or handprints.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Minor streak visible only from sharp angle, slight lint near bottom edge, light dust on upper frame.',
+      belowStandard: 'Grade 5 (Below Standards): Extensive handprints, cloudy film across viewing area, water splash streaks left on mirrors. Must be corrected within 24 hours.',
+      fboProTip: 'Stand at a 45-degree angle to the mirror under ceiling lights to easily reveal streaks and residue that look invisible when standing straight.',
+    },
   },
   {
     id: 'core-trash',
@@ -35,6 +99,20 @@ export const CORE_SERVICES: InspectionItem[] = [
     category: 'core',
     applicableDays: ['all'],
     description: 'Empty all trash bins throughout gym floor, locker rooms, and office; replace with fresh liners.',
+    inspectionGuide: {
+      coverallSection: 'Detail Cleaning / Office Areas / Restrooms',
+      inspectionProcedure: 'Inspect every trash and recycling station throughout gym floor, locker rooms, break area, and office. Look inside the receptacle, around the rim/lid, and down at the surrounding floor and adjacent wall.',
+      inspectionSteps: [
+        'Check for clean garbage cans and surrounding floor area for debris (Detail Cleaning Step 5).',
+        'Check doors, door frames, and walls for splash marks and beverage spots around garbage cans (Detail Cleaning Step 6).',
+        'Ensure fresh, correctly sized liner is installed and cuffed neatly around the receptacle rim.',
+        'Verify gym sanitizing wipe disposal bins are emptied and not overflowing.',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): Fresh liner installed, can exterior wiped clean of spills, surrounding floor swept/mopped, adjacent walls free of beverage splashes.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Receptacle emptied but exterior rim has slight dust or finger mark; minor lint near base of can.',
+      belowStandard: 'Grade 5 (Below Standards): Overflowing waste, missing trash liner, beverage stains/splash marks on adjacent wall or floor. Must be corrected within 24 hours.',
+      fboProTip: 'Check walls and baseboards immediately behind and beside trash cans—dripping beverage containers frequently leave stains when discarded.',
+    },
   },
   {
     id: 'core-water-dispensers',
@@ -42,6 +120,20 @@ export const CORE_SERVICES: InspectionItem[] = [
     category: 'core',
     applicableDays: ['all'],
     description: 'Sanitize bottle refill stations, drinking fountains, nozzles, splash panels, and drip trays.',
+    inspectionGuide: {
+      coverallSection: 'Entry & Common Areas (Drinking Fountains & Stainless Steel)',
+      inspectionProcedure: 'Examine drinking fountain and bottle refill station. Inspect dispensing spout/nozzle, sensor glass, stainless basin, backsplash panel, and lift the drain grate.',
+      inspectionSteps: [
+        'Check all chrome or stainless surfaces for hard water build-up, calcification, or debris (Restrooms Step 9).',
+        'Inspect water fountain nozzle and bottle filler sensor for biological slime, mineral scale, or mold.',
+        'Check basin and splash panel for water spots, streaks, and chemical residue.',
+        'Inspect drain grate and drain trough for trapped hair, lint, and stagnant water buildup.',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): Polished stainless steel with uniform grain, scale-free dispensing nozzle, sparkling clean basin, clear free-flowing drain grate.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Light water droplet spots on backsplash, minor mineral film near base of faucet spout.',
+      belowStandard: 'Grade 5 (Below Standards): Green or black slime on nozzle, clogged/slimy drain grate with hair, heavy calcified water stains on stainless steel. Must be corrected within 24 hours.',
+      fboProTip: 'Inspect the underside of the dispensing nozzle where mineral deposits and moisture accumulate undetected.',
+    },
   },
   {
     id: 'core-cubbies',
@@ -49,6 +141,20 @@ export const CORE_SERVICES: InspectionItem[] = [
     category: 'core',
     applicableDays: ['all'],
     description: 'Wipe down and sanitize member storage cubbies, lockers, and bag check shelves.',
+    inspectionGuide: {
+      coverallSection: 'Common Areas / Furniture / High & Low Dusting',
+      inspectionProcedure: 'Inspect member storage cubby cubicles, day lockers, and bag check shelves. Check interior corners, upper shelves, locker door latches, and the floor underneath the unit.',
+      inspectionSteps: [
+        'Check horizontal cubby surfaces and interior corners for dust, gym chalk, sweat rings, and forgotten items.',
+        'Check locker door handles, number tags, and latches for fingerprints and grease.',
+        'Check tops of locker banks up to 6ft for accumulated dust and lint (Detail Cleaning Step 11).',
+        'Check floor area and kickplate beneath cubbies for dropped items or dust bunnies (Floors Step 7).',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): Sanitized, dry cubby compartments, no gym chalk or dirt in corners, clean handles, clear floor beneath unit.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Slight chalk dust in rear corner of one cubby, minor dust on upper ledge.',
+      belowStandard: 'Grade 5 (Below Standards): Heavy chalk accumulation, sticky liquid residue inside cubby, debris or trash left under cubbies. Must be corrected within 24 hours.',
+      fboProTip: 'Run a finger along the inner rear corner of cubby shelves—this is where chalk dust and dirt pack in if not vacuumed or wiped properly.',
+    },
   },
   {
     id: 'core-floor-mopping',
@@ -56,6 +162,21 @@ export const CORE_SERVICES: InspectionItem[] = [
     category: 'core',
     applicableDays: ['all'],
     description: 'Dust mop and damp mop all hard surfaces, entryway tile, and restroom floors with neutral disinfectant detergent.',
+    inspectionGuide: {
+      coverallSection: 'Steps for Reviewing and Grading Floors',
+      inspectionProcedure: 'Inspect all hard floor surfaces (tile, vinyl, rubber, hardwood). Walk the floor to test for stickiness; check grout lines, corners, baseboards, and behind open doors.',
+      inspectionSteps: [
+        'Check the general appearance of all floor coverings for loose debris and build up of soils not removed during mopping (Floors Step 1).',
+        'Check tiling for dull appearance, streaks or dirty grout lines (Floors Step 2).',
+        'Check that floors are NOT sticky (Floors Step 5).',
+        'Check corners and edges of hard floors for debris and dirt; close doors and check behind (Floors Step 6).',
+        'Check all baseboards and furniture for splash areas where mopping may have left chemical splashes (Floors Step 4).',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): Clean, uniform non-slippery floor, zero stickiness, no mop streak swirls, corners clean, baseboards free of chemical mop splashes.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Slight mop streak under glare, minor lint in corner behind door, faint water spot on baseboard.',
+      belowStandard: 'Grade 5 (Below Standards): Sticky/tacky floor from chemical buildup, dark soil rings in corners, heavy white mop splashes dried on baseboards, dirty grout lines. Must be corrected within 24 hours.',
+      fboProTip: 'Always close doors and look behind them. Floor mops often push dirt behind open doors instead of collecting it.',
+    },
   },
   {
     id: 'core-closet-supplies',
@@ -63,6 +184,20 @@ export const CORE_SERVICES: InspectionItem[] = [
     category: 'core',
     applicableDays: ['all'],
     description: 'Ensure supply closet is organized, chemical bottles sealed, equipment stored, office lights switched off, and all exterior doors locked (1 Fob + 1 Key).',
+    inspectionGuide: {
+      coverallSection: 'FBO Guidelines (Logbook, MSDS, Chemical Compliance & Closing Security)',
+      inspectionProcedure: 'Enter the janitor supply closet. Review logbook, check chemical container labels, inspect mop storage and buckets, check equipment cleanliness, test office lights, and physically check lock latches on all exterior exits.',
+      inspectionSteps: [
+        'Check Logbook: Are the service calendars and MSDS (Material Safety Data Sheets) up-to-date? (FBO Guidelines Step 6).',
+        'Check chemical spray bottles: verify all secondary containers have GHS/OSHA compliant product labels (no unmarked chemicals).',
+        'Inspect janitor closet housekeeping: mop heads hung up or inverted to dry, mop buckets drained and rinsed, floor dry and clear.',
+        'Check closing security: office non-emergency lights turned off, supply closet locked, all exterior emergency and main doors deadlocked and secured (1 Fob + 1 Key check).',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): Current MSDS & signed logbook, 100% labeled chemicals, organized and dry closet, all exterior doors locked securely, lights extinguished.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Mop bucket drained but not fully rinsed, closet supplies slightly cluttered but safe.',
+      belowStandard: 'Grade 5 (Below Standards): Unmarked chemical spray bottles, wet dirty mop resting on floor, unsigned logbook, unlocked exterior door or security failure. Must be corrected within 24 hours.',
+      fboProTip: 'FBO Guidelines Step 6 explicitly requires checking logbooks, MSDS sheets, and proper communication sign in/out sheets on every inspection walkthrough.',
+    },
   },
 ];
 
@@ -73,6 +208,20 @@ export const SUNDAY_SPECIFIC: InspectionItem[] = [
     category: 'sunday',
     applicableDays: ['sunday'],
     description: 'Clean and sanitize staff/member microwave turntable and interior walls.',
+    inspectionGuide: {
+      coverallSection: 'Lunchroom / Coffee Stn / Kitchen (Appliances)',
+      inspectionProcedure: 'Open microwave door and inspect ceiling, sides, turntable glass, roller ring, door gasket, and front keypad/handle.',
+      inspectionSteps: [
+        'Check microwave ceiling and side walls for baked-on food splatters, grease, and sauce drips.',
+        'Remove or inspect glass turntable plate and roller ring underneath for crumbs and liquid spills.',
+        'Check microwave exterior handle, touchpad buttons, and top housing for fingerprints, grease, and dust.',
+        'Verify no offensive lingering food odors remain inside the cavity.',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): Completely odor-free, spotless interior ceiling/walls, sanitized turntable clean underneath, smudge-free keypad.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Minor sauce spot on inner ceiling, faint fingerprints on exterior handle, light crumb residue beneath turntable.',
+      belowStandard: 'Grade 5 (Below Standards): Baked-on crusted food, foul odor, greasy touch pad, debris under roller ring. Must be corrected within 24 hours.',
+      fboProTip: 'Look directly up at the microwave ceiling—grease and soup splatters accumulate there first while the bottom turntable looks deceptively clean.',
+    },
   },
   {
     id: 'sun-partition-glass',
@@ -80,6 +229,19 @@ export const SUNDAY_SPECIFIC: InspectionItem[] = [
     category: 'sunday',
     applicableDays: ['sunday'],
     description: 'Dust and wipe all architectural glass partition dividers and frames.',
+    inspectionGuide: {
+      coverallSection: 'Steps for Reviewing and Grading Detail Cleaning & Office Areas',
+      inspectionProcedure: 'Inspect glass partition dividers separating gym training zones and manager spaces. Check glass panels at eye level and check metal mounting frames.',
+      inspectionSteps: [
+        'Inspect glass partitions from an angle to detect dust accumulation, fingerprints, and smudges (Detail Cleaning Step 2).',
+        'Check top metal framing, upright brackets, and floor mounting tracks for settled dust and lint.',
+        'Verify both sides of divider glass have been wiped with a clean microfiber cloth.',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): Clear glass free of surface dust, smudges, and wipe marks; frames dusted end-to-end.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Visible gray dust film on glass, fingerprints around edges, lint on frame channels.',
+      belowStandard: 'Grade 5 (Below Standards): Heavy handprints, cloudy film across glass, thick dust settled along top framing channels. Must be corrected within 24 hours.',
+      fboProTip: 'Check both sides of partition glass—dust frequently settles on the office side while fingerprints appear on the gym walkway side.',
+    },
   },
   {
     id: 'sun-traffic-vacuum',
@@ -87,6 +249,19 @@ export const SUNDAY_SPECIFIC: InspectionItem[] = [
     category: 'sunday',
     applicableDays: ['sunday'],
     description: 'Vacuum main thoroughfares, cardio row walkways, and entrance tracks thoroughly.',
+    inspectionGuide: {
+      coverallSection: 'Steps for Reviewing and Grading Floors',
+      inspectionProcedure: 'Walk primary gym walkways, cardio thoroughfares, and transition strips. Check pile appearance, grit in traffic lanes, and machine bases.',
+      inspectionSteps: [
+        'Walk main thoroughfares and cardio row walkways to check for loose gravel, dirt, and lint (Floors Step 1).',
+        'Inspect transition strips between turf, rubber, and carpet for trapped grit and dust.',
+        'Check bottoms and lower sides of cardio equipment and furniture along the path to ensure vacuuming did not throw dust onto them (Floors Step 9).',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): Crisp pile appearance, zero visible gravel or debris in travel lanes, clean transitions.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Small crushed debris in walking paths, slight grit in transition joints.',
+      belowStandard: 'Grade 5 (Below Standards): Untreated gravel/mud trail, visible dust settled on machine bases, debris trapped in seams. Must be corrected within 24 hours.',
+      fboProTip: 'Carpet vacuuming done properly leaves no dust or limited dust on the bottoms of the furniture such as lower sides of desks and chair legs.',
+    },
   },
 ];
 
@@ -98,6 +273,20 @@ export const SUNDAY_MONTHLY: InspectionItem[] = [
     applicableDays: ['sunday'],
     isMonthly: true,
     description: 'Monthly scheduled deep clean of interior refrigerator shelves, crispers, and exterior handle.',
+    inspectionGuide: {
+      coverallSection: 'Lunchroom / Coffee Stn / Kitchen (Appliances)',
+      inspectionProcedure: 'Open breakroom refrigerator. Inspect all glass shelves, door bins, crisper drawers, door gasket folds, and exterior handle.',
+      inspectionSteps: [
+        'Inspect all interior shelves, door bins, and crisper drawers for spills, sticky rings, and expired debris.',
+        'Check interior walls and roof for stains and condensation odors.',
+        'Inspect rubber door gasket folds for crumbs, mold, or spills.',
+        'Wipe and sanitize exterior door handle, face, and top edge.',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): Clean sanitized shelves, no sticky residues, clean gasket seal, fresh odor, polished exterior handle.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Minor dry crumb in bottom bin, slight smudge on exterior door panel.',
+      belowStandard: 'Grade 5 (Below Standards): Spilled liquid rings on glass shelves, debris trapped in door seals, sticky exterior handle, sour odor. Must be corrected within 24 hours.',
+      fboProTip: 'Pull open the folds of the magnetic door gasket—spilled milk, condensation, and crumbs easily hide inside the rubber ridges.',
+    },
   },
   {
     id: 'sun-monthly-partition-detail',
@@ -106,6 +295,19 @@ export const SUNDAY_MONTHLY: InspectionItem[] = [
     applicableDays: ['sunday'],
     isMonthly: true,
     description: 'Monthly edge-to-edge streak-free squeegee detail on all gym partition glass panes.',
+    inspectionGuide: {
+      coverallSection: 'Office Areas & Detail Cleaning (Partition Glass Detail)',
+      inspectionProcedure: 'Inspect partition glass panes under direct lighting from corner to corner. Check perimeter silicone seals and mounting clips.',
+      inspectionSteps: [
+        'Inspect entire pane from corner to corner in bright light for water spots, streaks, and chemical haze.',
+        'Check edges adjacent to aluminum frames to ensure squeegee blade reached all corners without leaving dirty borders.',
+        'Inspect base clips and silicon seals for trapped dirt.',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): 100% streak-free, crystal-clear squeegee finish from edge to edge with zero border lines.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Single faint squeegee line near frame perimeter, slight water droplet at bottom corner.',
+      belowStandard: 'Grade 5 (Below Standards): Streaks along frame perimeter, haze in center, drip marks at base. Must be corrected within 24 hours.',
+      fboProTip: 'Verify that squeegee detailing reached all four corners. Incomplete blade strokes leave dirty boundary strips along aluminum frames.',
+    },
   },
 ];
 
@@ -116,6 +318,20 @@ export const TUESDAY_SPECIFIC: InspectionItem[] = [
     category: 'tuesday',
     applicableDays: ['tuesday'],
     description: 'Dust low shelves, surfaces, corners, picture frames, and high areas up to 6 feet.',
+    inspectionGuide: {
+      coverallSection: 'Steps for Reviewing and Grading Detail Cleaning',
+      inspectionProcedure: 'Scan all wall surfaces, upper corners, picture frames, clocks, television mount brackets, baseboard ledges, and areas behind computer screens up to 6 feet high.',
+      inspectionSteps: [
+        'Look in all room corners and wall junctions up to 6 feet for cobwebs (Detail Cleaning Step 10).',
+        'Check picture frames, wall art, motivational signage, and clocks for dust on top ledges (Detail Cleaning Step 9).',
+        'Check low horizontal surfaces: baseboard ledges, chair rails, low shelving, and emergency light boxes.',
+        'Inspect areas behind computer terminals and television screens where dust accumulates (Detail Cleaning Step 11).',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): Zero cobwebs in corners, dust-free picture tops and wall signs, clean low rails and baseboard ledges.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Faint dust on top edge of high picture frame, minor lint on low baseboard ledge.',
+      belowStandard: 'Grade 5 (Below Standards): Visible cobwebs hanging in corners, thick gray dust on picture frames or behind TV screens. Must be corrected within 24 hours.',
+      fboProTip: 'Look in corners for cobwebs and check all high-dust areas and horizontal surfaces where dust can accumulate, including areas behind computer terminals.',
+    },
   },
   {
     id: 'tue-surface-dusting',
@@ -123,6 +339,21 @@ export const TUESDAY_SPECIFIC: InspectionItem[] = [
     category: 'tuesday',
     applicableDays: ['tuesday'],
     description: 'Dust all fixtures and office furniture including computer monitors, file cabinets, desks, credenzas, countertops, display units, and window ledges.',
+    inspectionGuide: {
+      coverallSection: 'Steps for Reviewing and Grading Detail Cleaning & Office Areas',
+      inspectionProcedure: 'Examine all horizontal and vertical furniture surfaces in office, reception, and member lounge. Lift small desktop accessories to inspect underneath.',
+      inspectionSteps: [
+        'Check desks - top, side, keyboard drawer for dust, fingerprints, and spills (Detail Cleaning Step 3).',
+        'Lift small desk items (pen holders, staplers, card displays) to confirm dusting was done underneath (Detail Cleaning Step 3).',
+        'Check window ledges and blinds for dust and dried bugs (Detail Cleaning Step 7).',
+        'Check under lobby chairs and chair rungs for dust (Detail Cleaning Step 8).',
+        'Check counters, file cabinets, display units, and printer stands for dust accumulation.',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): Thoroughly dusted horizontal surfaces; small desk items lifted and wiped under; dust-free chair bases and window ledges.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Slight dust ring around desk items, light dust on lower filing cabinet tier.',
+      belowStandard: 'Grade 5 (Below Standards): Dust rings under staplers/desk accessories, dust on chair legs/rungs, dead bugs on window sills. Must be corrected within 24 hours.',
+      fboProTip: 'Have the small office items been dusted underneath? Check under lobby chairs and check pictures on walls and chairs for dust.',
+    },
   },
 ];
 
@@ -134,6 +365,20 @@ export const TUESDAY_MONTHLY: InspectionItem[] = [
     applicableDays: ['tuesday'],
     isMonthly: true,
     description: 'Monthly detailed dusting of window blinds and full wash of exterior & interior entrance glass.',
+    inspectionGuide: {
+      coverallSection: 'Entry & Common Areas (Blinds / Window Sills & Entrance Glass)',
+      inspectionProcedure: 'Inspect horizontal window blind slats top and underside, window sills, tilt wands, and complete exterior entrance glass panels and frames.',
+      inspectionSteps: [
+        'Inspect window blind slats top and underside for accumulated dust, grease, and dried bugs (Detail Cleaning Step 7).',
+        'Check blind pull cords and tilt wands for grime and dust.',
+        'Inspect full exterior and interior entrance glass panels, transom, and side glass for dirt, smog film, and finger streaks.',
+        'Check exterior door threshold and bottom sweep for grit.',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): Clean dust-free blind slats, spotless window sills free of dried insects, sparkling crystal entrance glass inside and out.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Minor dust on rear side of two blind slats, small water mark on exterior bottom glass pane.',
+      belowStandard: 'Grade 5 (Below Standards): Heavy gray dust on blinds, dead insects on sills, rain spots/finger smudges on entrance glass. Must be corrected within 24 hours.',
+      fboProTip: 'Tilt blinds both up and down during inspection—dust that is hidden when blinds are closed becomes immediately visible when slats are opened.',
+    },
   },
   {
     id: 'tue-monthly-vents-fixtures',
@@ -142,6 +387,19 @@ export const TUESDAY_MONTHLY: InspectionItem[] = [
     applicableDays: ['tuesday'],
     isMonthly: true,
     description: 'Monthly vacuuming and wiping of HVAC return air vents, diffusers, and hanging light fixtures.',
+    inspectionGuide: {
+      coverallSection: 'Steps for Reviewing and Grading Detail Cleaning (Vents / Air Exchange)',
+      inspectionProcedure: 'Look up at all ceiling HVAC supply and return air diffusers, ceiling tiles, and hanging light fixtures throughout the facility.',
+      inspectionSteps: [
+        'Inspect HVAC supply diffusers and return air grilles on ceiling for lint whiskers and dust buildup.',
+        'Check the ceiling tiles and drywall immediately surrounding vents for dark air-smudge rings.',
+        'Check hanging light fixtures, chandeliers, or pendant shades for dust on upper rims and bug deposits inside shades.',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): Vacuumed vent grilles free of dust webs, clean diffuser vanes, dust-free light fixture housings.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Slight lint on inner vane of one grille, faint shadow on adjacent tile edge.',
+      belowStandard: 'Grade 5 (Below Standards): Dark dust buildup on vent louvers, dust blowing from edges, bugs visible in light fixtures. Must be corrected within 24 hours.',
+      fboProTip: 'Review logbook calendars to establish monthly performance. If air exchange vents show heavy build-up between monthly cycles, suggest increased frequency to customer.',
+    },
   },
 ];
 
@@ -152,6 +410,20 @@ export const THURSDAY_SPECIFIC: InspectionItem[] = [
     category: 'thursday',
     applicableDays: ['thursday'],
     description: 'Damp wipe and disinfect office desks, manager chairs, client meeting tables, credenzas, and shelves.',
+    inspectionGuide: {
+      coverallSection: 'Office Areas & Detail Cleaning (Furniture)',
+      inspectionProcedure: 'Touch desk surfaces, check conference tables, inspect chair armrests and bases, and check credenzas for sticky spills or dust.',
+      inspectionSteps: [
+        'Check desk tops and conference tables for coffee rings, sticky patches, pen marks, and fingerprints.',
+        'Check chair armrests, seat edges, and backrests for body oils, dust, and spills.',
+        'Check filing cabinet handles and drawer fronts for smudges and handprints.',
+        'Verify a damp cloth with disinfectant detergent was used rather than a dry rag that only redistributes dust.',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): Sanitized, smooth streak-free surfaces; zero coffee rings; clean disinfected chair armrests and handles.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Minor water drying streak on desk laminate, slight smudge on file cabinet handle.',
+      belowStandard: 'Grade 5 (Below Standards): Sticky rings on desktop, fingerprints on file handles, dusty chair bases. Must be corrected within 24 hours.',
+      fboProTip: 'Check armrests and desk edges where hands rest—body oils and lotions build up quickly and require damp disinfectant wiping.',
+    },
   },
   {
     id: 'thu-sanitize-phones',
@@ -159,6 +431,20 @@ export const THURSDAY_SPECIFIC: InspectionItem[] = [
     category: 'thursday',
     applicableDays: ['thursday'],
     description: 'Disinfect office desk phones, touchscreens, keypads, and check-in station scanners.',
+    inspectionGuide: {
+      coverallSection: 'Steps for Reviewing and Grading Detail Cleaning (Telephones & Electronics)',
+      inspectionProcedure: 'Pick up telephone handsets; inspect earpieces, mouthpieces, keypad buttons, coiled cords, and check-in barcode scanners/touchscreens.',
+      inspectionSteps: [
+        'Check telephones - headset and cradles for facial oils, makeup, and dust (Detail Cleaning Step 4).',
+        'Check phone cradle, under the handset, and around dialing keys for dirt and lint.',
+        'Check gym member check-in touchscreens, barcode scanners, and keypads for smudges and oil buildup.',
+        'Confirm electronic screens are streak-free and sanitized with electronics-safe disinfectant.',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): Sanitized telephone handsets and cradles, clean coils, streak-free touchscreens, and disinfected keypads.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Faint fingerprint on touch screen corner, slight lint in telephone cord coil.',
+      belowStandard: 'Grade 5 (Below Standards): Makeup/grease on earpiece, dust under handset cradle, finger smudges blurring touchscreen scanner. Must be corrected within 24 hours.',
+      fboProTip: 'Check telephones - headset and cradles. Detail Cleaning Step 4 highlights that telephones harbor high microbial counts and must be inspected under the handset.',
+    },
   },
   {
     id: 'thu-carpet-spot-clean',
@@ -166,6 +452,19 @@ export const THURSDAY_SPECIFIC: InspectionItem[] = [
     category: 'thursday',
     applicableDays: ['thursday'],
     description: 'Vacuum and remove spots (1" diameter) from carpet and walk-on mats; vacuum or damp mop floor protector mats under office desks.',
+    inspectionGuide: {
+      coverallSection: 'Steps for Reviewing and Grading Floors (Carpets Spots / Stains)',
+      inspectionProcedure: 'Inspect carpeted zones for spots or spills (1 inch diameter or larger). Examine clear plastic floor mats under office chairs and their perimeters.',
+      inspectionSteps: [
+        'Inspect carpet for spots or stains (1" diameter or larger) from coffee, water spills, or tracked-in soil.',
+        'Check plastic desk chair floor mats: wipe or vacuum surface; check under mat edges for trapped grit that scratches floors.',
+        'Verify spot treatment removed discoloration without leaving chemical bleaching or sticky detergent residue.',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): All identifiable carpet spots treated and extracted, clean chair mats, clear edges.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Very faint residual shadow of old stain, minor lint at plastic mat border.',
+      belowStandard: 'Grade 5 (Below Standards): Untreated fresh coffee spots, muddy footprints, sticky residue, dirty plastic mat with dirt underneath. Must be corrected within 24 hours.',
+      fboProTip: 'Carpets with high traffic patterns or deep stains present an opportunity to suggest Special Services carpet cleaning to the customer (Floors Step 8).',
+    },
   },
   {
     id: 'thu-carpet-vacuum-full',
@@ -173,6 +472,20 @@ export const THURSDAY_SPECIFIC: InspectionItem[] = [
     category: 'thursday',
     applicableDays: ['thursday'],
     description: 'Complete wall-to-wall vacuuming of all carpeted cardio, turf transition, and office zones.',
+    inspectionGuide: {
+      coverallSection: 'Steps for Reviewing and Grading Floors (Wall-to-Wall Carpet)',
+      inspectionProcedure: 'Walk the entire perimeter of carpeted areas, look under desks, check corners behind open doors, and examine lower furniture sides.',
+      inspectionSteps: [
+        'Check the general appearance of all floor coverings for loose debris and build up of soils not removed during vacuuming (Floors Step 1).',
+        'Check underneath desks for accumulation of debris or dust bunnies - especially trapped under power cords/computer cables and garbage cans (Floors Step 7).',
+        'Check corners and edges of carpet and hard floors for debris and dirt; close doors and check behind (Floors Step 6).',
+        'Check carpet vacuuming - done properly there will be no dust or limited dust on the bottoms of the furniture such as lower sides of desks, filing cabinets, and chair legs (Floors Step 9).',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): Wall-to-wall vacuum lines, clean corners, clear space under desks and wires, zero dust kicked onto furniture legs.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Single paper clip or lint under desk, slight dust accumulation in far corner.',
+      belowStandard: 'Grade 5 (Below Standards): Paperclips/dirt under desks, dust bunnies caught in computer cables, unvacuumed corners behind doors. Must be corrected within 24 hours.',
+      fboProTip: 'Carpet vacuuming - done properly there will be no dust or limited dust on the bottoms of the furniture such as lower sides of desks, filing cabinets and chair legs (Floors Step 9).',
+    },
   },
   {
     id: 'thu-traffic-vacuum',
@@ -180,6 +493,19 @@ export const THURSDAY_SPECIFIC: InspectionItem[] = [
     category: 'thursday',
     applicableDays: ['thursday'],
     description: 'Targeted high-speed pass on entrance mats, stretching mats perimeter, and free-weight lanes.',
+    inspectionGuide: {
+      coverallSection: 'Steps for Reviewing and Grading Floors (Traffic Lanes)',
+      inspectionProcedure: 'Inspect high-traffic gym lanes, free-weight walkways, and stretching area perimeters for tracked gravel, sweat stains, and lint.',
+      inspectionSteps: [
+        'Inspect primary gym corridors, weight room rubber/carpet transitions, and high-wear pathways.',
+        'Check walk-on entrance mats for grit tracked from parking lot.',
+        'Identify wear patterns or heavy traffic matting that may require special restorative shampoo extraction (Floors Step 8).',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): Clean traffic lanes free of visible soil, grit, or debris; upright carpet pile.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Light dust trail along high-traffic lane edge, minor lint on mat perimeter.',
+      belowStandard: 'Grade 5 (Below Standards): Matted debris in walkway, visible dirt trail from entrance, soil accumulated along rubber borders. Must be corrected within 24 hours.',
+      fboProTip: 'If traffic lanes show heavy soil or wear patterns, note them as an opportunity for Special Services interim/restorative carpet care (Floors Step 8).',
+    },
   },
 ];
 
@@ -191,6 +517,19 @@ export const THURSDAY_MONTHLY: InspectionItem[] = [
     applicableDays: ['thursday'],
     isMonthly: true,
     description: 'Monthly crevice tool vacuuming along all baseboard perimeters, weight racks, and corners.',
+    inspectionGuide: {
+      coverallSection: 'Steps for Reviewing and Grading Floors (Edges & Corners)',
+      inspectionProcedure: 'Inspect the perimeter seam where carpet meets baseboards around entire facility for accumulated lint and black filtration soil. Check corners, baseboard edges behind equipment racks, and behind all doors.',
+      inspectionSteps: [
+        'Inspect the perimeter seam where carpet meets baseboards around entire facility for accumulated lint and filtration soil.',
+        'Check corners and edges of carpet and hard floors for debris and dirt; close doors and check behind (Floors Step 6).',
+        'Verify crevice nozzle was used to extract embedded dirt from baseboard channels and under weight racks.',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): Pristine perimeter edges, zero lint line against baseboards, clean corners behind closed doors.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Minor lint in short section of baseboard edge, faint dust behind door hinge.',
+      belowStandard: 'Grade 5 (Below Standards): Dark line of dust/lint along baseboards, dirt accumulation behind doors or equipment frames. Must be corrected within 24 hours.',
+      fboProTip: 'Check corners and edges of carpet and hard floors for debris and dirt. Close doors and check behind (Floors Step 6).',
+    },
   },
   {
     id: 'thu-monthly-fabric-furniture',
@@ -199,5 +538,19 @@ export const THURSDAY_MONTHLY: InspectionItem[] = [
     applicableDays: ['thursday'],
     isMonthly: true,
     description: 'Monthly vacuuming and lint removal on member lounge chairs, fabric seating, and cushions.',
+    inspectionGuide: {
+      coverallSection: 'Steps for Reviewing and Grading Detail Cleaning (Furniture & Upholstery)',
+      inspectionProcedure: 'Check fabric upholstery on lounge chairs and seating: inspect seams and crevices between seat cushions and armrests for crumbs, dust, and coins; inspect chair legs, casters, and rungs for hair and lint.',
+      inspectionSteps: [
+        'Check fabric upholstery on lounge chairs: inspect seams and crevices between cushions and armrests for crumbs and dust.',
+        'Lift or check underneath cushions and chair seats for debris and dust buildup.',
+        'Check under lobby chairs and chair rungs for dust (Detail Cleaning Step 8).',
+        'Inspect chair legs, casters, and rungs for hair, strings, and lint.',
+      ],
+      passStandard: 'Grade 9 (Meets Standards): Vacuumed fabric, lint-free upholstery, clean crevices under cushions, dust-free chair frames.',
+      needsImprovementStandard: 'Grade 7 (Needs Improvement): Minor crumb in deep seam, slight lint on lower chair rung.',
+      belowStandard: 'Grade 5 (Below Standards): Crumbs in cushion crevices, hair on upholstery, dust clinging to lower chair legs. Must be corrected within 24 hours.',
+      fboProTip: 'Check under lobby chairs for dust (Detail Cleaning Step 8). Look in crevices between seat cushions where debris gathers out of sight.',
+    },
   },
 ];

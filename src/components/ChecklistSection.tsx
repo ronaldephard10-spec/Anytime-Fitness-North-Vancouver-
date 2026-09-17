@@ -14,6 +14,12 @@ import {
   Image as ImageIcon,
   ZoomIn,
   Loader2,
+  BookOpen,
+  Lightbulb,
+  ShieldCheck,
+  ClipboardList,
+  AlertTriangle,
+  HelpCircle,
 } from 'lucide-react';
 import { InspectionItem, ItemEvaluation, ActiveTab, InspectionPhoto } from '../types/inspection';
 import { compressImage } from '../utils/imageUtils';
@@ -50,6 +56,7 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
   onToggleMonthly,
 }) => {
   const [expandedDrawers, setExpandedDrawers] = useState<Record<string, boolean>>({});
+  const [expandedGuides, setExpandedGuides] = useState<Record<string, boolean>>({});
   const [processingPhoto, setProcessingPhoto] = useState<Record<string, boolean>>({});
   const [activeLightboxPhoto, setActiveLightboxPhoto] = useState<{
     photo: InspectionPhoto;
@@ -62,6 +69,19 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
 
   const toggleDrawer = (id: string) => {
     setExpandedDrawers((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const toggleGuide = (id: string) => {
+    setExpandedGuides((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const toggleAllGuides = () => {
+    const allOpen = items.length > 0 && items.every((it) => !!expandedGuides[it.id]);
+    const next: Record<string, boolean> = {};
+    items.forEach((it) => {
+      next[it.id] = !allOpen;
+    });
+    setExpandedGuides(next);
   };
 
   // Helper to extract all photos for an item, normalizing legacy photoUrl
@@ -160,6 +180,23 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
             </div>
             {subtitle && <p className="text-xs text-slate-400 mt-0.5">{subtitle}</p>}
           </div>
+
+          {/* Quick toggle for all Coverall QA Inspection Guides */}
+          {items.some((it) => !!it.inspectionGuide) && (
+            <button
+              type="button"
+              onClick={toggleAllGuides}
+              className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-purple-950/40 hover:bg-purple-900/50 border border-purple-700/40 text-purple-300 transition"
+              title="Expand or collapse Coverall QA inspection instructions for all items in this section"
+            >
+              <BookOpen className="w-3.5 h-3.5 text-purple-400" />
+              <span>
+                {items.length > 0 && items.every((it) => !!expandedGuides[it.id])
+                  ? 'Hide All QA Guides'
+                  : 'View All QA Guides'}
+              </span>
+            </button>
+          )}
         </div>
 
         {/* Items List */}
@@ -224,6 +261,30 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
                       <p className="text-xs text-slate-400 mt-1 leading-relaxed">
                         {item.description}
                       </p>
+                    )}
+
+                    {/* How to Inspect Trigger Button */}
+                    {item.inspectionGuide && (
+                      <div className="mt-2 flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => toggleGuide(item.id)}
+                          className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg transition border ${
+                            expandedGuides[item.id]
+                              ? 'bg-purple-900/60 border-purple-500 text-purple-200 shadow-xs'
+                              : 'bg-slate-800/80 hover:bg-slate-750 border-slate-700 text-slate-300 hover:text-white'
+                          }`}
+                          title="View Coverall QA inspection procedure, checkpoints, and 9/7/5 rating standards"
+                        >
+                          <BookOpen className="w-3.5 h-3.5 text-purple-400" />
+                          <span>How to Inspect ({item.inspectionGuide.coverallSection})</span>
+                          {expandedGuides[item.id] ? (
+                            <ChevronUp className="w-3 h-3 text-purple-300 ml-0.5" />
+                          ) : (
+                            <ChevronDown className="w-3 h-3 text-slate-400 ml-0.5" />
+                          )}
+                        </button>
+                      </div>
                     )}
                   </div>
 
@@ -380,6 +441,146 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
                     </div>
                   )}
                 </div>
+
+                {/* Coverall QA Inspection Method Guide Drawer */}
+                {isEnabled && item.inspectionGuide && expandedGuides[item.id] && (
+                  <div className="mt-3 pt-3 border-t border-purple-900/40 bg-purple-950/20 rounded-xl p-3 sm:p-4 border border-purple-800/40 space-y-3.5">
+                    {/* Header with Coverall branding & category */}
+                    <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-purple-800/30">
+                      <div className="flex items-center gap-2">
+                        <div className="p-1.5 rounded-lg bg-purple-900/70 border border-purple-700/60 text-purple-200">
+                          <BookOpen className="w-4 h-4 text-purple-300" />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-bold text-purple-200 uppercase tracking-wide">
+                              Coverall QA Standard
+                            </span>
+                            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-purple-900/80 text-purple-300 border border-purple-700">
+                              {item.inspectionGuide.coverallSection}
+                            </span>
+                          </div>
+                          <span className="text-[11px] text-purple-300/80 block mt-0.5">
+                            FBO Guidelines for Reviewing and Grading Cleaning
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        {/* Quick Pass button based on QA standard */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            onUpdateStatus(item.id, 'pass');
+                            if (!evalData.notes) {
+                              onUpdateNotes(item.id, 'Meets Coverall Grade 9 sanitation standard.');
+                            }
+                          }}
+                          className="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-900/60 hover:bg-emerald-800/80 border border-emerald-600/50 text-emerald-200 transition flex items-center gap-1 cursor-pointer"
+                        >
+                          <Check className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>Grade 9 (Pass)</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => toggleGuide(item.id)}
+                          className="text-xs text-slate-400 hover:text-white px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 transition cursor-pointer"
+                        >
+                          Close
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Step-by-step physical walkthrough procedure */}
+                    <div className="space-y-1.5">
+                      <h5 className="text-[11px] font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+                        <ClipboardList className="w-3.5 h-3.5 text-purple-400" />
+                        <span>The Way to Do the Inspection (Walkthrough Procedure)</span>
+                      </h5>
+                      <p className="text-xs text-slate-300 leading-relaxed bg-slate-950/70 p-3 rounded-lg border border-slate-800/90 font-sans">
+                        {item.inspectionGuide.inspectionProcedure}
+                      </p>
+                    </div>
+
+                    {/* Numbered specific checkpoints from Coverall FBO Guidelines */}
+                    <div className="space-y-1.5">
+                      <h5 className="text-[11px] font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                        <span>Inspection Checkpoints (From Coverall QA Report Guide)</span>
+                      </h5>
+                      <ul className="grid grid-cols-1 gap-1.5 text-xs text-slate-300">
+                        {item.inspectionGuide.inspectionSteps.map((step, sIdx) => (
+                          <li
+                            key={sIdx}
+                            className="flex items-start gap-2.5 bg-slate-900/90 p-2.5 rounded-lg border border-slate-800 hover:border-purple-800/50 transition"
+                          >
+                            <span className="shrink-0 w-5 h-5 rounded-full bg-purple-900/80 border border-purple-600/50 text-purple-200 font-mono text-[10px] font-bold flex items-center justify-center mt-0.5">
+                              {sIdx + 1}
+                            </span>
+                            <span className="leading-relaxed">{step}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Coverall QA Rating Matrix (9 / 7 / 5) */}
+                    <div className="space-y-1.5 pt-1">
+                      <h5 className="text-[11px] font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+                        <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
+                        <span>Coverall Rating Criteria (9 / 7 / 5 Standard)</span>
+                      </h5>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+                        <div className="bg-emerald-950/30 border border-emerald-600/40 rounded-lg p-2.5 space-y-1">
+                          <div className="flex items-center justify-between">
+                            <span className="font-bold text-emerald-300 text-[11px] flex items-center gap-1">
+                              <Check className="w-3 h-3 text-emerald-400" />
+                              9 - Meets Standards
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-emerald-200/90 leading-snug">
+                            {item.inspectionGuide.passStandard}
+                          </p>
+                        </div>
+
+                        <div className="bg-amber-950/30 border border-amber-600/40 rounded-lg p-2.5 space-y-1">
+                          <div className="flex items-center justify-between">
+                            <span className="font-bold text-amber-300 text-[11px] flex items-center gap-1">
+                              <AlertTriangle className="w-3 h-3 text-amber-400" />
+                              7 - Needs Improvement
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-amber-200/90 leading-snug">
+                            {item.inspectionGuide.needsImprovementStandard}
+                          </p>
+                        </div>
+
+                        <div className="bg-rose-950/30 border border-rose-600/40 rounded-lg p-2.5 space-y-1">
+                          <div className="flex items-center justify-between">
+                            <span className="font-bold text-rose-300 text-[11px] flex items-center gap-1">
+                              <XCircle className="w-3 h-3 text-rose-400" />
+                              5 - Below Standards
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-rose-200/90 leading-snug">
+                            {item.inspectionGuide.belowStandard}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* FBO Pro Tip */}
+                    {item.inspectionGuide.fboProTip && (
+                      <div className="flex items-start gap-2.5 bg-amber-950/30 border border-amber-600/40 p-2.5 rounded-lg text-xs text-amber-200">
+                        <Lightbulb className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                        <div className="leading-relaxed">
+                          <span className="font-bold text-amber-300 mr-1.5">FBO Inspection Rule:</span>
+                          <span>{item.inspectionGuide.fboProTip}</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {/* Station Pictures & Observation Notes Expandable Drawer */}
                 {isEnabled && isDrawerOpen && (

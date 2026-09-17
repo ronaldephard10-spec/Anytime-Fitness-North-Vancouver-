@@ -17,32 +17,86 @@ import {
   Layers,
   Wrench,
   AlertTriangle,
-  Printer
+  Printer,
+  BookOpen,
+  Lightbulb,
+  ClipboardList,
+  Check,
+  Info,
 } from 'lucide-react';
 import { ORIGINAL_SOURCE_DOCUMENT, WORK_SCHEDULE_ITEMS, ServiceFrequencyItem } from '../data/sourceDocument';
 import { INITIAL_PERIODIC_SERVICES, MONTHLY_SERVICE_RULES } from '../utils/scheduleEngine';
+import {
+  CORE_SERVICES,
+  SUNDAY_SPECIFIC,
+  SUNDAY_MONTHLY,
+  TUESDAY_SPECIFIC,
+  TUESDAY_MONTHLY,
+  THURSDAY_SPECIFIC,
+  THURSDAY_MONTHLY,
+} from '../data/checklistItems';
+import { InspectionItem } from '../types/inspection';
 
 interface SourceDocumentModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectMonthlyTask?: (toggleKey: string) => void;
+  initialTab?: TabType;
 }
 
-type TabType = 'account' | 'areas' | 'schedule' | 'calendar' | 'special';
+type TabType = 'qa-guide' | 'schedule' | 'calendar' | 'account' | 'areas' | 'special';
 
 export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
   isOpen,
   onClose,
   onSelectMonthlyTask,
+  initialTab,
 }) => {
-  const [activeTab, setActiveTab] = useState<TabType>('schedule');
+  const [activeTab, setActiveTab] = useState<TabType>(initialTab || 'qa-guide');
+
+  React.useEffect(() => {
+    if (isOpen && initialTab) {
+      setActiveTab(initialTab);
+    }
+  }, [isOpen, initialTab]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [qaCategoryFilter, setQaCategoryFilter] = useState<string>('all');
+  const [qaExpandedItem, setQaExpandedItem] = useState<string | null>(null);
   const [frequencyFilter, setFrequencyFilter] = useState<string>('all');
   const [selectedCalendarMonth, setSelectedCalendarMonth] = useState<number>(9); // 9 = Oct 2026, 8 = Sep 2026
 
   if (!isOpen) return null;
 
   const doc = ORIGINAL_SOURCE_DOCUMENT;
+
+  const allInspectionItems: InspectionItem[] = [
+    ...CORE_SERVICES,
+    ...SUNDAY_SPECIFIC,
+    ...SUNDAY_MONTHLY,
+    ...TUESDAY_SPECIFIC,
+    ...TUESDAY_MONTHLY,
+    ...THURSDAY_SPECIFIC,
+    ...THURSDAY_MONTHLY,
+  ];
+
+  const filteredQaItems = allInspectionItems.filter((item) => {
+    const matchesCat =
+      qaCategoryFilter === 'all' ||
+      (qaCategoryFilter === 'core' && item.category === 'core') ||
+      (qaCategoryFilter === 'sunday' && (item.category === 'sunday' || (item.category === 'monthly' && item.applicableDays.includes('sunday')))) ||
+      (qaCategoryFilter === 'tuesday' && (item.category === 'tuesday' || (item.category === 'monthly' && item.applicableDays.includes('tuesday')))) ||
+      (qaCategoryFilter === 'thursday' && (item.category === 'thursday' || (item.category === 'monthly' && item.applicableDays.includes('thursday')))) ||
+      (qaCategoryFilter === 'monthly' && item.isMonthly);
+
+    const matchesSearch =
+      searchQuery.trim() === '' ||
+      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.inspectionGuide?.coverallSection.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.inspectionGuide?.inspectionProcedure.toLowerCase().includes(searchQuery.toLowerCase());
+
+    return matchesCat && matchesSearch;
+  });
 
   const filteredItems = WORK_SCHEDULE_ITEMS.filter((item) => {
     const matchesSearch =
@@ -110,6 +164,18 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
         {/* Navigation Tabs */}
         <div className="bg-slate-900/95 border-b border-slate-800 px-4 flex gap-1 overflow-x-auto text-xs font-semibold scrollbar-none">
           <button
+            onClick={() => setActiveTab('qa-guide')}
+            className={`py-3 px-3.5 border-b-2 transition flex items-center gap-1.5 whitespace-nowrap ${
+              activeTab === 'qa-guide'
+                ? 'border-purple-400 text-purple-300 bg-purple-950/20'
+                : 'border-transparent text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <BookOpen className="w-3.5 h-3.5 text-purple-400" />
+            QA Inspection Guide ({allInspectionItems.length} Items)
+          </button>
+
+          <button
             onClick={() => setActiveTab('schedule')}
             className={`py-3 px-3.5 border-b-2 transition flex items-center gap-1.5 whitespace-nowrap ${
               activeTab === 'schedule'
@@ -172,6 +238,324 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
 
         {/* Content Area */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
+          {/* TAB 0: QA INSPECTION GUIDE & STANDARDS */}
+          {activeTab === 'qa-guide' && (
+            <div className="space-y-6">
+              {/* Header Banner */}
+              <div className="bg-gradient-to-br from-purple-950/80 via-slate-900 to-slate-900 p-4 sm:p-5 rounded-2xl border border-purple-800/60 shadow-md space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-purple-300 bg-purple-900/60 px-2.5 py-0.5 rounded-full border border-purple-700">
+                        Coverall Health-Based Cleaning System
+                      </span>
+                      <span className="text-[11px] font-bold text-emerald-300 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">
+                        Quality Assurance Rating Manual
+                      </span>
+                    </div>
+                    <h3 className="text-base sm:text-lg font-bold text-white mt-1">
+                      FBO Inspection Guide: Walkthrough Procedures & Grading Standards
+                    </h3>
+                    <p className="text-xs text-slate-300 leading-relaxed max-w-3xl mt-0.5">
+                      Standardized inspection procedure for every item in the Anytime Fitness #3007 checklist. Built directly from the Coverall Quality Assurance Rating Guidelines, incorporating the 9 / 7 / 5 scoring criteria and 24-hour correction mandates.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Core FBO Principles Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
+                  <div className="bg-emerald-950/30 border border-emerald-500/30 rounded-xl p-3 space-y-1">
+                    <div className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-emerald-400" />
+                      <h4 className="text-xs font-bold text-emerald-300">Grade 9: Meets Standards</h4>
+                    </div>
+                    <p className="text-[11px] text-emerald-200/90 leading-snug">
+                      Facility cleanliness meets Coverall specifications. Surfaces sanitized, streak-free, dust-free under accessories, and odors eliminated.
+                    </p>
+                  </div>
+
+                  <div className="bg-amber-950/30 border border-amber-500/30 rounded-xl p-3 space-y-1">
+                    <div className="flex items-center gap-2">
+                      <AlertTriangle className="w-4 h-4 text-amber-400" />
+                      <h4 className="text-xs font-bold text-amber-300">Grade 7: Needs Improvement</h4>
+                    </div>
+                    <p className="text-[11px] text-amber-200/90 leading-snug">
+                      Minor flaw detected (light dust, faint streak). If customer mentions an issue, mark 7 even if you disagree. Note quietly without showing customer defects.
+                    </p>
+                  </div>
+
+                  <div className="bg-rose-950/30 border border-rose-500/30 rounded-xl p-3 space-y-1">
+                    <div className="flex items-center gap-2">
+                      <ShieldCheck className="w-4 h-4 text-rose-400" />
+                      <h4 className="text-xs font-bold text-rose-300">Grade 5: Below Standards</h4>
+                    </div>
+                    <p className="text-[11px] text-rose-200/90 leading-snug">
+                      Unacceptable service or sanitation failure. <strong className="text-rose-200">Mandatory Rule:</strong> Must be re-cleaned and fully corrected within 24 hours.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Important FBO Rules Pill Banner */}
+                <div className="bg-slate-950/70 rounded-xl p-3 border border-slate-800 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-slate-300">
+                  <div className="flex items-center gap-1.5">
+                    <Lightbulb className="w-3.5 h-3.5 text-amber-400" />
+                    <span><strong>Uniform & ID:</strong> Neat attire with Coverall photo badge.</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5 text-purple-400" />
+                    <span><strong>Vary Timing:</strong> Inspect on different days of the week & times of month.</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <ClipboardList className="w-3.5 h-3.5 text-cyan-400" />
+                    <span><strong>Logbook & MSDS:</strong> Verify calendar is signed and MSDS sheets are current.</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Three Core Checkpoint Reference Guides (Restrooms, Floors, Detail Cleaning) */}
+              <div className="space-y-3">
+                <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+                  <ClipboardList className="w-4 h-4 text-purple-400" />
+                  <span>Coverall Foundation Steps For Reviewing & Grading Quality</span>
+                </h4>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  {/* Restrooms */}
+                  <div className="bg-slate-800/50 border border-slate-700/70 rounded-xl p-3.5 space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-purple-300 uppercase">Restrooms (9 Steps)</span>
+                      <span className="text-[10px] text-slate-400">Restroom Standard</span>
+                    </div>
+                    <ul className="text-[11px] text-slate-300 space-y-1.5 list-decimal list-inside leading-snug">
+                      <li>Check that NO foul odors are present.</li>
+                      <li>Check corners of floors & behind toilets for dirt/hair.</li>
+                      <li>Check inside/outside of toilets & urinal bowl faces.</li>
+                      <li>Inspect top edges of all stall partitions.</li>
+                      <li>Check mirrors & dispensers for sparkling finish.</li>
+                      <li>Check sink areas for soil & soap build-up.</li>
+                      <li>Spot clean walls around urinals, dispensers & trash.</li>
+                      <li>Check toilet paper, towels & soap dispensers are full.</li>
+                      <li>Check chrome & stainless for hard water scale.</li>
+                    </ul>
+                  </div>
+
+                  {/* Floors */}
+                  <div className="bg-slate-800/50 border border-slate-700/70 rounded-xl p-3.5 space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-cyan-300 uppercase">Floors (9 Steps)</span>
+                      <span className="text-[10px] text-slate-400">Hard & Carpet Floors</span>
+                    </div>
+                    <ul className="text-[11px] text-slate-300 space-y-1.5 list-decimal list-inside leading-snug">
+                      <li>Check general appearance for loose debris & soil.</li>
+                      <li>Check tiling for dullness, streaks or dirty grout.</li>
+                      <li>Check transitions, edges & trim strips.</li>
+                      <li>Check baseboards & furniture for mop splash marks.</li>
+                      <li>Verify hard floors are NOT sticky.</li>
+                      <li>Check corners & close doors to check behind.</li>
+                      <li>Check under desks for cables & dust bunnies.</li>
+                      <li>Identify worn carpet spots for Special Services.</li>
+                      <li>Check vacuuming did not kick dust onto chair legs.</li>
+                    </ul>
+                  </div>
+
+                  {/* Detail Cleaning */}
+                  <div className="bg-slate-800/50 border border-slate-700/70 rounded-xl p-3.5 space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-emerald-300 uppercase">Detail Cleaning (12 Steps)</span>
+                      <span className="text-[10px] text-slate-400">Furniture & Glass</span>
+                    </div>
+                    <ul className="text-[11px] text-slate-300 space-y-1.5 list-decimal list-inside leading-snug">
+                      <li>Check reception & front entrance foyer.</li>
+                      <li>Check for smudges or streaks on glass doors.</li>
+                      <li>Check desk tops & dust underneath small items.</li>
+                      <li>Check telephones - headsets, mouthpieces & cradles.</li>
+                      <li>Check garbage cans, fresh liners & floor area.</li>
+                      <li>Check walls & doorframes for trash splash spots.</li>
+                      <li>Check window sills & blinds for dead bugs/dust.</li>
+                      <li>Check under lobby chairs & rungs for dust.</li>
+                      <li>Check tops of picture frames & motivational signs.</li>
+                      <li>Look in all room corners for cobwebs.</li>
+                      <li>Check high dusting up to 6ft & behind screens.</li>
+                      <li>Check light switches, door handles & kickplates.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              {/* Item-by-Item Guide Directory with Filters & Search */}
+              <div className="space-y-3 pt-2">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+                      <BookOpen className="w-4 h-4 text-purple-400" />
+                      <span>Item-by-Item Inspection Method Guide ({filteredQaItems.length} of {allInspectionItems.length} Items)</span>
+                    </h4>
+                    <p className="text-xs text-slate-400">
+                      Step-by-step walkthrough directions, checkpoints, and grading criteria for each task.
+                    </p>
+                  </div>
+
+                  {/* Category Filter Chips */}
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    {[
+                      { id: 'all', label: 'All Items' },
+                      { id: 'core', label: 'Core Daily' },
+                      { id: 'sunday', label: 'Sunday' },
+                      { id: 'tuesday', label: 'Tuesday' },
+                      { id: 'thursday', label: 'Thursday' },
+                      { id: 'monthly', label: 'Monthly' },
+                    ].map((tab) => (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        onClick={() => setQaCategoryFilter(tab.id)}
+                        className={`text-xs font-medium px-2.5 py-1 rounded-lg transition ${
+                          qaCategoryFilter === tab.id
+                            ? 'bg-purple-600 text-white shadow-xs font-bold'
+                            : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                        }`}
+                      >
+                        {tab.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Item Cards List */}
+                <div className="space-y-3">
+                  {filteredQaItems.map((item) => {
+                    const isExpanded = qaExpandedItem === item.id;
+                    const guide = item.inspectionGuide;
+
+                    return (
+                      <div
+                        key={item.id}
+                        className="bg-slate-800/40 border border-slate-700/80 rounded-xl p-3.5 space-y-3 hover:border-slate-600 transition"
+                      >
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              {item.isMonthly && (
+                                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-700">
+                                  Monthly Detail
+                                </span>
+                              )}
+                              <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-slate-800 text-purple-300 border border-slate-700">
+                                {item.category.toUpperCase()}
+                              </span>
+                              {guide && (
+                                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-950 text-purple-200 border border-purple-800">
+                                  {guide.coverallSection}
+                                </span>
+                              )}
+                              <h4 className="text-sm font-bold text-white">{item.name}</h4>
+                            </div>
+                            <p className="text-xs text-slate-400 mt-1">{item.description}</p>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => setQaExpandedItem(isExpanded ? null : item.id)}
+                            className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-purple-900/40 hover:bg-purple-800/60 text-purple-200 border border-purple-700/60 transition self-start sm:self-center shrink-0 cursor-pointer"
+                          >
+                            {isExpanded ? 'Hide Method' : 'View Way to Inspect'}
+                          </button>
+                        </div>
+
+                        {/* Expandable Guide Body */}
+                        {isExpanded && guide && (
+                          <div className="pt-3 border-t border-slate-700/60 space-y-3 animate-in fade-in duration-150">
+                            {/* Physical Walkthrough Procedure */}
+                            <div className="space-y-1">
+                              <h5 className="text-[11px] font-bold text-purple-300 uppercase tracking-wider flex items-center gap-1.5">
+                                <ClipboardList className="w-3.5 h-3.5 text-purple-400" />
+                                <span>The Way to Do the Inspection (Physical Walkthrough Procedure)</span>
+                              </h5>
+                              <p className="text-xs text-slate-200 leading-relaxed bg-slate-900/90 p-3 rounded-lg border border-slate-800">
+                                {guide.inspectionProcedure}
+                              </p>
+                            </div>
+
+                            {/* Inspection Checkpoints */}
+                            <div className="space-y-1.5">
+                              <h5 className="text-[11px] font-bold text-emerald-300 uppercase tracking-wider flex items-center gap-1.5">
+                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                                <span>Inspection Checkpoints (From Coverall Guidelines)</span>
+                              </h5>
+                              <ul className="grid grid-cols-1 gap-1.5 text-xs text-slate-300">
+                                {guide.inspectionSteps.map((step, sIdx) => (
+                                  <li
+                                    key={sIdx}
+                                    className="flex items-start gap-2 bg-slate-900/80 p-2 rounded-lg border border-slate-800"
+                                  >
+                                    <span className="shrink-0 w-4 h-4 rounded-full bg-purple-900/80 text-purple-200 font-mono text-[10px] font-bold flex items-center justify-center mt-0.5">
+                                      {sIdx + 1}
+                                    </span>
+                                    <span className="leading-snug">{step}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+
+                            {/* Rating Matrix */}
+                            <div className="space-y-1.5 pt-1">
+                              <h5 className="text-[11px] font-bold text-cyan-300 uppercase tracking-wider flex items-center gap-1.5">
+                                <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
+                                <span>Coverall 9 / 7 / 5 Grading System Standards</span>
+                              </h5>
+                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+                                <div className="bg-emerald-950/30 border border-emerald-600/40 rounded-lg p-2.5 space-y-1">
+                                  <span className="font-bold text-emerald-300 text-[11px] flex items-center gap-1">
+                                    <Check className="w-3 h-3 text-emerald-400" />
+                                    Grade 9: Meets Standards
+                                  </span>
+                                  <p className="text-[11px] text-emerald-200/90 leading-snug">
+                                    {guide.passStandard}
+                                  </p>
+                                </div>
+
+                                <div className="bg-amber-950/30 border border-amber-600/40 rounded-lg p-2.5 space-y-1">
+                                  <span className="font-bold text-amber-300 text-[11px] flex items-center gap-1">
+                                    <AlertTriangle className="w-3 h-3 text-amber-400" />
+                                    Grade 7: Needs Improvement
+                                  </span>
+                                  <p className="text-[11px] text-amber-200/90 leading-snug">
+                                    {guide.needsImprovementStandard}
+                                  </p>
+                                </div>
+
+                                <div className="bg-rose-950/30 border border-rose-600/40 rounded-lg p-2.5 space-y-1">
+                                  <span className="font-bold text-rose-300 text-[11px] flex items-center gap-1">
+                                    <ShieldCheck className="w-3 h-3 text-rose-400" />
+                                    Grade 5: Below Standards
+                                  </span>
+                                  <p className="text-[11px] text-rose-200/90 leading-snug">
+                                    {guide.belowStandard}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Pro Tip */}
+                            {guide.fboProTip && (
+                              <div className="flex items-start gap-2 bg-amber-950/30 border border-amber-600/40 p-2.5 rounded-lg text-xs text-amber-200">
+                                <Lightbulb className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                                <div>
+                                  <span className="font-bold text-amber-300 mr-1.5">FBO Inspection Rule:</span>
+                                  <span>{guide.fboProTip}</span>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* TAB 1: WORK SCHEDULE & FREQUENCIES */}
           {activeTab === 'schedule' && (
             <div className="space-y-4">

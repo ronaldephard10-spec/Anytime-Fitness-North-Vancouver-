@@ -45,6 +45,9 @@ export default function App() {
 
   // Modals for Source Document Reference, Annual / Periodic Services, & Monthly QA Summary
   const [isSourceDocOpen, setIsSourceDocOpen] = useState<boolean>(false);
+  const [sourceDocInitialTab, setSourceDocInitialTab] = useState<
+    'qa-guide' | 'schedule' | 'calendar' | 'account' | 'areas' | 'special'
+  >('qa-guide');
   const [isPeriodicModalOpen, setIsPeriodicModalOpen] = useState<boolean>(false);
   const [isMonthlySummaryOpen, setIsMonthlySummaryOpen] = useState<boolean>(false);
 
@@ -639,7 +642,14 @@ export default function App() {
         formattedTime={timestamp.formattedTime}
         onResetAudit={handleResetAudit}
         isCompleted={activeScore.percentage >= 85}
-        onOpenSourceDoc={() => setIsSourceDocOpen(true)}
+        onOpenQAGuide={() => {
+          setSourceDocInitialTab('qa-guide');
+          setIsSourceDocOpen(true);
+        }}
+        onOpenSourceDoc={() => {
+          setSourceDocInitialTab('schedule');
+          setIsSourceDocOpen(true);
+        }}
         onOpenMonthlySummary={() => setIsMonthlySummaryOpen(true)}
         isVoiceListening={voiceState.isListening}
         onToggleVoice={voiceState.toggleListening}
@@ -842,6 +852,7 @@ export default function App() {
         isOpen={isSourceDocOpen}
         onClose={() => setIsSourceDocOpen(false)}
         onSelectMonthlyTask={(key) => handleToggleMonthly(key)}
+        initialTab={sourceDocInitialTab}
       />
 
       {/* Annual & Periodic Special Services Manager Modal */}

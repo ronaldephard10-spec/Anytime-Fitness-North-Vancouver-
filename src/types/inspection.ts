@@ -4,6 +4,16 @@ export type ReportingCadence = 'monthly-summary' | 'weekly-summary' | 'every-vis
 
 export type ItemStatus = 'pass' | 'fail' | 'pending' | 'na';
 
+export interface InspectionMethodGuide {
+  coverallSection: string; // e.g. "Entry & Common Areas", "Restrooms", "Floors", "Detail Cleaning", "Office Areas"
+  inspectionProcedure: string; // The physical step-by-step way to perform the inspection
+  inspectionSteps: string[]; // Specific checkpoints from Coverall FBO inspection guide
+  passStandard: string; // 9 - Meets standards
+  needsImprovementStandard: string; // 7 - Needs improvement
+  belowStandard: string; // 5 - Below standards (must be corrected within 24 hours)
+  fboProTip?: string; // FBO Inspection tip from Coverall guide
+}
+
 export interface InspectionItem {
   id: string;
   name: string;
@@ -12,6 +22,7 @@ export interface InspectionItem {
   isMonthly?: boolean;
   notesPrompt?: string;
   description?: string;
+  inspectionGuide?: InspectionMethodGuide;
 }
 
 export interface InspectionPhoto {
