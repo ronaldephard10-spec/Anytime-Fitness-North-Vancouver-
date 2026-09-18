@@ -219,7 +219,7 @@ export const CertificatePreviewModal: React.FC<CertificatePreviewModalProps> = (
                     {FACILITY_INFO.address} • <span className="font-semibold text-emerald-800">Acct #{FACILITY_INFO.accountNumber}</span>
                   </p>
                   <p className="text-purple-900 font-medium pt-0.5 text-xs">
-                    Schedule: 3x / Week (Tuesday, Thursday, Saturday at 11:00 PM — 156 Annual Visits)
+                    Schedule: 3x / Week (Tuesday, Thursday, Sunday after 11:00 PM — 156 Annual Visits)
                   </p>
                   <p className="text-slate-600 pt-0.5 text-xs">
                     <span className="font-semibold text-slate-700">Contact:</span> {FACILITY_INFO.contactName} ({FACILITY_INFO.contactPhone}) • Ref: Coverall Work Agreement #{FACILITY_INFO.accountNumber}

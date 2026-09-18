@@ -44,8 +44,6 @@ import {
   TUESDAY_MONTHLY,
   THURSDAY_SPECIFIC,
   THURSDAY_MONTHLY,
-  SATURDAY_SPECIFIC,
-  SATURDAY_MONTHLY,
 } from '../data/checklistItems';
 import { InspectionItem } from '../types/inspection';
 
@@ -101,14 +99,12 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
 
   const allInspectionItems: InspectionItem[] = [
     ...CORE_SERVICES,
-    ...SATURDAY_SPECIFIC,
-    ...SATURDAY_MONTHLY,
+    ...SUNDAY_SPECIFIC,
+    ...SUNDAY_MONTHLY,
     ...TUESDAY_SPECIFIC,
     ...TUESDAY_MONTHLY,
     ...THURSDAY_SPECIFIC,
     ...THURSDAY_MONTHLY,
-    ...SUNDAY_SPECIFIC,
-    ...SUNDAY_MONTHLY,
   ];
 
   const filteredQaItems = allInspectionItems.filter((item) => {
@@ -773,7 +769,7 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
             for (let d = 1; d <= daysInMonth; d++) {
               const dateObj = new Date(calYear, calMonth, d);
               const dayOfWeek = dateObj.getDay();
-              const isScheduled = dayOfWeek === 2 || dayOfWeek === 4 || dayOfWeek === 6; // Tue, Thu, Sat
+              const isScheduled = dayOfWeek === 0 || dayOfWeek === 2 || dayOfWeek === 4; // Sun, Tue, Thu
               let visitNumber = 0;
               if (isScheduled) {
                 scheduledCounter++;
@@ -782,10 +778,10 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
 
               const occurrence = getWeekdayOccurrenceInMonth(dateObj);
               const isFirstTuesday = dayOfWeek === 2 && occurrence === 1;
-              const isSecondSaturday = dayOfWeek === 6 && occurrence === 2;
+              const isSecondSunday = dayOfWeek === 0 && occurrence === 2;
               const isSecondTuesday = dayOfWeek === 2 && occurrence === 2;
               const isThirdTuesday = dayOfWeek === 2 && occurrence === 3;
-              const isFourthSaturday = dayOfWeek === 6 && occurrence === 4;
+              const isFourthSunday = dayOfWeek === 0 && occurrence === 4;
               const isSecondThursday = dayOfWeek === 4 && occurrence === 2;
               const isThirdThursday = dayOfWeek === 4 && occurrence === 3;
 
@@ -809,10 +805,10 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                 visitNumber,
                 occurrence,
                 isFirstTuesday,
-                isSecondSaturday,
+                isSecondSunday,
                 isSecondTuesday,
                 isThirdTuesday,
-                isFourthSaturday,
+                isFourthSunday,
                 isSecondThursday,
                 isThirdThursday,
                 isSelectedDate,
@@ -842,7 +838,7 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                         {doc.customerName} • {doc.customerAddress}
                       </h3>
                       <p className="text-xs text-slate-300 mt-0.5">
-                        Cadence: <strong className="text-purple-200">3x / Week (Tuesday, Thursday, Saturday @ 11:00 PM)</strong> • Account #{doc.accountNumber}
+                        Cadence: <strong className="text-purple-200">3x / Week (Tuesday, Thursday, Sunday after 11:00 PM)</strong> • Account #{doc.accountNumber}
                       </p>
                     </div>
 
@@ -905,7 +901,7 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                       <span className="text-slate-400 hidden sm:inline">• Click any calendar day below to instantly load its walkthrough</span>
                     </div>
                     <div className="text-[11px] text-purple-300">
-                      Weekly Schedule: Tuesday, Thursday, Saturday @ 11:00 PM
+                      Weekly Schedule: Tuesday, Thursday, Sunday after 11:00 PM
                     </div>
                   </div>
                 </div>
@@ -914,13 +910,13 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                 <div className="bg-slate-900/80 rounded-2xl border border-slate-800 overflow-hidden shadow-xl">
                   {/* Day headers */}
                   <div className="grid grid-cols-7 bg-slate-950 border-b border-slate-800 text-center py-2 text-[11px] font-bold text-slate-400">
-                    <div>SUN</div>
+                    <div className="text-purple-300">SUN (Service)</div>
                     <div>MON</div>
                     <div className="text-purple-300">TUE (Service)</div>
                     <div>WED</div>
                     <div className="text-purple-300">THU (Service)</div>
                     <div>FRI</div>
-                    <div className="text-purple-300">SAT (Service)</div>
+                    <div>SAT</div>
                   </div>
 
                   {/* Calendar cells */}
@@ -1018,14 +1014,14 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                                 </div>
                               )}
 
-                              {cell.isSecondSaturday && (
+                              {cell.isSecondSunday && (
                                 <div className="p-1 rounded bg-indigo-950/90 border border-indigo-400/80 text-indigo-200 text-[10px] font-extrabold leading-tight shadow-sm">
                                   <div className="flex items-center gap-1">
                                     <Sparkles className="w-3 h-3 text-indigo-300 shrink-0" />
-                                    <span>2nd Sat Mandated:</span>
+                                    <span>2nd Sun Mandated:</span>
                                   </div>
                                   <span className="text-[9.5px] font-semibold text-white block mt-0.5">
-                                    Detail edge vac & fabric furniture
+                                    Inside refrigerator deep clean
                                   </span>
                                 </div>
                               )}
@@ -1054,9 +1050,9 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                                 </div>
                               )}
 
-                              {cell.isFourthSaturday && (
+                              {cell.isFourthSunday && (
                                 <div className="p-1 rounded bg-purple-950/80 border border-purple-600/60 text-purple-200 text-[9px] font-bold">
-                                  4th Sat: Inside Refrigerators
+                                  4th Sun: Partition Glass Detail
                                 </div>
                               )}
                             </div>
@@ -1091,19 +1087,19 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                     </div>
                   </div>
 
-                  {/* 2nd Saturday Mandate */}
+                  {/* 2nd Sunday Mandate */}
                   <div className="p-4 rounded-xl bg-indigo-950/30 border border-indigo-400/50 space-y-2">
                     <div className="flex items-center gap-2">
                       <span className="px-2 py-0.5 rounded bg-indigo-900 border border-indigo-400 text-indigo-200 text-[11px] font-black uppercase">
-                        2nd Saturday Mandate
+                        2nd Sunday Mandate
                       </span>
-                      <h4 className="text-sm font-bold text-white">Detail Edge Vacuuming & Furniture</h4>
+                      <h4 className="text-sm font-bold text-white">Inside Refrigerator Deep Clean</h4>
                     </div>
                     <p className="text-xs text-slate-300">
-                      <strong>Contract Requirement:</strong> Mandates "Detail edge vacuuming & Vacuum fabric furniture" on the 2nd Saturday of every month. Crevice-tool vacuum all baseboard edges, acoustic panels, tight corners, and HEPA vacuum all upholstered chairs and sofas.
+                      <strong>Contract Requirement:</strong> Mandates "Inside Refrigerator Deep Clean" on the 2nd Sunday of every month. Empty interior shelves, crisper bins, door gaskets, and sanitize with hospital-grade disinfectant.
                     </p>
                     <div className="text-[11px] text-indigo-300 bg-indigo-950/80 p-2 rounded-lg border border-indigo-800/60">
-                      ✓ Automatically activated when walkthrough date is set to the 2nd Saturday of any month.
+                      ✓ Automatically activated when walkthrough date is set to the 2nd Sunday of any month.
                     </div>
                   </div>
                 </div>
@@ -1129,37 +1125,44 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                         <tr className="bg-amber-950/20">
                           <td className="py-2.5 px-3 font-bold text-amber-300">Clean Partition Glass</td>
                           <td className="py-2.5 px-3 font-semibold text-white">1st Tuesday of Month</td>
-                          <td className="py-2.5 px-3 text-purple-300">Tuesday 11:00 PM</td>
+                          <td className="py-2.5 px-3 text-purple-300">Tuesday after 11:00 PM</td>
                           <td className="py-2.5 px-3 text-slate-300">Clean partition glass, conference dividers & sidelites (streak-free squeegee)</td>
                           <td className="py-2.5 px-3 text-slate-400">Pg 5, 7</td>
                         </tr>
                         <tr className="bg-indigo-950/20">
-                          <td className="py-2.5 px-3 font-bold text-indigo-300">Detail Edge Vacuuming & Vacuum Fabric Furniture</td>
-                          <td className="py-2.5 px-3 font-semibold text-white">2nd Saturday of Month</td>
-                          <td className="py-2.5 px-3 text-purple-300">Saturday 11:00 PM</td>
-                          <td className="py-2.5 px-3 text-slate-300">Crevice tool edge vacuum baseboards + HEPA vacuum upholstered furniture</td>
-                          <td className="py-2.5 px-3 text-slate-400">Pg 3, 7</td>
+                          <td className="py-2.5 px-3 font-bold text-indigo-300">Inside Refrigerator Deep Clean</td>
+                          <td className="py-2.5 px-3 font-semibold text-white">2nd Sunday of Month</td>
+                          <td className="py-2.5 px-3 text-purple-300">Sunday after 11:00 PM</td>
+                          <td className="py-2.5 px-3 text-slate-300">Empty shelves, sanitize interior walls, bins & racks with hospital disinfectant</td>
+                          <td className="py-2.5 px-3 text-slate-400">Pg 4, 7</td>
                         </tr>
                         <tr>
                           <td className="py-2.5 px-3 font-semibold text-purple-300">Dust Light Fixtures & Ceiling Vents</td>
                           <td className="py-2.5 px-3">2nd Tuesday of Month</td>
-                          <td className="py-2.5 px-3 text-purple-300">Tuesday 11:00 PM</td>
+                          <td className="py-2.5 px-3 text-purple-300">Tuesday after 11:00 PM</td>
                           <td className="py-2.5 px-3 text-slate-300">Extension pole microfiber duster on high fixtures & return vents (6-10 ft)</td>
                           <td className="py-2.5 px-3 text-slate-400">Pg 4, 8</td>
                         </tr>
                         <tr>
                           <td className="py-2.5 px-3 font-semibold text-purple-300">Dust Blinds & Entrance Glass Doors</td>
                           <td className="py-2.5 px-3">3rd Tuesday of Month</td>
-                          <td className="py-2.5 px-3 text-purple-300">Tuesday 11:00 PM</td>
+                          <td className="py-2.5 px-3 text-purple-300">Tuesday after 11:00 PM</td>
                           <td className="py-2.5 px-3 text-slate-300">Dust window horizontal blinds + clean entrance exterior/interior glass & polish frame</td>
                           <td className="py-2.5 px-3 text-slate-400">Pg 3, 7</td>
                         </tr>
                         <tr>
-                          <td className="py-2.5 px-3 font-semibold text-purple-300">Clean Inside of Refrigerators</td>
-                          <td className="py-2.5 px-3">4th Saturday of Month</td>
-                          <td className="py-2.5 px-3 text-purple-300">Saturday 11:00 PM</td>
-                          <td className="py-2.5 px-3 text-slate-300">Empty shelves, sanitize interior walls & racks with hospital-grade disinfectant</td>
-                          <td className="py-2.5 px-3 text-slate-400">Pg 4, 7</td>
+                          <td className="py-2.5 px-3 font-semibold text-purple-300">Detail Edge Vacuuming</td>
+                          <td className="py-2.5 px-3">3rd Thursday of Month</td>
+                          <td className="py-2.5 px-3 text-purple-300">Thursday after 11:00 PM</td>
+                          <td className="py-2.5 px-3 text-slate-300">Crevice tool edge vacuuming around all baseboard perimeters, weight racks & corners</td>
+                          <td className="py-2.5 px-3 text-slate-400">Pg 3, 7</td>
+                        </tr>
+                        <tr>
+                          <td className="py-2.5 px-3 font-semibold text-purple-300">Partition Glass Detail</td>
+                          <td className="py-2.5 px-3">4th Sunday of Month</td>
+                          <td className="py-2.5 px-3 text-purple-300">Sunday after 11:00 PM</td>
+                          <td className="py-2.5 px-3 text-slate-300">Monthly edge-to-edge streak-free squeegee detail on all gym partition glass panes</td>
+                          <td className="py-2.5 px-3 text-slate-400">Pg 5, 7</td>
                         </tr>
                       </tbody>
                     </table>

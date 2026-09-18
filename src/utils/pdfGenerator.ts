@@ -8,8 +8,6 @@ import {
   TUESDAY_MONTHLY,
   THURSDAY_SPECIFIC,
   THURSDAY_MONTHLY,
-  SATURDAY_SPECIFIC,
-  SATURDAY_MONTHLY,
 } from '../data/checklistItems';
 import type { CompletedInspection } from './inspectionHistory';
 

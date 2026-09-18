@@ -36,7 +36,6 @@ export const ComplianceScoreCard: React.FC<ComplianceScoreCardProps> = ({
   const tabLabels: Record<ActiveTab, string> = {
     tuesday: 'Tuesday Shift',
     thursday: 'Thursday Shift',
-    saturday: 'Saturday Shift',
     sunday: 'Sunday Shift',
     'full-audit': 'Full Facility Audit',
   };

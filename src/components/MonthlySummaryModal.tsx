@@ -369,10 +369,10 @@ export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
                       completed: metrics.monthlyRotationsCompleted.some((r) => r.toLowerCase().includes('partition')),
                     },
                     {
-                      rotation: '2nd Saturday',
-                      name: 'Detail Edge Vacuuming & Vacuum Fabric Furniture',
-                      area: 'Baseboards, Crevices & Upholstered Seating',
-                      completed: metrics.monthlyRotationsCompleted.some((r) => r.toLowerCase().includes('edge') || r.toLowerCase().includes('fabric') || r.toLowerCase().includes('furniture')),
+                      rotation: '2nd Sunday',
+                      name: 'Deep Clean Inside of Refrigerators',
+                      area: 'Staff & Member Refrigerators (Sanitized)',
+                      completed: metrics.monthlyRotationsCompleted.some((r) => r.toLowerCase().includes('refrigerator')),
                     },
                     {
                       rotation: '2nd Tuesday',
@@ -387,10 +387,16 @@ export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
                       completed: metrics.monthlyRotationsCompleted.some((r) => r.toLowerCase().includes('blind') || r.toLowerCase().includes('entrance') || r.toLowerCase().includes('door')),
                     },
                     {
-                      rotation: '4th Saturday',
-                      name: 'Deep Clean Inside of Refrigerators',
-                      area: 'Staff & Member Refrigerators (Sanitized)',
-                      completed: metrics.monthlyRotationsCompleted.some((r) => r.toLowerCase().includes('refrigerator')),
+                      rotation: '3rd Thursday',
+                      name: 'Detail Edge Vacuuming',
+                      area: 'Baseboards, Crevices & Perimeter Edging',
+                      completed: metrics.monthlyRotationsCompleted.some((r) => r.toLowerCase().includes('edge') || r.toLowerCase().includes('vacuum')),
+                    },
+                    {
+                      rotation: '4th Sunday',
+                      name: 'Partition Glass Detail',
+                      area: 'Gym Partition Glass & Dividers Squeegee Detail',
+                      completed: metrics.monthlyRotationsCompleted.some((r) => r.toLowerCase().includes('partition') || r.toLowerCase().includes('glass')),
                     },
                   ].map((item, idx) => (
                     <div

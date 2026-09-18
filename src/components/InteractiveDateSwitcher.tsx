@@ -39,14 +39,14 @@ export const InteractiveDateSwitcher: React.FC<InteractiveDateSwitcherProps> = (
     currentDate.getDate()
   ).padStart(2, '0')}`;
 
-  // Helper to step to previous/next service day (Tue=2, Thu=4, Sat=6)
+  // Helper to step to previous/next service day (Sun=0, Tue=2, Thu=4)
   const stepVisit = (direction: 'prev' | 'next') => {
     const step = direction === 'next' ? 1 : -1;
     let nextDate = new Date(currentDate);
     for (let i = 0; i < 7; i++) {
       nextDate.setDate(nextDate.getDate() + step);
       const d = nextDate.getDay();
-      if (d === 2 || d === 4 || d === 6) {
+      if (d === 0 || d === 2 || d === 4) {
         onSelectDate(nextDate);
         return;
       }
@@ -55,7 +55,7 @@ export const InteractiveDateSwitcher: React.FC<InteractiveDateSwitcherProps> = (
 
   // Special Contract Milestones
   const isFirstTuesday = dayOfWeek === 2 && occurrence === 1;
-  const isSecondSaturday = dayOfWeek === 6 && occurrence === 2;
+  const isSecondSunday = dayOfWeek === 0 && occurrence === 2;
 
   // Jump to specific milestone helpers
   const jumpToFirstTuesday = () => {
@@ -66,12 +66,12 @@ export const InteractiveDateSwitcher: React.FC<InteractiveDateSwitcherProps> = (
     onSelectDate(d);
   };
 
-  const jumpToSecondSaturday = () => {
+  const jumpToSecondSunday = () => {
     const d = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-    while (d.getDay() !== 6) {
+    while (d.getDay() !== 0) {
       d.setDate(d.getDate() + 1);
     }
-    d.setDate(d.getDate() + 7); // 2nd Saturday
+    d.setDate(d.getDate() + 7); // 2nd Sunday
     onSelectDate(d);
   };
 
@@ -99,7 +99,7 @@ export const InteractiveDateSwitcher: React.FC<InteractiveDateSwitcherProps> = (
               </span>
             </div>
             <p className="text-xs text-slate-300 mt-0.5">
-              Contract Cadence: <strong className="text-purple-200">Tuesday, Thursday, Saturday @ 11:00 PM</strong> • 156 Annual Visits Total
+              Contract Cadence: <strong className="text-purple-200">Tuesday, Thursday, Sunday after 11:00 PM</strong> • 156 Annual Visits Total
             </p>
           </div>
         </div>
@@ -265,11 +265,11 @@ export const InteractiveDateSwitcher: React.FC<InteractiveDateSwitcherProps> = (
               </button>
               <span className="text-slate-600">•</span>
               <button
-                onClick={jumpToSecondSaturday}
+                onClick={jumpToSecondSunday}
                 className="text-indigo-300 hover:text-indigo-200 font-semibold underline cursor-pointer"
-                title="Jump to 2nd Saturday of this month to test 'Detail edge vac & fabric furniture'"
+                title="Jump to 2nd Sunday of this month to test 'Inside Refrigerator Deep Clean'"
               >
-                2nd Sat (Edge Vac & Fabric)
+                2nd Sun (Refrigerator Clean)
               </button>
             </div>
           </div>

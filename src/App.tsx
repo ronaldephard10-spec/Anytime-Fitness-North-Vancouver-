@@ -16,8 +16,6 @@ import {
   TUESDAY_MONTHLY,
   THURSDAY_SPECIFIC,
   THURSDAY_MONTHLY,
-  SATURDAY_SPECIFIC,
-  SATURDAY_MONTHLY,
 } from './data/checklistItems';
 import { getTodayInspectionDay, formatInspectionTimestamp, getLocalDateIso } from './utils/dayDetector';
 import { getMonthlyTasksDueForDate, getDueInspectionForDate } from './utils/scheduleEngine';
@@ -77,10 +75,9 @@ export default function App() {
     const initial: Record<string, ItemEvaluation> = {};
     const allKnown = [
       ...CORE_SERVICES,
-      ...SATURDAY_SPECIFIC,
+      ...SUNDAY_SPECIFIC,
       ...TUESDAY_SPECIFIC,
       ...THURSDAY_SPECIFIC,
-      ...SUNDAY_SPECIFIC,
     ];
     allKnown.forEach((item) => {
       initial[item.id] = { id: item.id, status: 'pass' };
@@ -323,14 +320,14 @@ export default function App() {
     // Determine day of week
     const d = selectedDate.getDay();
     let tabToSelect: ActiveTab = 'tuesday';
-    if (d === 2) tabToSelect = 'tuesday';
+    if (d === 0) tabToSelect = 'sunday';
+    else if (d === 2) tabToSelect = 'tuesday';
     else if (d === 4) tabToSelect = 'thursday';
-    else if (d === 6) tabToSelect = 'saturday';
     else {
       // Off schedule, recommend closest
-      if (d === 0 || d === 1) tabToSelect = 'tuesday';
+      if (d === 1) tabToSelect = 'tuesday';
       else if (d === 3) tabToSelect = 'thursday';
-      else if (d === 5) tabToSelect = 'saturday';
+      else if (d === 5 || d === 6) tabToSelect = 'sunday';
     }
     setActiveTab(tabToSelect);
 
@@ -358,7 +355,7 @@ export default function App() {
   // Calculate strictly what is due for the active shift and inspected date!
   const dueInspection = useMemo(() => {
     const shiftOverride =
-      activeTab === 'saturday' || activeTab === 'tuesday' || activeTab === 'thursday' || activeTab === 'sunday'
+      activeTab === 'sunday' || activeTab === 'tuesday' || activeTab === 'thursday'
         ? activeTab
         : null;
     return getDueInspectionForDate(inspectedDate, shiftOverride);
@@ -367,7 +364,7 @@ export default function App() {
   // Helper to determine which items belong to a given tab strictly for that day/shift
   const getItemsForTab = (tab: ActiveTab): InspectionItem[] => {
     const shift: DayOfWeek =
-      tab === 'saturday' || tab === 'tuesday' || tab === 'thursday' || tab === 'sunday'
+      tab === 'sunday' || tab === 'tuesday' || tab === 'thursday'
         ? tab
         : 'tuesday';
 
@@ -375,14 +372,7 @@ export default function App() {
     const items = [...dueInfo.allDueItems];
 
     // If an inspector manually opted into an unscheduled ad-hoc monthly task, include it
-    if (shift === 'saturday') {
-      if (monthlyToggles['sat-monthly-edge-fabric'] && !items.some((i) => i.id === 'sat-monthly-edge-fabric')) {
-        items.push(SATURDAY_MONTHLY[0]);
-      }
-      if (monthlyToggles['sat-monthly-refrigerator'] && !items.some((i) => i.id === 'sat-monthly-refrigerator')) {
-        items.push(SATURDAY_MONTHLY[1]);
-      }
-    } else if (shift === 'tuesday') {
+    if (shift === 'tuesday') {
       if (monthlyToggles['tue-monthly-blinds-entrance'] && !items.some((i) => i.id === 'tue-monthly-blinds-entrance')) {
         items.push(TUESDAY_MONTHLY[0]);
       }
@@ -442,11 +432,10 @@ export default function App() {
 
   // Stats for the TabBar badges
   const dayStats = useMemo(() => {
-    const tabs: ActiveTab[] = ['tuesday', 'thursday', 'saturday', 'sunday'];
+    const tabs: ActiveTab[] = ['tuesday', 'thursday', 'sunday'];
     const res: Record<ActiveTab, { total: number; passed: number; score: number }> = {
       tuesday: { total: 0, passed: 0, score: 0 },
       thursday: { total: 0, passed: 0, score: 0 },
-      saturday: { total: 0, passed: 0, score: 0 },
       sunday: { total: 0, passed: 0, score: 0 },
       'full-audit': { total: 0, passed: 0, score: 0 },
     };
@@ -766,7 +755,7 @@ export default function App() {
                   Today is {todayInfo.dayName} (No Routine Shift Scheduled)
                 </div>
                 <div className="text-xs text-slate-400 mt-0.5">
-                  Anytime Fitness North Vancouver (Unit 103) is serviced 3x weekly: Tuesday, Thursday & Saturday at 11:00 PM (156 Visits/Year). Displaying due items for the{' '}
+                  Anytime Fitness North Vancouver (Unit 103) is serviced 3x weekly: Tuesday, Thursday & Sunday after 11:00 PM (156 Visits/Year). Displaying due items for the{' '}
                   <span className="text-purple-300 font-semibold">{dueInspection.shiftDay.toUpperCase()} Shift</span>.
                 </div>
               </div>
@@ -824,13 +813,11 @@ export default function App() {
               title={`${dueInspection.shiftDay.charAt(0).toUpperCase() + dueInspection.shiftDay.slice(1)} Specific Services`}
               badgeText={`${dueInspection.shiftDay.charAt(0).toUpperCase() + dueInspection.shiftDay.slice(1)} Shift (Due Tonight)`}
               subtitle={
-                dueInspection.shiftDay === 'saturday'
-                  ? 'Gym perimeter vacuuming, rubber flooring extraction, equipment wipe-down, sanitization.'
+                dueInspection.shiftDay === 'sunday'
+                  ? 'Gym perimeter vacuuming, rubber flooring extraction, equipment wipe-down, sanitization & microwave interior.'
                   : dueInspection.shiftDay === 'tuesday'
                   ? 'High/Low dusting (up to 6ft) and surface dusting of fixtures, desks, counters, display units & ledges.'
-                  : dueInspection.shiftDay === 'thursday'
-                  ? 'Damp wipe office desks & furniture, sanitize phones, carpet spot vacuuming & desk mats, full floor carpet vacuum, traffic vacuum.'
-                  : 'Microwave interior cleaning, partition glass dusting, high-traffic vacuuming.'
+                  : 'Damp wipe office desks & furniture, sanitize phones, carpet spot vacuuming & desk mats, full floor carpet vacuum, traffic vacuum.'
               }
               items={dueInspection.shiftSpecificItems}
               evaluations={evaluations}
@@ -882,9 +869,7 @@ export default function App() {
               badgeText="Optional / Extra"
               subtitle="Select and evaluate any monthly rotation items completed out of normal cycle."
               items={
-                dueInspection.shiftDay === 'saturday'
-                  ? SATURDAY_MONTHLY
-                  : dueInspection.shiftDay === 'tuesday'
+                dueInspection.shiftDay === 'tuesday'
                   ? TUESDAY_MONTHLY
                   : dueInspection.shiftDay === 'thursday'
                   ? THURSDAY_MONTHLY

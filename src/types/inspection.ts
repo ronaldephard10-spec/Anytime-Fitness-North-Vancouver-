@@ -1,5 +1,5 @@
-export type DayOfWeek = 'tuesday' | 'thursday' | 'saturday' | 'sunday';
-export type ActiveTab = 'tuesday' | 'thursday' | 'saturday' | 'sunday' | 'full-audit';
+export type DayOfWeek = 'tuesday' | 'thursday' | 'sunday';
+export type ActiveTab = 'tuesday' | 'thursday' | 'sunday' | 'full-audit';
 export type ReportingCadence = 'monthly-summary' | 'weekly-summary' | 'every-visit';
 
 export type ItemStatus = 'pass' | 'fail' | 'pending' | 'na';
@@ -17,8 +17,8 @@ export interface InspectionMethodGuide {
 export interface InspectionItem {
   id: string;
   name: string;
-  category: 'core' | 'tuesday' | 'thursday' | 'saturday' | 'sunday' | 'monthly';
-  applicableDays: ('tuesday' | 'thursday' | 'saturday' | 'sunday' | 'all')[];
+  category: 'core' | 'tuesday' | 'thursday' | 'sunday' | 'monthly';
+  applicableDays: ('tuesday' | 'thursday' | 'sunday' | 'all')[];
   isMonthly?: boolean;
   notesPrompt?: string;
   description?: string;
@@ -96,7 +96,7 @@ export const FACILITY_INFO: FacilityMetadata = {
   facility: 'Anytime Fitness North Vancouver',
   unit: 'Unit 103',
   address: '103 - 2180 Dollarton Hwy, North Vancouver, BC V7H 0B5',
-  frequency: '3x / Week (Tuesday, Thursday, Saturday at 11:00 PM — 156 Annual Visits)',
+  frequency: '3x / Week (Tuesday, Thursday, Sunday after 11:00 PM — 156 Annual Visits)',
   contactName: 'Jennifer Johnson',
   contactPhone: '604-785-4857',
   accountNumber: '3007',
@@ -107,7 +107,7 @@ export const FACILITY_INFO: FacilityMetadata = {
   monthlyBilling: '$685.00 / month',
   printingDate: 'May 20, 2026',
   totalAnnualVisits: 156,
-  contractCycle: 'Tuesday, Thursday, Saturday (156 Visits / Year)',
+  contractCycle: 'Tuesday, Thursday, Sunday (156 Visits / Year)',
 };
 
 export const RECIPIENT_CONFIG = {
