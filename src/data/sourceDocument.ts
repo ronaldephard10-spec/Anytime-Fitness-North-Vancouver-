@@ -397,13 +397,13 @@ export const WORK_SCHEDULE_ITEMS: ServiceFrequencyItem[] = [
     notes: 'Scheduled: 2nd Tuesday of each month.',
   },
   {
-    id: 'ws-month-refrigerator',
-    section: 'Kitchens / Breakrooms',
-    task: 'Clean inside of refrigerators (shelves, crisper bins, door gaskets).',
+    id: 'ws-month-partition-detail',
+    section: 'Glass & Partitions',
+    task: 'Partition Glass Detail (Streak-free squeegee and frame polish).',
     frequency: '1x Month',
     dayOrTiming: '2nd Sunday of every Month',
-    toolsSupplies: 'Color-coded microfiber cloths and hospital grade disinfectant',
-    notes: 'Deep interior sanitation of refrigerator.',
+    toolsSupplies: 'Hospital glass cleaner, rubber squeegee, microfiber edger',
+    notes: 'Deep monthly glass squeegee detail on all gym partition glass panes.',
   },
   {
     id: 'ws-month-entrance-blinds',
@@ -433,13 +433,13 @@ export const WORK_SCHEDULE_ITEMS: ServiceFrequencyItem[] = [
     notes: 'Scheduled: 3rd Thursday of each month.',
   },
   {
-    id: 'ws-month-partition-detail',
-    section: 'Glass & Partitions',
-    task: 'Partition Glass Detail (Streak-free squeegee and frame polish).',
+    id: 'ws-month-refrigerator',
+    section: 'Kitchens / Breakrooms',
+    task: 'Clean inside of refrigerators (shelves, crisper bins, door gaskets).',
     frequency: '1x Month',
     dayOrTiming: '4th Sunday of every Month',
-    toolsSupplies: 'Hospital glass cleaner, rubber squeegee, microfiber edger',
-    notes: 'Deep monthly glass squeegee detail on all gym partition glass panes.',
+    toolsSupplies: 'Color-coded microfiber cloths and hospital grade disinfectant',
+    notes: 'Deep interior sanitation of refrigerator scheduled for the 4th Sunday of each month.',
   },
 
   // ANNUAL & PERIODIC SPECIAL SERVICES (Page 21)

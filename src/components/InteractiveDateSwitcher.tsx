@@ -56,6 +56,7 @@ export const InteractiveDateSwitcher: React.FC<InteractiveDateSwitcherProps> = (
   // Special Contract Milestones
   const isFirstTuesday = dayOfWeek === 2 && occurrence === 1;
   const isSecondSunday = dayOfWeek === 0 && occurrence === 2;
+  const isFourthSunday = dayOfWeek === 0 && occurrence === 4;
 
   // Jump to specific milestone helpers
   const jumpToFirstTuesday = () => {
@@ -72,6 +73,15 @@ export const InteractiveDateSwitcher: React.FC<InteractiveDateSwitcherProps> = (
       d.setDate(d.getDate() + 1);
     }
     d.setDate(d.getDate() + 7); // 2nd Sunday
+    onSelectDate(d);
+  };
+
+  const jumpToFourthSunday = () => {
+    const d = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    while (d.getDay() !== 0) {
+      d.setDate(d.getDate() + 1);
+    }
+    d.setDate(d.getDate() + 21); // 4th Sunday (1st Sunday + 21 days)
     onSelectDate(d);
   };
 
@@ -266,10 +276,18 @@ export const InteractiveDateSwitcher: React.FC<InteractiveDateSwitcherProps> = (
               <span className="text-slate-600">•</span>
               <button
                 onClick={jumpToSecondSunday}
-                className="text-indigo-300 hover:text-indigo-200 font-semibold underline cursor-pointer"
-                title="Jump to 2nd Sunday of this month to test 'Inside Refrigerator Deep Clean'"
+                className="text-purple-300 hover:text-purple-200 font-semibold underline cursor-pointer"
+                title="Jump to 2nd Sunday of this month to test 'Partition Glass Detail'"
               >
-                2nd Sun (Refrigerator Clean)
+                2nd Sun (Partition Detail)
+              </button>
+              <span className="text-slate-600">•</span>
+              <button
+                onClick={jumpToFourthSunday}
+                className="text-indigo-300 hover:text-indigo-200 font-semibold underline cursor-pointer"
+                title="Jump to 4th Sunday of this month to test 'Inside Refrigerator Deep Clean'"
+              >
+                4th Sun (Refrigerator Clean)
               </button>
             </div>
           </div>

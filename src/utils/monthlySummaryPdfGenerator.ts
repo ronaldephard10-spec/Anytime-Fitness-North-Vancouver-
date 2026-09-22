@@ -204,18 +204,18 @@ export function generateMonthlySummaryPDF(
         : 'Scheduled in Rotation',
     },
     {
-      schedule: '3rd Sunday of Month',
-      task: 'Staff Refrigerator Interior Sanitization (Page 4)',
-      area: 'Staff Breakroom Kitchen',
-      status: metrics.monthlyRotationsCompleted.some((r) => r.toLowerCase().includes('refrigerator'))
+      schedule: '2nd Sunday of Month',
+      task: 'Partition Glass & Plexiglass Wall Wash (Page 4)',
+      area: 'Gym Glass & Office Partitions',
+      status: metrics.monthlyRotationsCompleted.some((r) => r.toLowerCase().includes('partition'))
         ? 'COMPLETED ✓'
         : 'Scheduled in Rotation',
     },
     {
       schedule: '4th Sunday of Month',
-      task: 'Partition Glass & Plexiglass Wall Wash (Page 4)',
-      area: 'Gym Glass & Office Partitions',
-      status: metrics.monthlyRotationsCompleted.some((r) => r.toLowerCase().includes('partition'))
+      task: 'Staff Refrigerator Interior Sanitization (Page 4)',
+      area: 'Staff Breakroom Kitchen',
+      status: metrics.monthlyRotationsCompleted.some((r) => r.toLowerCase().includes('refrigerator'))
         ? 'COMPLETED ✓'
         : 'Scheduled in Rotation',
     },

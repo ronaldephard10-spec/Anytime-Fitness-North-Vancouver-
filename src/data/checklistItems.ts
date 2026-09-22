@@ -272,10 +272,10 @@ export const SUNDAY_MONTHLY: InspectionItem[] = [
     category: 'monthly',
     applicableDays: ['sunday'],
     isMonthly: true,
-    description: 'Monthly scheduled deep clean of interior refrigerator shelves, crispers, and exterior handle.',
+    description: 'Scheduled for the 4th Sunday of every month. Deep clean of interior refrigerator shelves, crispers, and exterior handle.',
     inspectionGuide: {
       coverallSection: 'Lunchroom / Coffee Stn / Kitchen (Appliances)',
-      inspectionProcedure: 'Open breakroom refrigerator. Inspect all glass shelves, door bins, crisper drawers, door gasket folds, and exterior handle.',
+      inspectionProcedure: 'Mandated on the 4th Sunday of every month. Open breakroom refrigerator. Inspect all glass shelves, door bins, crisper drawers, door gasket folds, and exterior handle.',
       inspectionSteps: [
         'Inspect all interior shelves, door bins, and crisper drawers for spills, sticky rings, and expired debris.',
         'Check interior walls and roof for stains and condensation odors.',
@@ -285,7 +285,7 @@ export const SUNDAY_MONTHLY: InspectionItem[] = [
       passStandard: 'Grade 9 (Meets Standards): Clean sanitized shelves, no sticky residues, clean gasket seal, fresh odor, polished exterior handle.',
       needsImprovementStandard: 'Grade 7 (Needs Improvement): Minor dry crumb in bottom bin, slight smudge on exterior door panel.',
       belowStandard: 'Grade 5 (Below Standards): Spilled liquid rings on glass shelves, debris trapped in door seals, sticky exterior handle, sour odor. Must be corrected within 24 hours.',
-      fboProTip: 'Pull open the folds of the magnetic door gasket—spilled milk, condensation, and crumbs easily hide inside the rubber ridges.',
+      fboProTip: 'Mandated on the 4th Sunday of every month. Pull open the folds of the magnetic door gasket—spilled milk, condensation, and crumbs easily hide inside the rubber ridges.',
     },
   },
   {
@@ -294,10 +294,10 @@ export const SUNDAY_MONTHLY: InspectionItem[] = [
     category: 'monthly',
     applicableDays: ['sunday'],
     isMonthly: true,
-    description: 'Monthly edge-to-edge streak-free squeegee detail on all gym partition glass panes.',
+    description: 'Scheduled for the 2nd Sunday of every month. Monthly edge-to-edge streak-free squeegee detail on all gym partition glass panes.',
     inspectionGuide: {
       coverallSection: 'Office Areas & Detail Cleaning (Partition Glass Detail)',
-      inspectionProcedure: 'Inspect partition glass panes under direct lighting from corner to corner. Check perimeter silicone seals and mounting clips.',
+      inspectionProcedure: 'Mandated on the 2nd Sunday of every month. Inspect partition glass panes under direct lighting from corner to corner. Check perimeter silicone seals and mounting clips.',
       inspectionSteps: [
         'Inspect entire pane from corner to corner in bright light for water spots, streaks, and chemical haze.',
         'Check edges adjacent to aluminum frames to ensure squeegee blade reached all corners without leaving dirty borders.',
@@ -306,7 +306,7 @@ export const SUNDAY_MONTHLY: InspectionItem[] = [
       passStandard: 'Grade 9 (Meets Standards): 100% streak-free, crystal-clear squeegee finish from edge to edge with zero border lines.',
       needsImprovementStandard: 'Grade 7 (Needs Improvement): Single faint squeegee line near frame perimeter, slight water droplet at bottom corner.',
       belowStandard: 'Grade 5 (Below Standards): Streaks along frame perimeter, haze in center, drip marks at base. Must be corrected within 24 hours.',
-      fboProTip: 'Verify that squeegee detailing reached all four corners. Incomplete blade strokes leave dirty boundary strips along aluminum frames.',
+      fboProTip: 'Mandated on the 2nd Sunday of every month. Verify that squeegee detailing reached all four corners. Incomplete blade strokes leave dirty boundary strips along aluminum frames.',
     },
   },
 ];

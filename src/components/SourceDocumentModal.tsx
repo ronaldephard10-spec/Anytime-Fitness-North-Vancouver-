@@ -1015,14 +1015,8 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                               )}
 
                               {cell.isSecondSunday && (
-                                <div className="p-1 rounded bg-indigo-950/90 border border-indigo-400/80 text-indigo-200 text-[10px] font-extrabold leading-tight shadow-sm">
-                                  <div className="flex items-center gap-1">
-                                    <Sparkles className="w-3 h-3 text-indigo-300 shrink-0" />
-                                    <span>2nd Sun Mandated:</span>
-                                  </div>
-                                  <span className="text-[9.5px] font-semibold text-white block mt-0.5">
-                                    Inside refrigerator deep clean
-                                  </span>
+                                <div className="p-1 rounded bg-purple-950/80 border border-purple-600/60 text-purple-200 text-[9px] font-bold">
+                                  2nd Sun: Partition Glass Detail
                                 </div>
                               )}
 
@@ -1051,8 +1045,14 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                               )}
 
                               {cell.isFourthSunday && (
-                                <div className="p-1 rounded bg-purple-950/80 border border-purple-600/60 text-purple-200 text-[9px] font-bold">
-                                  4th Sun: Partition Glass Detail
+                                <div className="p-1 rounded bg-indigo-950/90 border border-indigo-400/80 text-indigo-200 text-[10px] font-extrabold leading-tight shadow-sm">
+                                  <div className="flex items-center gap-1">
+                                    <Sparkles className="w-3 h-3 text-indigo-300 shrink-0" />
+                                    <span>4th Sun Mandated:</span>
+                                  </div>
+                                  <span className="text-[9.5px] font-semibold text-white block mt-0.5">
+                                    Inside refrigerator deep clean
+                                  </span>
                                 </div>
                               )}
                             </div>
@@ -1087,19 +1087,19 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                     </div>
                   </div>
 
-                  {/* 2nd Sunday Mandate */}
+                  {/* 4th Sunday Mandate */}
                   <div className="p-4 rounded-xl bg-indigo-950/30 border border-indigo-400/50 space-y-2">
                     <div className="flex items-center gap-2">
                       <span className="px-2 py-0.5 rounded bg-indigo-900 border border-indigo-400 text-indigo-200 text-[11px] font-black uppercase">
-                        2nd Sunday Mandate
+                        4th Sunday Mandate
                       </span>
                       <h4 className="text-sm font-bold text-white">Inside Refrigerator Deep Clean</h4>
                     </div>
                     <p className="text-xs text-slate-300">
-                      <strong>Contract Requirement:</strong> Mandates "Inside Refrigerator Deep Clean" on the 2nd Sunday of every month. Empty interior shelves, crisper bins, door gaskets, and sanitize with hospital-grade disinfectant.
+                      <strong>Contract Requirement:</strong> Mandates "Inside Refrigerator Deep Clean" on the 4th Sunday of every month. Empty interior shelves, crisper bins, door gaskets, and sanitize with hospital-grade disinfectant.
                     </p>
                     <div className="text-[11px] text-indigo-300 bg-indigo-950/80 p-2 rounded-lg border border-indigo-800/60">
-                      ✓ Automatically activated when walkthrough date is set to the 2nd Sunday of any month.
+                      ✓ Automatically activated when walkthrough date is set to the 4th Sunday of any month.
                     </div>
                   </div>
                 </div>
@@ -1129,12 +1129,12 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                           <td className="py-2.5 px-3 text-slate-300">Clean partition glass, conference dividers & sidelites (streak-free squeegee)</td>
                           <td className="py-2.5 px-3 text-slate-400">Pg 5, 7</td>
                         </tr>
-                        <tr className="bg-indigo-950/20">
-                          <td className="py-2.5 px-3 font-bold text-indigo-300">Inside Refrigerator Deep Clean</td>
+                        <tr>
+                          <td className="py-2.5 px-3 font-semibold text-purple-300">Partition Glass Detail</td>
                           <td className="py-2.5 px-3 font-semibold text-white">2nd Sunday of Month</td>
                           <td className="py-2.5 px-3 text-purple-300">Sunday after 11:00 PM</td>
-                          <td className="py-2.5 px-3 text-slate-300">Empty shelves, sanitize interior walls, bins & racks with hospital disinfectant</td>
-                          <td className="py-2.5 px-3 text-slate-400">Pg 4, 7</td>
+                          <td className="py-2.5 px-3 text-slate-300">Monthly edge-to-edge streak-free squeegee detail on all gym partition glass panes</td>
+                          <td className="py-2.5 px-3 text-slate-400">Pg 5, 7</td>
                         </tr>
                         <tr>
                           <td className="py-2.5 px-3 font-semibold text-purple-300">Dust Light Fixtures & Ceiling Vents</td>
@@ -1157,12 +1157,12 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                           <td className="py-2.5 px-3 text-slate-300">Crevice tool edge vacuuming around all baseboard perimeters, weight racks & corners</td>
                           <td className="py-2.5 px-3 text-slate-400">Pg 3, 7</td>
                         </tr>
-                        <tr>
-                          <td className="py-2.5 px-3 font-semibold text-purple-300">Partition Glass Detail</td>
-                          <td className="py-2.5 px-3">4th Sunday of Month</td>
+                        <tr className="bg-indigo-950/20">
+                          <td className="py-2.5 px-3 font-bold text-indigo-300">Inside Refrigerator Deep Clean</td>
+                          <td className="py-2.5 px-3 font-semibold text-white">4th Sunday of Month</td>
                           <td className="py-2.5 px-3 text-purple-300">Sunday after 11:00 PM</td>
-                          <td className="py-2.5 px-3 text-slate-300">Monthly edge-to-edge streak-free squeegee detail on all gym partition glass panes</td>
-                          <td className="py-2.5 px-3 text-slate-400">Pg 5, 7</td>
+                          <td className="py-2.5 px-3 text-slate-300">Empty shelves, sanitize interior walls, bins & racks with hospital disinfectant</td>
+                          <td className="py-2.5 px-3 text-slate-400">Pg 4, 7</td>
                         </tr>
                       </tbody>
                     </table>

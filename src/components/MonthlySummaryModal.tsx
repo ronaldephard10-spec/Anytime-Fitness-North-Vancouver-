@@ -370,9 +370,9 @@ export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
                     },
                     {
                       rotation: '2nd Sunday',
-                      name: 'Deep Clean Inside of Refrigerators',
-                      area: 'Staff & Member Refrigerators (Sanitized)',
-                      completed: metrics.monthlyRotationsCompleted.some((r) => r.toLowerCase().includes('refrigerator')),
+                      name: 'Partition Glass Detail',
+                      area: 'Gym Partition Glass & Dividers Squeegee Detail',
+                      completed: metrics.monthlyRotationsCompleted.some((r) => r.toLowerCase().includes('partition') || r.toLowerCase().includes('glass')),
                     },
                     {
                       rotation: '2nd Tuesday',
@@ -394,9 +394,9 @@ export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
                     },
                     {
                       rotation: '4th Sunday',
-                      name: 'Partition Glass Detail',
-                      area: 'Gym Partition Glass & Dividers Squeegee Detail',
-                      completed: metrics.monthlyRotationsCompleted.some((r) => r.toLowerCase().includes('partition') || r.toLowerCase().includes('glass')),
+                      name: 'Deep Clean Inside of Refrigerators',
+                      area: 'Staff & Member Refrigerators (Sanitized)',
+                      completed: metrics.monthlyRotationsCompleted.some((r) => r.toLowerCase().includes('refrigerator')),
                     },
                   ].map((item, idx) => (
                     <div

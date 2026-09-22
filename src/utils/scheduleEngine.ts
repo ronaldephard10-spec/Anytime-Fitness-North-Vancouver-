@@ -125,8 +125,8 @@ export function getMonthlyContractVisits(year: number, month: number): {
 /**
  * Coverall Health-Based Cleaning System Monthly Services Schedule Rules (Unit 103 - 2180 Dollarton Hwy • 156 Visits)
  * 1st Tuesday: "Clean partition glass" (interior glass partition walls, conference dividers, sidelites)
- * 2nd Sunday: "Inside Refrigerator Deep Clean" (interior shelves, crisper bins, door gaskets)
- * 4th Sunday: "Partition Glass Detail" (edge-to-edge streak-free squeegee detail)
+ * 2nd Sunday: "Partition Glass Detail" (monthly edge-to-edge streak-free squeegee detail)
+ * 4th Sunday: "Inside Refrigerator Deep Clean" (interior shelves, crisper bins, door gaskets)
  */
 export const MONTHLY_SERVICE_RULES: Record<string, {
   dayOfWeek: DayOfWeek;
@@ -168,24 +168,24 @@ export const MONTHLY_SERVICE_RULES: Record<string, {
     description: 'Clean glass entrance doors (interior/exterior), polish trim & dust all window blinds.',
     category: 'tuesday',
   },
-  'sun-refrigerator': {
-    dayOfWeek: 'sunday',
-    dayNum: 0,
-    occurrence: 2,
-    name: 'Inside Refrigerator Deep Clean',
-    toggleKey: 'sun-monthly-refrigerator',
-    occurrenceText: '2nd Sunday of the Month',
-    description: 'Deep clean inside of refrigerators: interior shelves, crisper bins, and door gaskets with hospital disinfectant.',
-    category: 'sunday',
-  },
   'sun-partition-detail': {
     dayOfWeek: 'sunday',
     dayNum: 0,
-    occurrence: 4,
+    occurrence: 2,
     name: 'Partition Glass Detail',
     toggleKey: 'sun-monthly-partition-detail',
-    occurrenceText: '4th Sunday of the Month',
+    occurrenceText: '2nd Sunday of the Month',
     description: 'Monthly edge-to-edge streak-free squeegee detail on all gym partition glass panes.',
+    category: 'sunday',
+  },
+  'sun-refrigerator': {
+    dayOfWeek: 'sunday',
+    dayNum: 0,
+    occurrence: 4,
+    name: 'Inside Refrigerator Deep Clean',
+    toggleKey: 'sun-monthly-refrigerator',
+    occurrenceText: '4th Sunday of the Month',
+    description: 'Deep clean inside of refrigerators: interior shelves, crisper bins, and door gaskets with hospital disinfectant.',
     category: 'sunday',
   },
   'thu-fabric-furniture': {

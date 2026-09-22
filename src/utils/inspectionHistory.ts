@@ -196,7 +196,7 @@ const SEED_INSPECTIONS: CompletedInspection[] = [
     totalEvaluated: 13,
     inspectorName: 'Ronald Ephard',
     supervisorName: 'Jennifer Johnson',
-    notes: 'Official Start Date shift & Initial Clean certification. Staff breakroom refrigerator deep disinfected and sanitized per 2nd Sunday rotation.',
+    notes: 'Official Start Date shift & Initial Clean certification. Staff breakroom refrigerator deep disinfected and sanitized per contract agreement (Regular monthly rotation: 4th Sunday).',
     monthlyTasksCompleted: ['Staff Breakroom Refrigerator Deep Disinfection'],
     deficiencies: [],
     photoCount: 2,

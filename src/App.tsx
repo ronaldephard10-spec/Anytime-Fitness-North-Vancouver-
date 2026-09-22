@@ -86,14 +86,12 @@ export default function App() {
   };
 
   const DEFAULT_MONTHLY_TOGGLES: Record<string, boolean> = {
-    'sat-monthly-edge-fabric': false,
-    'sat-monthly-refrigerator': false,
     'tue-monthly-blinds-entrance': false,
     'tue-monthly-vents-fixtures': false,
     'thu-monthly-detail-edge-vacuum': false,
     'thu-monthly-fabric-furniture': false,
-    'sun-monthly-refrigerator': false,
     'sun-monthly-partition-detail': false,
+    'sun-monthly-refrigerator': false,
   };
 
   // 2. Track date of current audit session for rollover detection
