@@ -38,11 +38,13 @@ import { NewDayRolloverBanner } from './components/NewDayRolloverBanner';
 import { ResetConfirmModal } from './components/ResetConfirmModal';
 import { useOnlineStatus } from './hooks/useOnlineStatus';
 import { useVoiceWalkthrough } from './hooks/useVoiceWalkthrough';
+import { useTextSize } from './hooks/useTextSize';
 
 const STORAGE_KEY = 'af_inspection_audit_state_v1';
 
 export default function App() {
   const isOnline = useOnlineStatus();
+  const { textSize, cycleTextSize } = useTextSize();
 
   // Modals for Source Document Reference, Annual / Periodic Services, & Monthly QA Summary
   const [isSourceDocOpen, setIsSourceDocOpen] = useState<boolean>(false);
@@ -706,6 +708,8 @@ export default function App() {
         isVoiceSupported={voiceState.isSupported}
         onDownloadReport={handleDownloadCurrentReport}
         onSaveReport={handleSaveCurrentReport}
+        textSize={textSize}
+        onCycleTextSize={cycleTextSize}
       />
 
       {/* Top Shift Tab Bar */}

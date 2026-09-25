@@ -83,45 +83,45 @@ export const VoiceAssistantBar: React.FC<VoiceAssistantBarProps> = ({
               </button>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
-              <div className="p-2 rounded-lg bg-slate-950/60 border border-emerald-500/30">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+              <div className="p-2.5 rounded-lg bg-slate-950/60 border border-emerald-500/30">
                 <div className="font-bold text-emerald-300 flex items-center gap-1 mb-0.5">
-                  <CheckCircle2 className="w-3 h-3" /> "Pass [item]"
+                  <CheckCircle2 className="w-3.5 h-3.5" /> "Pass [item]"
                 </div>
-                <p className="text-slate-400">
+                <p className="text-slate-300">
                   e.g., "Pass restrooms", "Pass entrance", "Pass gym mirrors", "Pass all"
                 </p>
               </div>
 
-              <div className="p-2 rounded-lg bg-slate-950/60 border border-rose-500/30">
+              <div className="p-2.5 rounded-lg bg-slate-950/60 border border-rose-500/30">
                 <div className="font-bold text-rose-300 flex items-center gap-1 mb-0.5">
-                  <AlertCircle className="w-3 h-3" /> "Fail [item]"
+                  <AlertCircle className="w-3.5 h-3.5" /> "Fail [item]"
                 </div>
-                <p className="text-slate-400">
+                <p className="text-slate-300">
                   e.g., "Fail microwave door handle dirty" (scrolls to item & prompts photo)
                 </p>
               </div>
 
-              <div className="p-2 rounded-lg bg-slate-950/60 border border-cyan-500/30">
+              <div className="p-2.5 rounded-lg bg-slate-950/60 border border-cyan-500/30">
                 <div className="font-bold text-cyan-300 mb-0.5">"Note [item] [text]"</div>
-                <p className="text-slate-400">
+                <p className="text-slate-300">
                   e.g., "Note water dispenser refilled sanitizing station"
                 </p>
               </div>
 
-              <div className="p-2 rounded-lg bg-slate-950/60 border border-purple-500/30">
+              <div className="p-2.5 rounded-lg bg-slate-950/60 border border-purple-500/30">
                 <div className="font-bold text-purple-300 mb-0.5">"What's left?" / "Next section"</div>
-                <p className="text-slate-400">
+                <p className="text-slate-300">
                   Reads out remaining unpassed items or switches to the next shift tab.
                 </p>
               </div>
             </div>
 
-            <div className="p-2 rounded-lg bg-purple-950/40 border border-purple-800/40 flex items-center justify-between text-[11px] text-purple-200">
+            <div className="p-2.5 rounded-lg bg-purple-950/40 border border-purple-800/40 flex items-center justify-between text-xs text-purple-200">
               <span>Say <strong>"Submit report"</strong> at any time to jump to final review.</span>
               <button
                 onClick={() => setIsHelpOpen(false)}
-                className="px-2 py-0.5 rounded bg-purple-800 text-white font-semibold text-[10px] hover:bg-purple-700 transition"
+                className="px-2.5 py-1 rounded-lg bg-purple-800 text-white font-bold text-xs hover:bg-purple-700 transition"
               >
                 Got it
               </button>
@@ -135,7 +135,7 @@ export const VoiceAssistantBar: React.FC<VoiceAssistantBarProps> = ({
             isListening
               ? 'bg-slate-950/95 border-purple-500/60 ring-2 ring-purple-500/30 shadow-purple-950/80'
               : 'bg-slate-900/95 border-slate-800'
-          } p-3 sm:p-3.5`}
+          } p-3.5`}
         >
           <div className="flex items-center justify-between gap-3">
             {/* Primary Mic Trigger & Pulsing Visual Indicator */}
@@ -152,18 +152,18 @@ export const VoiceAssistantBar: React.FC<VoiceAssistantBarProps> = ({
                 <button
                   onClick={toggleListening}
                   id="voice-mic-toggle-btn"
-                  className={`relative w-11 h-11 rounded-full flex items-center justify-center transition-all active:scale-95 shadow-lg ${
+                  className={`relative w-12 h-12 rounded-full flex items-center justify-center transition-all active:scale-95 shadow-lg ${
                     isListening
                       ? 'bg-gradient-to-tr from-purple-600 to-indigo-500 text-white ring-2 ring-white/40'
-                      : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700'
+                      : 'bg-slate-800 hover:bg-slate-750 text-slate-300 border border-slate-700'
                   }`}
                   title={isListening ? 'Pause hands-free listening' : 'Start hands-free voice walkthrough'}
                   aria-label="Toggle Voice Walkthrough Assistant"
                 >
                   {isListening ? (
-                    <Radio className="w-5 h-5 animate-pulse text-white" />
+                    <Radio className="w-6 h-6 animate-pulse text-white" />
                   ) : (
-                    <Mic className="w-5 h-5 text-slate-300" />
+                    <Mic className="w-6 h-6 text-slate-300" />
                   )}
                 </button>
               </div>
@@ -172,7 +172,7 @@ export const VoiceAssistantBar: React.FC<VoiceAssistantBarProps> = ({
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <span
-                    className={`inline-block w-2 h-2 rounded-full ${
+                    className={`inline-block w-2.5 h-2.5 rounded-full ${
                       isListening
                         ? isSpeaking
                           ? 'bg-cyan-400 animate-bounce'
@@ -180,7 +180,7 @@ export const VoiceAssistantBar: React.FC<VoiceAssistantBarProps> = ({
                         : 'bg-slate-500'
                     }`}
                   />
-                  <span className="text-xs font-bold text-white truncate">
+                  <span className="text-sm sm:text-xs font-bold text-white truncate">
                     {isListening
                       ? isSpeaking
                         ? 'Speaking Confirmation...'
@@ -188,24 +188,24 @@ export const VoiceAssistantBar: React.FC<VoiceAssistantBarProps> = ({
                       : 'Voice Assistant'}
                   </span>
                   {isListening && (
-                    <span className="text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded-full bg-purple-950 border border-purple-500/40 text-purple-300 shrink-0">
+                    <span className="text-xs uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-purple-950 border border-purple-500/40 text-purple-300 shrink-0">
                       Active
                     </span>
                   )}
                 </div>
 
                 {/* Subtitle / Live Transcription */}
-                <div className="text-[11px] truncate mt-0.5">
+                <div className="text-xs truncate mt-0.5">
                   {interimTranscript ? (
-                    <span className="text-purple-300 italic font-mono">
+                    <span className="text-purple-300 italic font-mono font-medium">
                       Hearing: "{interimTranscript}"
                     </span>
                   ) : lastFeedback ? (
-                    <span className="text-slate-300">
+                    <span className="text-slate-200">
                       {lastFeedback}
                     </span>
                   ) : (
-                    <span className="text-slate-400">
+                    <span className="text-slate-300">
                       Tap mic to start walking through {activeShiftName}
                     </span>
                   )}
@@ -265,7 +265,7 @@ export const VoiceAssistantBar: React.FC<VoiceAssistantBarProps> = ({
 
           {/* Expanded Live Status View */}
           {!isMinimized && isListening && (
-            <div className="mt-2.5 pt-2.5 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-[10px] text-slate-400">
+            <div className="mt-2.5 pt-2.5 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400">
               <div className="flex items-center gap-1.5">
                 <span className="text-purple-400 font-semibold">Try:</span>
                 <span className="text-slate-300 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">

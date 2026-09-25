@@ -171,14 +171,14 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
         <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-800">
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-base font-bold text-white tracking-tight">{title}</h3>
+              <h3 className="text-lg sm:text-base font-bold text-white tracking-tight">{title}</h3>
               {badgeText && (
-                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-purple-950 border border-purple-700/50 text-purple-300">
+                <span className="text-xs uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-purple-950 border border-purple-700/50 text-purple-300">
                   {badgeText}
                 </span>
               )}
             </div>
-            {subtitle && <p className="text-xs text-slate-400 mt-0.5">{subtitle}</p>}
+            {subtitle && <p className="text-sm sm:text-xs text-slate-300 mt-1">{subtitle}</p>}
           </div>
 
           {/* Quick toggle for all Coverall QA Inspection Guides */}
@@ -186,10 +186,10 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
             <button
               type="button"
               onClick={toggleAllGuides}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-purple-950/40 hover:bg-purple-900/50 border border-purple-700/40 text-purple-300 transition"
+              className="inline-flex items-center gap-1.5 text-sm sm:text-xs font-semibold px-3 py-2 sm:px-2.5 sm:py-1.5 rounded-xl sm:rounded-lg bg-purple-950/40 hover:bg-purple-900/50 border border-purple-700/40 text-purple-200 transition min-h-[40px] sm:min-h-0"
               title="Expand or collapse Coverall QA inspection instructions for all items in this section"
             >
-              <BookOpen className="w-3.5 h-3.5 text-purple-400" />
+              <BookOpen className="w-4 h-4 text-purple-400 shrink-0" />
               <span>
                 {items.length > 0 && items.every((it) => !!expandedGuides[it.id])
                   ? 'Hide All QA Guides'
@@ -200,7 +200,7 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
         </div>
 
         {/* Items List */}
-        <div className="space-y-3">
+        <div className="space-y-3.5 sm:space-y-3">
           {items.map((item) => {
             const isMonthly = item.isMonthly;
             const isEnabled = !isMonthly || !!monthlyToggles[item.id];
@@ -216,7 +216,7 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
               <div
                 key={item.id}
                 id={`checklist-item-${item.id}`}
-                className={`rounded-xl border transition-all p-3 sm:p-3.5 ${
+                className={`rounded-xl border transition-all p-3.5 sm:p-4 ${
                   !isEnabled
                     ? 'bg-slate-950/40 border-slate-850 opacity-60'
                     : status === 'pass'
@@ -226,18 +226,18 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
                     : 'bg-slate-800/60 border-slate-750'
                 }`}
               >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
                   {/* Item Information */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       {isMonthly && (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-700">
-                          <Sparkles className="w-3 h-3 text-indigo-400" />
+                        <span className="inline-flex items-center gap-1 text-xs font-bold uppercase px-2.5 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-700">
+                          <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
                           Monthly Detail
                         </span>
                       )}
 
-                      <h4 className="text-sm font-bold text-slate-100 flex items-center gap-1.5">
+                      <h4 className="text-base sm:text-base md:text-lg font-bold text-white tracking-tight leading-snug">
                         {item.name}
                       </h4>
 
@@ -246,10 +246,10 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
                         <button
                           type="button"
                           onClick={() => toggleDrawer(item.id)}
-                          className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-purple-950/80 border border-purple-500/50 text-purple-300 hover:bg-purple-900/80 transition"
+                          className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-purple-950/80 border border-purple-500/50 text-purple-300 hover:bg-purple-900/80 transition"
                           title="View attached station pictures"
                         >
-                          <Camera className="w-3 h-3 text-purple-400" />
+                          <Camera className="w-3.5 h-3.5 text-purple-400" />
                           <span>
                             {photoCount} {photoCount === 1 ? 'Picture' : 'Pictures'}
                           </span>
@@ -258,30 +258,30 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
                     </div>
 
                     {item.description && (
-                      <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                      <p className="text-sm sm:text-sm text-slate-300 mt-1.5 leading-relaxed">
                         {item.description}
                       </p>
                     )}
 
                     {/* How to Inspect Trigger Button */}
                     {item.inspectionGuide && (
-                      <div className="mt-2 flex items-center gap-2">
+                      <div className="mt-2.5 flex items-center gap-2">
                         <button
                           type="button"
                           onClick={() => toggleGuide(item.id)}
-                          className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg transition border ${
+                          className={`inline-flex items-center gap-1.5 text-sm sm:text-xs font-semibold px-3 py-1.5 rounded-lg transition border min-h-[38px] sm:min-h-0 ${
                             expandedGuides[item.id]
                               ? 'bg-purple-900/60 border-purple-500 text-purple-200 shadow-xs'
-                              : 'bg-slate-800/80 hover:bg-slate-750 border-slate-700 text-slate-300 hover:text-white'
+                              : 'bg-slate-800/80 hover:bg-slate-750 border-slate-700 text-slate-200 hover:text-white'
                           }`}
                           title="View Coverall QA inspection procedure, checkpoints, and 9/7/5 rating standards"
                         >
-                          <BookOpen className="w-3.5 h-3.5 text-purple-400" />
+                          <BookOpen className="w-4 h-4 text-purple-400 shrink-0" />
                           <span>How to Inspect ({item.inspectionGuide.coverallSection})</span>
                           {expandedGuides[item.id] ? (
-                            <ChevronUp className="w-3 h-3 text-purple-300 ml-0.5" />
+                            <ChevronUp className="w-3.5 h-3.5 text-purple-300 ml-0.5" />
                           ) : (
-                            <ChevronDown className="w-3 h-3 text-slate-400 ml-0.5" />
+                            <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-0.5" />
                           )}
                         </button>
                       </div>
@@ -290,9 +290,9 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
 
                   {/* Monthly Toggle or Status Actions */}
                   {isMonthly ? (
-                    <div className="flex items-center gap-2 sm:gap-3 shrink-0 self-end sm:self-center">
+                    <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 shrink-0 self-stretch sm:self-center justify-between sm:justify-end">
                       <label className="flex items-center gap-2 cursor-pointer select-none">
-                        <span className="text-xs font-semibold text-slate-300">
+                        <span className="text-sm sm:text-xs font-semibold text-slate-200">
                           {isEnabled ? 'Included in Audit' : 'Include Monthly'}
                         </span>
                         <input
@@ -302,13 +302,13 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
                           className="sr-only"
                         />
                         <div
-                          className={`w-11 h-6 rounded-full transition-colors relative p-0.5 ${
+                          className={`w-12 h-6.5 rounded-full transition-colors relative p-0.5 ${
                             isEnabled ? 'bg-purple-600' : 'bg-slate-700'
                           }`}
                         >
                           <div
-                            className={`w-5 h-5 rounded-full bg-white transition-transform ${
-                              isEnabled ? 'translate-x-5' : 'translate-x-0'
+                            className={`w-5.5 h-5.5 rounded-full bg-white transition-transform ${
+                              isEnabled ? 'translate-x-5.5' : 'translate-x-0'
                             }`}
                           />
                         </div>
@@ -316,24 +316,24 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
 
                       {/* If enabled, show Pass / Fail buttons + Photo button */}
                       {isEnabled && (
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-2">
                           <button
                             onClick={() => onUpdateStatus(item.id, 'pass')}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
+                            className={`px-3.5 py-2 sm:px-3 sm:py-1.5 rounded-xl sm:rounded-lg text-sm sm:text-xs font-bold transition flex items-center justify-center gap-1.5 min-h-[44px] sm:min-h-[36px] ${
                               status === 'pass'
-                                ? 'bg-emerald-600 text-white shadow-sm'
-                                : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                                ? 'bg-emerald-600 text-white shadow-sm ring-2 ring-emerald-400'
+                                : 'bg-slate-800 text-slate-200 hover:bg-slate-750 border border-slate-700'
                             }`}
                           >
-                            <Check className="w-3 h-3" />
+                            <Check className="w-4 h-4" />
                             Pass
                           </button>
                           <button
                             onClick={() => onUpdateStatus(item.id, 'fail')}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
+                            className={`px-3.5 py-2 sm:px-3 sm:py-1.5 rounded-xl sm:rounded-lg text-sm sm:text-xs font-bold transition flex items-center justify-center gap-1.5 min-h-[44px] sm:min-h-[36px] ${
                               status === 'fail'
-                                ? 'bg-rose-600 text-white shadow-sm'
-                                : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                                ? 'bg-rose-600 text-white shadow-sm ring-2 ring-rose-400'
+                                : 'bg-slate-800 text-slate-200 hover:bg-slate-750 border border-slate-700'
                             }`}
                           >
                             Fail
@@ -343,33 +343,33 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
                           <button
                             type="button"
                             onClick={() => toggleDrawer(item.id)}
-                            className={`p-1.5 rounded-lg border text-xs transition flex items-center gap-1 ${
+                            className={`px-3 py-2 sm:p-1.5 rounded-xl sm:rounded-lg border text-sm sm:text-xs transition flex items-center justify-center gap-1.5 min-h-[44px] sm:min-h-[36px] ${
                               photoCount > 0
                                 ? 'bg-purple-950 border-purple-500 text-purple-300'
-                                : 'bg-slate-800 border-slate-700 text-slate-300 hover:text-white'
+                                : 'bg-slate-800 border-slate-700 text-slate-200 hover:text-white'
                             }`}
                             title="Add or view station pictures"
                           >
-                            <Camera className="w-3.5 h-3.5 text-purple-400" />
+                            <Camera className="w-4 h-4 text-purple-400" />
                           </button>
                         </div>
                       )}
                     </div>
                   ) : (
                     /* Standard Checklist item buttons */
-                    <div className="flex items-center gap-1.5 shrink-0 self-end sm:self-center">
+                    <div className="flex items-center gap-2 shrink-0 self-stretch sm:self-center justify-between sm:justify-end">
                       {/* Pass button */}
                       <button
                         id={`btn-pass-${item.id}`}
                         onClick={() => onUpdateStatus(item.id, 'pass')}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+                        className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2 sm:px-3 sm:py-1.5 rounded-xl sm:rounded-lg text-sm sm:text-xs font-bold transition min-h-[44px] sm:min-h-[36px] ${
                           status === 'pass'
-                            ? 'bg-emerald-600 text-white shadow-sm ring-1 ring-emerald-400'
-                            : 'bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700'
+                            ? 'bg-emerald-600 text-white shadow-md ring-2 ring-emerald-400'
+                            : 'bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700'
                         }`}
                         title="Mark compliant"
                       >
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-300" />
+                        <CheckCircle2 className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-emerald-300 shrink-0" />
                         <span>Pass</span>
                       </button>
 
@@ -377,14 +377,14 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
                       <button
                         id={`btn-fail-${item.id}`}
                         onClick={() => onUpdateStatus(item.id, 'fail')}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+                        className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2 sm:px-3 sm:py-1.5 rounded-xl sm:rounded-lg text-sm sm:text-xs font-bold transition min-h-[44px] sm:min-h-[36px] ${
                           status === 'fail'
-                            ? 'bg-rose-600 text-white shadow-sm ring-1 ring-rose-400'
-                            : 'bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700'
+                            ? 'bg-rose-600 text-white shadow-md ring-2 ring-rose-400'
+                            : 'bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700'
                         }`}
                         title="Flag deficiency"
                       >
-                        <XCircle className="w-3.5 h-3.5 text-rose-300" />
+                        <XCircle className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-rose-300 shrink-0" />
                         <span>Fail</span>
                       </button>
 
@@ -392,14 +392,14 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
                       <button
                         id={`btn-na-${item.id}`}
                         onClick={() => onUpdateStatus(item.id, 'na')}
-                        className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium transition ${
+                        className={`px-3 py-2 sm:px-2.5 sm:py-1.5 rounded-xl sm:rounded-lg text-sm sm:text-xs font-semibold transition min-h-[44px] sm:min-h-[36px] flex items-center justify-center gap-1 ${
                           status === 'na'
-                            ? 'bg-slate-700 text-slate-200 ring-1 ring-slate-500'
-                            : 'bg-slate-800 text-slate-400 hover:bg-slate-700 border border-slate-700'
+                            ? 'bg-slate-700 text-white ring-2 ring-slate-400'
+                            : 'bg-slate-800 text-slate-300 hover:bg-slate-750 border border-slate-700'
                         }`}
                         title="Not applicable this shift"
                       >
-                        <MinusCircle className="w-3 h-3" />
+                        <MinusCircle className="w-3.5 h-3.5 shrink-0 text-slate-400" />
                         <span>N/A</span>
                       </button>
 
@@ -407,21 +407,21 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
                       <button
                         type="button"
                         onClick={() => toggleDrawer(item.id)}
-                        className={`px-2.5 py-1.5 rounded-lg border text-xs font-semibold transition flex items-center gap-1.5 ${
+                        className={`px-3 py-2 sm:px-2.5 sm:py-1.5 rounded-xl sm:rounded-lg border text-sm sm:text-xs font-semibold transition min-h-[44px] sm:min-h-[36px] flex items-center justify-center gap-1.5 ${
                           photoCount > 0
                             ? 'bg-purple-950/80 border-purple-500 text-purple-200 shadow-xs'
-                            : 'bg-slate-800 border-slate-700 text-slate-300 hover:text-white hover:border-slate-600'
+                            : 'bg-slate-800 border-slate-700 text-slate-200 hover:text-white hover:border-slate-600'
                         }`}
                         title="Add pictures or notes for this station"
                       >
-                        <Camera className={`w-3.5 h-3.5 ${photoCount > 0 ? 'text-purple-300' : 'text-purple-400'}`} />
-                        <span className="text-[11px]">
+                        <Camera className={`w-4 h-4 sm:w-3.5 sm:h-3.5 shrink-0 ${photoCount > 0 ? 'text-purple-300' : 'text-purple-400'}`} />
+                        <span className="text-xs">
                           {photoCount > 0 ? `${photoCount}` : 'Photo'}
                         </span>
                         {isDrawerOpen ? (
-                          <ChevronUp className="w-3 h-3 text-slate-400 ml-0.5" />
+                          <ChevronUp className="w-3.5 h-3.5 text-slate-400 ml-0.5 shrink-0" />
                         ) : (
-                          <ChevronDown className="w-3 h-3 text-slate-400 ml-0.5" />
+                          <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-0.5 shrink-0" />
                         )}
                       </button>
 
@@ -429,14 +429,14 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
                       <button
                         type="button"
                         onClick={() => toggleDrawer(item.id)}
-                        className={`p-1.5 rounded-lg border text-xs transition flex items-center ${
+                        className={`p-2.5 sm:p-1.5 rounded-xl sm:rounded-lg border text-sm sm:text-xs transition flex items-center justify-center min-h-[44px] sm:min-h-[36px] ${
                           hasNotes
                             ? 'bg-purple-950 border-purple-500 text-purple-300'
-                            : 'bg-slate-800 border-slate-700 text-slate-400 hover:text-slate-200'
+                            : 'bg-slate-800 border-slate-700 text-slate-300 hover:text-white'
                         }`}
                         title="Add observation notes"
                       >
-                        <MessageSquare className="w-3.5 h-3.5" />
+                        <MessageSquare className="w-4 h-4 text-purple-400" />
                       </button>
                     </div>
                   )}
@@ -456,11 +456,11 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
                             <span className="text-xs font-bold text-purple-200 uppercase tracking-wide">
                               Coverall QA Standard
                             </span>
-                            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-purple-900/80 text-purple-300 border border-purple-700">
+                            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-purple-900/80 text-purple-300 border border-purple-700">
                               {item.inspectionGuide.coverallSection}
                             </span>
                           </div>
-                          <span className="text-[11px] text-purple-300/80 block mt-0.5">
+                          <span className="text-xs text-purple-300/80 block mt-0.5">
                             FBO Guidelines for Reviewing and Grading Cleaning
                           </span>
                         </div>
@@ -494,28 +494,28 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
 
                     {/* Step-by-step physical walkthrough procedure */}
                     <div className="space-y-1.5">
-                      <h5 className="text-[11px] font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
-                        <ClipboardList className="w-3.5 h-3.5 text-purple-400" />
+                      <h5 className="text-xs sm:text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+                        <ClipboardList className="w-4 h-4 text-purple-400" />
                         <span>The Way to Do the Inspection (Walkthrough Procedure)</span>
                       </h5>
-                      <p className="text-xs text-slate-300 leading-relaxed bg-slate-950/70 p-3 rounded-lg border border-slate-800/90 font-sans">
+                      <p className="text-sm sm:text-xs text-slate-200 leading-relaxed bg-slate-950/70 p-3.5 rounded-xl border border-slate-800/90 font-sans">
                         {item.inspectionGuide.inspectionProcedure}
                       </p>
                     </div>
 
                     {/* Numbered specific checkpoints from Coverall FBO Guidelines */}
                     <div className="space-y-1.5">
-                      <h5 className="text-[11px] font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                      <h5 className="text-xs sm:text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                         <span>Inspection Checkpoints (From Coverall QA Report Guide)</span>
                       </h5>
-                      <ul className="grid grid-cols-1 gap-1.5 text-xs text-slate-300">
+                      <ul className="grid grid-cols-1 gap-2 text-sm sm:text-xs text-slate-200">
                         {item.inspectionGuide.inspectionSteps.map((step, sIdx) => (
                           <li
                             key={sIdx}
-                            className="flex items-start gap-2.5 bg-slate-900/90 p-2.5 rounded-lg border border-slate-800 hover:border-purple-800/50 transition"
+                            className="flex items-start gap-3 bg-slate-900/90 p-3 rounded-xl border border-slate-800 hover:border-purple-800/50 transition"
                           >
-                            <span className="shrink-0 w-5 h-5 rounded-full bg-purple-900/80 border border-purple-600/50 text-purple-200 font-mono text-[10px] font-bold flex items-center justify-center mt-0.5">
+                            <span className="shrink-0 w-6 h-6 rounded-full bg-purple-900/80 border border-purple-600/50 text-purple-200 font-mono text-xs font-bold flex items-center justify-center mt-0.5">
                               {sIdx + 1}
                             </span>
                             <span className="leading-relaxed">{step}</span>
@@ -525,44 +525,44 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
                     </div>
 
                     {/* Coverall QA Rating Matrix (9 / 7 / 5) */}
-                    <div className="space-y-1.5 pt-1">
-                      <h5 className="text-[11px] font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
-                        <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
+                    <div className="space-y-2 pt-1">
+                      <h5 className="text-xs sm:text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+                        <ShieldCheck className="w-4 h-4 text-cyan-400" />
                         <span>Coverall Rating Criteria (9 / 7 / 5 Standard)</span>
                       </h5>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
-                        <div className="bg-emerald-950/30 border border-emerald-600/40 rounded-lg p-2.5 space-y-1">
+                        <div className="bg-emerald-950/30 border border-emerald-600/40 rounded-xl p-3 space-y-1">
                           <div className="flex items-center justify-between">
-                            <span className="font-bold text-emerald-300 text-[11px] flex items-center gap-1">
-                              <Check className="w-3 h-3 text-emerald-400" />
+                            <span className="font-bold text-emerald-300 text-xs sm:text-xs flex items-center gap-1">
+                              <Check className="w-3.5 h-3.5 text-emerald-400" />
                               9 - Meets Standards
                             </span>
                           </div>
-                          <p className="text-[11px] text-emerald-200/90 leading-snug">
+                          <p className="text-xs text-emerald-200/90 leading-snug">
                             {item.inspectionGuide.passStandard}
                           </p>
                         </div>
 
-                        <div className="bg-amber-950/30 border border-amber-600/40 rounded-lg p-2.5 space-y-1">
+                        <div className="bg-amber-950/30 border border-amber-600/40 rounded-xl p-3 space-y-1">
                           <div className="flex items-center justify-between">
-                            <span className="font-bold text-amber-300 text-[11px] flex items-center gap-1">
-                              <AlertTriangle className="w-3 h-3 text-amber-400" />
+                            <span className="font-bold text-amber-300 text-xs sm:text-xs flex items-center gap-1">
+                              <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
                               7 - Needs Improvement
                             </span>
                           </div>
-                          <p className="text-[11px] text-amber-200/90 leading-snug">
+                          <p className="text-xs text-amber-200/90 leading-snug">
                             {item.inspectionGuide.needsImprovementStandard}
                           </p>
                         </div>
 
-                        <div className="bg-rose-950/30 border border-rose-600/40 rounded-lg p-2.5 space-y-1">
+                        <div className="bg-rose-950/30 border border-rose-600/40 rounded-xl p-3 space-y-1">
                           <div className="flex items-center justify-between">
-                            <span className="font-bold text-rose-300 text-[11px] flex items-center gap-1">
-                              <XCircle className="w-3 h-3 text-rose-400" />
+                            <span className="font-bold text-rose-300 text-xs sm:text-xs flex items-center gap-1">
+                              <XCircle className="w-3.5 h-3.5 text-rose-400" />
                               5 - Below Standards
                             </span>
                           </div>
-                          <p className="text-[11px] text-rose-200/90 leading-snug">
+                          <p className="text-xs text-rose-200/90 leading-snug">
                             {item.inspectionGuide.belowStandard}
                           </p>
                         </div>
@@ -571,7 +571,7 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
 
                     {/* FBO Pro Tip */}
                     {item.inspectionGuide.fboProTip && (
-                      <div className="flex items-start gap-2.5 bg-amber-950/30 border border-amber-600/40 p-2.5 rounded-lg text-xs text-amber-200">
+                      <div className="flex items-start gap-2.5 bg-amber-950/30 border border-amber-600/40 p-3 rounded-xl text-sm sm:text-xs text-amber-200">
                         <Lightbulb className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                         <div className="leading-relaxed">
                           <span className="font-bold text-amber-300 mr-1.5">FBO Inspection Rule:</span>
@@ -585,19 +585,19 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
                 {/* Station Pictures & Observation Notes Expandable Drawer */}
                 {isEnabled && isDrawerOpen && (
                   <div
-                    className="mt-3 pt-3 border-t border-slate-750/70 space-y-3"
+                    className="mt-3.5 pt-3.5 border-t border-slate-750/70 space-y-3.5"
                     onDragOver={(e) => e.preventDefault()}
                     onDrop={(e) => handleDrop(item.id, e)}
                   >
                     {/* Station Pictures Gallery Header & Triggers */}
-                    <div className="bg-slate-950/70 border border-slate-800 rounded-xl p-3 space-y-3">
-                      <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="bg-slate-950/70 border border-slate-800 rounded-xl p-3.5 space-y-3">
+                      <div className="flex flex-wrap items-center justify-between gap-2.5">
                         <div className="flex items-center gap-2">
                           <Camera className="w-4 h-4 text-purple-400" />
-                          <span className="text-xs font-bold text-slate-200">
+                          <span className="text-sm sm:text-xs font-bold text-slate-200">
                             Station Pictures ({photoCount})
                           </span>
-                          <span className="text-[10px] text-slate-400 hidden sm:inline">
+                          <span className="text-xs text-slate-400 hidden sm:inline">
                             Attached evidence for certified report
                           </span>
                         </div>
@@ -605,8 +605,8 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
                         {/* Capture Action Buttons */}
                         <div className="flex items-center gap-2">
                           {/* Take photo with Camera */}
-                          <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-700 hover:bg-purple-600 text-white text-xs font-semibold cursor-pointer transition shadow-xs active:scale-95">
-                            <Camera className="w-3.5 h-3.5" />
+                          <label className="flex items-center gap-1.5 px-3.5 py-2.5 sm:px-3 sm:py-1.5 rounded-xl sm:rounded-lg bg-purple-700 hover:bg-purple-600 text-white text-sm sm:text-xs font-bold cursor-pointer transition shadow-xs active:scale-95 min-h-[44px] sm:min-h-0">
+                            <Camera className="w-4 h-4" />
                             <span>Take Photo</span>
                             <input
                               ref={(el) => (cameraInputRefs.current[item.id] = el)}
@@ -619,8 +619,8 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
                           </label>
 
                           {/* Browse Gallery or Files */}
-                          <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold cursor-pointer transition active:scale-95">
-                            <ImageIcon className="w-3.5 h-3.5 text-purple-400" />
+                          <label className="flex items-center gap-1.5 px-3.5 py-2.5 sm:px-3 sm:py-1.5 rounded-xl sm:rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-sm sm:text-xs font-bold cursor-pointer transition active:scale-95 min-h-[44px] sm:min-h-0">
+                            <ImageIcon className="w-4 h-4 text-purple-400" />
                             <span>Browse Gallery</span>
                             <input
                               ref={(el) => (fileInputRefs.current[item.id] = el)}
@@ -635,7 +635,7 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
 
                       {/* Processing indicator */}
                       {isProcessing && (
-                        <div className="flex items-center gap-2 py-2 px-3 rounded-lg bg-purple-950/40 border border-purple-800/40 text-xs text-purple-300">
+                        <div className="flex items-center gap-2 py-2.5 px-3 rounded-lg bg-purple-950/40 border border-purple-800/40 text-sm sm:text-xs text-purple-300">
                           <Loader2 className="w-4 h-4 animate-spin text-purple-400 shrink-0" />
                           <span>Compressing and securing inspection photo...</span>
                         </div>
@@ -643,11 +643,11 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
 
                       {/* Photo Thumbnails Grid */}
                       {photoCount > 0 ? (
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5 pt-1">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 pt-1">
                           {itemPhotos.map((photo, pIndex) => (
                             <div
                               key={photo.id}
-                              className="group relative aspect-square bg-slate-900 rounded-lg overflow-hidden border border-slate-700 hover:border-purple-500 transition shadow-sm flex flex-col justify-end"
+                              className="group relative aspect-square bg-slate-900 rounded-xl overflow-hidden border border-slate-700 hover:border-purple-500 transition shadow-sm flex flex-col justify-end"
                             >
                               <img
                                 src={photo.dataUrl}
@@ -664,14 +664,14 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
                               />
 
                               {/* Top Action Overlay */}
-                              <div className="absolute top-1 right-1 flex items-center gap-1 z-10">
+                              <div className="absolute top-1.5 right-1.5 flex items-center gap-1 z-10">
                                 <button
                                   type="button"
                                   onClick={() => handleDeletePhoto(item.id, photo.id)}
-                                  className="p-1 rounded-md bg-black/70 hover:bg-rose-900 text-slate-300 hover:text-rose-200 border border-white/10 transition"
+                                  className="p-1.5 rounded-lg bg-black/80 hover:bg-rose-900 text-slate-200 hover:text-rose-100 border border-white/20 transition min-w-[32px] min-h-[32px] flex items-center justify-center"
                                   title="Delete picture"
                                 >
-                                  <Trash2 className="w-3 h-3" />
+                                  <Trash2 className="w-4 h-4" />
                                 </button>
                               </div>
 
@@ -686,14 +686,14 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
                                 }
                                 className="absolute inset-0 bg-purple-950/30 opacity-0 group-hover:opacity-100 transition flex items-center justify-center cursor-pointer pointer-events-auto"
                               >
-                                <div className="p-1.5 rounded-full bg-black/70 text-white">
-                                  <ZoomIn className="w-4 h-4" />
+                                <div className="p-2 rounded-full bg-black/80 text-white">
+                                  <ZoomIn className="w-5 h-5" />
                                 </div>
                               </div>
 
                               {/* Bottom Timestamp Pill */}
-                              <div className="relative z-10 p-1 bg-gradient-to-t from-black/85 via-black/50 to-transparent pointer-events-none">
-                                <span className="text-[10px] text-slate-300 font-mono block truncate">
+                              <div className="relative z-10 p-1.5 bg-gradient-to-t from-black/90 via-black/60 to-transparent pointer-events-none">
+                                <span className="text-xs text-slate-200 font-mono block truncate font-medium">
                                   {photo.timestamp || `Photo ${pIndex + 1}`}
                                 </span>
                               </div>
@@ -701,10 +701,10 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
                           ))}
 
                           {/* Quick "+ Add Another Picture" Tile */}
-                          <label className="aspect-square rounded-lg border-2 border-dashed border-slate-700 hover:border-purple-500 hover:bg-purple-950/20 transition flex flex-col items-center justify-center p-2 cursor-pointer text-center text-slate-400 hover:text-purple-300">
-                            <Plus className="w-5 h-5 text-purple-400 mb-1" />
-                            <span className="text-[11px] font-semibold">Add Picture</span>
-                            <span className="text-[9px] text-slate-500">Camera or file</span>
+                          <label className="aspect-square rounded-xl border-2 border-dashed border-slate-700 hover:border-purple-500 hover:bg-purple-950/20 transition flex flex-col items-center justify-center p-3 cursor-pointer text-center text-slate-300 hover:text-purple-300 min-h-[110px]">
+                            <Plus className="w-6 h-6 text-purple-400 mb-1" />
+                            <span className="text-xs font-bold">Add Picture</span>
+                            <span className="text-xs text-slate-400">Camera / file</span>
                             <input
                               type="file"
                               accept="image/*"
@@ -716,11 +716,11 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
                         </div>
                       ) : (
                         /* Empty state prompt for photos */
-                        <div className="py-4 px-3 border border-dashed border-slate-800 rounded-lg text-center bg-slate-900/40">
-                          <p className="text-xs text-slate-400">
+                        <div className="py-4 px-3 border border-dashed border-slate-800 rounded-xl text-center bg-slate-900/40">
+                          <p className="text-sm sm:text-xs text-slate-300">
                             No pictures attached yet for this station.
                           </p>
-                          <p className="text-[11px] text-slate-500 mt-0.5">
+                          <p className="text-xs text-slate-400 mt-1">
                             Tap <strong>Take Photo</strong> to capture with camera, or drag & drop image files here.
                           </p>
                         </div>
@@ -735,7 +735,7 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
                           placeholder="Add observation note (e.g. restocked supplies, sanitized stall surfaces, polished mirror)..."
                           value={evalData.notes || ''}
                           onChange={(e) => onUpdateNotes(item.id, e.target.value)}
-                          className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-hidden focus:border-purple-500"
+                          className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-hidden focus:border-purple-500 min-h-[44px]"
                         />
                       </div>
                     </div>

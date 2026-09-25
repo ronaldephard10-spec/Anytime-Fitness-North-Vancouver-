@@ -61,25 +61,25 @@ export const ScheduleRadarBanner: React.FC<ScheduleRadarBannerProps> = ({
           </div>
           <div>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-purple-300 bg-purple-950/80 px-2 py-0.5 rounded border border-purple-800">
+              <span className="text-xs font-bold uppercase tracking-wider text-purple-300 bg-purple-950/80 px-2.5 py-0.5 rounded border border-purple-800">
                 Coverall Work Schedule Radar
               </span>
-              <span className="text-[11px] font-medium text-slate-300">
+              <span className="text-xs font-semibold text-slate-200">
                 {scheduleSummary.dateFormatted} • {scheduleSummary.dayOfWeekName}
               </span>
               {scheduleSummary.isScheduledShift ? (
-                <span className="text-[10px] font-bold text-emerald-300 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800 flex items-center gap-1">
-                  <Clock className="w-3 h-3 text-emerald-400" />
+                <span className="text-xs font-bold text-emerald-300 bg-emerald-950/80 px-2.5 py-0.5 rounded border border-emerald-800 flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5 text-emerald-400" />
                   11:00 PM Shift Active
                 </span>
               ) : (
-                <span className="text-[10px] text-slate-400 bg-slate-800 px-2 py-0.5 rounded">
+                <span className="text-xs text-slate-300 bg-slate-800 px-2.5 py-0.5 rounded">
                   Non-cleaning Day (Next: Sun, Tue, or Thu @ 11:00 PM)
                 </span>
               )}
             </div>
 
-            <div className="text-xs text-slate-300 mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+            <div className="text-sm sm:text-xs text-slate-200 mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
               <span>
                 <strong>Occurrence:</strong> Week {scheduleSummary.occurrenceInMonth} of the month ({scheduleSummary.dayOfWeekName})
               </span>
@@ -92,41 +92,41 @@ export const ScheduleRadarBanner: React.FC<ScheduleRadarBannerProps> = ({
         </div>
 
         {/* Action Buttons: Source Doc, Periodic Services, & Monthly QA Report */}
-        <div className="flex flex-wrap items-center gap-2 self-end sm:self-center">
+        <div className="flex flex-wrap items-center gap-2 self-start sm:self-center">
           {onOpenMonthlySummary && (
             <button
               onClick={onOpenMonthlySummary}
-              className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-800 to-indigo-800 hover:from-purple-700 hover:to-indigo-700 text-white border border-purple-500/50 text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
+              className="px-3.5 py-2 sm:px-3 sm:py-1.5 rounded-xl sm:rounded-lg bg-gradient-to-r from-purple-800 to-indigo-800 hover:from-purple-700 hover:to-indigo-700 text-white border border-purple-500/50 text-sm sm:text-xs font-bold transition flex items-center gap-1.5 shadow-sm min-h-[40px] sm:min-h-0"
               title="Open Client Monthly QA Summary & Executive Report"
             >
-              <FileText className="w-3.5 h-3.5 text-purple-200" />
+              <FileText className="w-4 h-4 text-purple-200" />
               <span>Monthly Client QA</span>
             </button>
           )}
 
           <button
             onClick={onOpenPeriodicServices}
-            className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition flex items-center gap-1.5 shadow-sm"
+            className="px-3.5 py-2 sm:px-3 sm:py-1.5 rounded-xl sm:rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-sm sm:text-xs font-semibold transition flex items-center gap-1.5 shadow-sm min-h-[40px] sm:min-h-0"
           >
-            <Wrench className="w-3.5 h-3.5 text-purple-400" />
-            <span>Annual & Periodic Services</span>
+            <Wrench className="w-4 h-4 text-purple-400" />
+            <span>Annual & Periodic</span>
           </button>
 
           <button
             onClick={onOpenSourceDoc}
-            className="px-3 py-1.5 rounded-lg bg-purple-600/30 hover:bg-purple-600 text-purple-200 hover:text-white border border-purple-500/40 text-xs font-semibold transition flex items-center gap-1.5 shadow-sm"
+            className="px-3.5 py-2 sm:px-3 sm:py-1.5 rounded-xl sm:rounded-lg bg-purple-600/30 hover:bg-purple-600 text-purple-200 hover:text-white border border-purple-500/40 text-sm sm:text-xs font-semibold transition flex items-center gap-1.5 shadow-sm min-h-[40px] sm:min-h-0"
           >
-            <FileText className="w-3.5 h-3.5" />
-            <span>View Source Agreement</span>
+            <FileText className="w-4 h-4" />
+            <span>Source Agreement</span>
           </button>
 
           {onSimulateNewDay && (
             <button
               onClick={onSimulateNewDay}
-              className="px-2.5 py-1.5 rounded-lg bg-indigo-950/70 hover:bg-indigo-900 border border-indigo-700/60 text-indigo-300 text-xs font-semibold transition flex items-center gap-1.5 shadow-sm"
+              className="px-3 py-2 sm:px-2.5 sm:py-1.5 rounded-xl sm:rounded-lg bg-indigo-950/70 hover:bg-indigo-900 border border-indigo-700/60 text-indigo-300 text-sm sm:text-xs font-semibold transition flex items-center gap-1.5 shadow-sm min-h-[40px] sm:min-h-0"
               title="Test the midnight rollover & report download workflow"
             >
-              <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+              <Sparkles className="w-4 h-4 text-indigo-400" />
               <span>Simulate Day Rollover</span>
             </button>
           )}
@@ -135,45 +135,45 @@ export const ScheduleRadarBanner: React.FC<ScheduleRadarBannerProps> = ({
 
       {/* Tonight's Scheduled Monthly Task Radar */}
       {hasMonthlyDueTonight ? (
-        <div className="bg-amber-950/40 border border-amber-800/60 rounded-lg p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="bg-amber-950/40 border border-amber-800/60 rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-start gap-2.5">
-            <Sparkles className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+            <Sparkles className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
             <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-amber-200">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-sm sm:text-xs font-bold text-amber-200">
                   Scheduled Monthly Rotation for Tonight:
                 </span>
-                <span className="text-[10px] font-bold bg-amber-900/80 text-amber-200 px-1.5 py-0.5 rounded border border-amber-700">
+                <span className="text-xs font-bold bg-amber-900/80 text-amber-200 px-2 py-0.5 rounded border border-amber-700">
                   {tasksDueTonight[0].occurrenceText}
                 </span>
               </div>
-              <p className="text-xs text-amber-100/90 font-medium mt-0.5">
+              <p className="text-sm sm:text-xs text-amber-100 font-bold mt-1">
                 {tasksDueTonight.map((t) => t.name).join(' & ')}
               </p>
-              <p className="text-[11px] text-amber-200/70 mt-0.5">
+              <p className="text-xs text-amber-200/90 mt-0.5">
                 {tasksDueTonight.map((t) => t.description).join(' ')}
               </p>
             </div>
           </div>
 
           <div className="shrink-0 flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-300 bg-emerald-950/80 px-3 py-1.5 rounded-lg border border-emerald-700">
-              <CheckCircle2 className="w-3.5 h-3.5" />
-              <span>Included in Tonight&apos;s Due Checklist</span>
+            <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-300 bg-emerald-950/80 px-3.5 py-2 rounded-xl border border-emerald-700">
+              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              <span>Included in Tonight's Due Checklist</span>
             </span>
           </div>
         </div>
       ) : (
-        <div className="bg-slate-800/50 border border-slate-700/60 rounded-lg p-2.5 flex items-center justify-between gap-2 text-xs text-slate-300">
+        <div className="bg-slate-800/50 border border-slate-700/60 rounded-xl p-3 flex flex-wrap items-center justify-between gap-2 text-sm sm:text-xs text-slate-200">
           <div className="flex items-center gap-2">
-            <Clock className="w-3.5 h-3.5 text-purple-400" />
+            <Clock className="w-4 h-4 text-purple-400 shrink-0" />
             <span>
-              <strong>Tonight&apos;s Protocol:</strong> Core Daily Services (9 items) +{' '}
+              <strong>Tonight's Protocol:</strong> Core Daily Services (9 items) +{' '}
               {scheduleSummary.dayTab ? `${scheduleSummary.dayOfWeekName} Weekly Specifics` : 'Next scheduled 11:00 PM shift'}.
             </span>
           </div>
           {upcomingMonthly.length > 0 && (
-            <span className="text-[11px] text-purple-300 hidden md:inline">
+            <span className="text-xs text-purple-300 hidden md:inline">
               Next monthly rotation: <strong>{upcomingMonthly[0].task.name}</strong> on {upcomingMonthly[0].dateStr}
             </span>
           )}
@@ -184,10 +184,10 @@ export const ScheduleRadarBanner: React.FC<ScheduleRadarBannerProps> = ({
       <div>
         <button
           onClick={() => setIsLookaheadOpen(!isLookaheadOpen)}
-          className="text-xs font-semibold text-purple-300 hover:text-purple-200 flex items-center gap-1 transition"
+          className="text-xs font-semibold text-purple-300 hover:text-purple-200 flex items-center gap-1 transition p-1"
         >
           <span>{isLookaheadOpen ? 'Hide' : 'Show'} Upcoming 30-Day Rotation Schedule</span>
-          {isLookaheadOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+          {isLookaheadOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
 
         {isLookaheadOpen && (
@@ -195,18 +195,18 @@ export const ScheduleRadarBanner: React.FC<ScheduleRadarBannerProps> = ({
             {upcomingMonthly.map((item, idx) => (
               <div
                 key={idx}
-                className={`p-2.5 rounded-lg border text-xs transition ${
+                className={`p-3 rounded-xl border text-xs transition ${
                   item.isToday
                     ? 'bg-amber-950/40 border-amber-700/70 text-amber-200'
                     : 'bg-slate-800/40 border-slate-700/60 text-slate-300'
                 }`}
               >
-                <div className="flex items-center justify-between text-[10px] font-bold text-slate-400">
+                <div className="flex items-center justify-between text-xs font-bold text-slate-400">
                   <span>{item.dateStr}</span>
                   <span className="text-purple-400">{item.task.occurrenceText}</span>
                 </div>
-                <div className="font-bold text-xs text-slate-100 mt-1">{item.task.name}</div>
-                <p className="text-[11px] text-slate-400 line-clamp-2 mt-0.5">
+                <div className="font-bold text-sm sm:text-xs text-slate-100 mt-1">{item.task.name}</div>
+                <p className="text-xs text-slate-400 line-clamp-2 mt-0.5">
                   {item.task.description}
                 </p>
               </div>

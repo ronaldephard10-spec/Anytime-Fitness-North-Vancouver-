@@ -98,11 +98,11 @@ export const PeriodicServicesModal: React.FC<PeriodicServicesModalProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-purple-200 bg-purple-950 px-2 py-0.5 rounded border border-purple-800">
+                <span className="text-xs font-bold uppercase tracking-wider text-purple-200 bg-purple-950 px-2 py-0.5 rounded border border-purple-800">
                   Agreement Page 21 Reference
                 </span>
                 {dueCount > 0 && (
-                  <span className="text-[10px] font-bold text-amber-300 bg-amber-950/80 px-2 py-0.5 rounded border border-amber-800">
+                  <span className="text-xs font-bold text-amber-300 bg-amber-950/80 px-2 py-0.5 rounded border border-amber-800">
                     {dueCount} Service{dueCount > 1 ? 's' : ''} Recommended
                   </span>
                 )}
@@ -145,7 +145,7 @@ export const PeriodicServicesModal: React.FC<PeriodicServicesModalProps> = ({
               </button>
             ))}
           </div>
-          <div className="text-[11px] text-slate-400 hidden sm:block">
+          <div className="text-xs text-slate-400 hidden sm:block">
             S.O.P. Specs from Coverall Agreement
           </div>
         </div>
@@ -173,11 +173,11 @@ export const PeriodicServicesModal: React.FC<PeriodicServicesModalProps> = ({
                     <div className="space-y-0.5">
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="text-xs font-bold text-slate-100">{serv.title}</span>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-purple-300 bg-purple-950 px-2 py-0.5 rounded border border-purple-800">
+                        <span className="text-xs font-bold uppercase tracking-wider text-purple-300 bg-purple-950 px-2 py-0.5 rounded border border-purple-800">
                           {serv.frequencyLabel}
                         </span>
                         <span
-                          className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+                          className={`text-xs font-bold px-2 py-0.5 rounded ${
                             isDue
                               ? 'bg-amber-900/80 text-amber-200 border border-amber-700'
                               : isCompleted
@@ -257,7 +257,7 @@ export const PeriodicServicesModal: React.FC<PeriodicServicesModalProps> = ({
                       ) : (
                         <div className="flex items-center gap-2">
                           {serv.notes && (
-                            <span className="text-slate-300 italic text-[11px]">
+                            <span className="text-slate-300 italic text-xs">
                               &quot;{serv.notes}&quot;
                             </span>
                           )}
@@ -266,7 +266,7 @@ export const PeriodicServicesModal: React.FC<PeriodicServicesModalProps> = ({
                               setEditingId(serv.id);
                               setTempNotes(serv.notes || '');
                             }}
-                            className="text-purple-400 hover:text-purple-300 font-medium underline text-[11px]"
+                            className="text-purple-400 hover:text-purple-300 font-medium underline text-xs"
                           >
                             {serv.notes ? 'Edit note' : '+ Add service note'}
                           </button>

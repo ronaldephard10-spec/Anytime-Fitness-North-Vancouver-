@@ -98,17 +98,17 @@ export const InteractiveDateSwitcher: React.FC<InteractiveDateSwitcherProps> = (
           </div>
           <div>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-[10px] font-black uppercase tracking-wider text-purple-200 bg-purple-900/80 px-2.5 py-0.5 rounded-full border border-purple-500/60">
+              <span className="text-xs font-bold uppercase tracking-wider text-purple-200 bg-purple-900/80 px-2.5 py-0.5 rounded-full border border-purple-500/60">
                 Commercial Contract Service Calendar
               </span>
-              <span className="text-xs font-bold text-white">
+              <span className="text-sm sm:text-xs font-bold text-white">
                 {FACILITY_INFO.facility}
               </span>
               <span className="text-xs text-purple-300">
                 • {FACILITY_INFO.address}
               </span>
             </div>
-            <p className="text-xs text-slate-300 mt-0.5">
+            <p className="text-sm sm:text-xs text-slate-200 mt-1">
               Contract Cadence: <strong className="text-purple-200">Tuesday, Thursday, Sunday after 11:00 PM</strong> • 156 Annual Visits Total
             </p>
           </div>
@@ -118,11 +118,11 @@ export const InteractiveDateSwitcher: React.FC<InteractiveDateSwitcherProps> = (
         <button
           onClick={onOpen12MonthCalendar}
           id="btn-open-12mo-calendar"
-          className="flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-600 hover:to-indigo-600 text-white font-bold text-xs shadow-md shadow-purple-950/60 border border-purple-400/40 transition cursor-pointer shrink-0"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-600 hover:to-indigo-600 text-white font-bold text-sm sm:text-xs shadow-md shadow-purple-950/60 border border-purple-400/40 transition cursor-pointer shrink-0 min-h-[44px]"
         >
           <CalendarDays className="w-4 h-4 text-purple-200" />
           <span>Source Document (12-Mo Calendar)</span>
-          <span className="text-[10px] bg-purple-950 px-1.5 py-0.2 rounded font-black text-purple-300 border border-purple-500/40">
+          <span className="text-xs bg-purple-950 px-2 py-0.5 rounded font-black text-purple-300 border border-purple-500/40">
             156 Visits
           </span>
         </button>
@@ -136,7 +136,7 @@ export const InteractiveDateSwitcher: React.FC<InteractiveDateSwitcherProps> = (
           <button
             onClick={() => stepVisit('prev')}
             id="btn-prev-visit"
-            className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1 transition cursor-pointer"
+            className="px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-sm sm:text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer min-h-[44px]"
             title="Jump to Previous Contract Service Visit"
           >
             <ChevronLeft className="w-4 h-4 text-purple-300" />
@@ -144,7 +144,7 @@ export const InteractiveDateSwitcher: React.FC<InteractiveDateSwitcherProps> = (
           </button>
 
           {/* Date Picker Input */}
-          <div className="flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-xl border border-purple-700/60 shadow-inner">
+          <div className="flex items-center gap-2 bg-slate-950 px-3.5 py-2 rounded-xl border border-purple-700/60 shadow-inner min-h-[44px]">
             <Calendar className="w-4 h-4 text-purple-400 shrink-0" />
             <label htmlFor="audit-date-picker" className="sr-only">
               Inspection Date
@@ -159,7 +159,7 @@ export const InteractiveDateSwitcher: React.FC<InteractiveDateSwitcherProps> = (
                   onSelectDate(new Date(y, m - 1, d));
                 }
               }}
-              className="bg-transparent text-white text-xs font-bold focus:outline-none cursor-pointer"
+              className="bg-transparent text-white text-sm sm:text-xs font-bold focus:outline-none cursor-pointer"
             />
           </div>
 
@@ -167,7 +167,7 @@ export const InteractiveDateSwitcher: React.FC<InteractiveDateSwitcherProps> = (
           <button
             onClick={() => stepVisit('next')}
             id="btn-next-visit"
-            className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1 transition cursor-pointer"
+            className="px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-sm sm:text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer min-h-[44px]"
             title="Jump to Next Contract Service Visit"
           >
             <span className="hidden sm:inline">Next Visit</span>
@@ -178,7 +178,7 @@ export const InteractiveDateSwitcher: React.FC<InteractiveDateSwitcherProps> = (
           <button
             onClick={() => onSelectDate(new Date())}
             id="btn-today-visit"
-            className="px-2.5 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-slate-300 text-xs font-medium flex items-center gap-1 transition cursor-pointer"
+            className="px-3 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-slate-200 text-sm sm:text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer min-h-[44px]"
             title="Reset Date to Today"
           >
             <RotateCcw className="w-3.5 h-3.5 text-purple-400" />
@@ -189,33 +189,33 @@ export const InteractiveDateSwitcher: React.FC<InteractiveDateSwitcherProps> = (
         {/* Current Inspected Date Status Badge */}
         <div className="flex flex-wrap items-center gap-2">
           {scheduleInfo.isScheduledShift ? (
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-950/80 border border-emerald-500/50 text-emerald-300 shadow-sm">
+            <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-950/80 border border-emerald-500/50 text-emerald-300 shadow-sm min-h-[44px]">
               <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
               <div className="text-xs">
-                <span className="font-extrabold text-white">
+                <span className="font-extrabold text-white text-sm sm:text-xs">
                   {scheduleInfo.dayOfWeekName} Shift Active
                 </span>
-                <span className="text-[11px] text-emerald-300 ml-1.5 font-medium">
+                <span className="text-xs text-emerald-300 ml-1.5 font-medium">
                   • 11:00 PM • Contract Visit
                 </span>
               </div>
             </div>
           ) : (
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-950/60 border border-amber-500/50 text-amber-300 shadow-sm">
+            <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-amber-950/60 border border-amber-500/50 text-amber-300 shadow-sm min-h-[44px]">
               <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
               <div className="text-xs">
-                <span className="font-bold text-white">
+                <span className="font-bold text-white text-sm sm:text-xs">
                   {scheduleInfo.dayOfWeekName} (Off-Schedule)
                 </span>
-                <span className="text-[11px] text-amber-200 ml-1.5">
+                <span className="text-xs text-amber-200 ml-1.5">
                   • Standard visits: Tue, Thu, Sat
                 </span>
               </div>
             </div>
           )}
 
-          <div className="px-3 py-1.5 rounded-xl bg-slate-950/80 border border-purple-800/50 text-xs text-slate-300 font-medium flex items-center gap-1.5">
-            <Clock className="w-3.5 h-3.5 text-purple-400" />
+          <div className="px-3.5 py-2 rounded-xl bg-slate-950/80 border border-purple-800/50 text-xs text-slate-200 font-semibold flex items-center gap-1.5 min-h-[44px]">
+            <Clock className="w-4 h-4 text-purple-400" />
             <span>
               Week {scheduleInfo.occurrenceInMonth} of month ({scheduleInfo.dayOfWeekName})
             </span>
@@ -230,24 +230,24 @@ export const InteractiveDateSwitcher: React.FC<InteractiveDateSwitcherProps> = (
             {tasksDue.map((task) => (
               <div
                 key={task.toggleKey}
-                className="p-3 rounded-xl bg-gradient-to-r from-purple-950/80 to-indigo-950/80 border border-purple-500/60 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md"
+                className="p-3.5 rounded-xl bg-gradient-to-r from-purple-950/80 to-indigo-950/80 border border-purple-500/60 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md"
               >
-                <div className="space-y-0.5">
-                  <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded-full bg-purple-900 border border-purple-400 text-purple-200 text-[10px] font-black uppercase">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="px-2.5 py-0.5 rounded-full bg-purple-900 border border-purple-400 text-purple-200 text-xs font-bold uppercase">
                       Mandated by Contract Due Date
                     </span>
-                    <span className="font-bold text-white text-sm">
+                    <span className="font-bold text-white text-base sm:text-sm">
                       {task.name}
                     </span>
                   </div>
-                  <p className="text-[11px] text-slate-300">
+                  <p className="text-xs sm:text-xs text-slate-200">
                     {task.description} • <em>{task.occurrenceText}</em>
                   </p>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
-                  <span className="px-2.5 py-1 rounded-lg bg-emerald-950 border border-emerald-500/60 text-emerald-300 text-xs font-extrabold flex items-center gap-1">
-                    <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                  <span className="px-3 py-1.5 rounded-lg bg-emerald-950 border border-emerald-500/60 text-emerald-300 text-xs font-extrabold flex items-center gap-1.5">
+                    <Sparkles className="w-4 h-4 text-emerald-400" />
                     <span>Active in Tonight's Walkthrough</span>
                   </span>
                 </div>
@@ -255,20 +255,20 @@ export const InteractiveDateSwitcher: React.FC<InteractiveDateSwitcherProps> = (
             ))}
           </div>
         ) : (
-          <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400">
+          <div className="flex flex-wrap items-center justify-between gap-2.5 text-sm sm:text-xs text-slate-300">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 shrink-0"></span>
               <span>
                 Standard Core & Shift Services due for this date. No monthly deep clean is mandated for {scheduleInfo.dayOfWeekName}, Week {scheduleInfo.occurrenceInMonth}.
               </span>
             </div>
 
             {/* Quick Milestone Jump Links */}
-            <div className="flex items-center gap-2 text-[11px]">
-              <span className="text-slate-500">Test Rotations:</span>
+            <div className="flex flex-wrap items-center gap-2 text-xs">
+              <span className="text-slate-400 font-medium">Test Rotations:</span>
               <button
                 onClick={jumpToFirstTuesday}
-                className="text-amber-400 hover:text-amber-300 font-semibold underline cursor-pointer"
+                className="text-amber-300 hover:text-amber-200 font-semibold underline cursor-pointer p-1"
                 title="Jump to 1st Tuesday of this month to test 'Clean partition glass'"
               >
                 1st Tue (Partition Glass)
@@ -276,7 +276,7 @@ export const InteractiveDateSwitcher: React.FC<InteractiveDateSwitcherProps> = (
               <span className="text-slate-600">•</span>
               <button
                 onClick={jumpToSecondSunday}
-                className="text-purple-300 hover:text-purple-200 font-semibold underline cursor-pointer"
+                className="text-purple-300 hover:text-purple-200 font-semibold underline cursor-pointer p-1"
                 title="Jump to 2nd Sunday of this month to test 'Partition Glass Detail'"
               >
                 2nd Sun (Partition Detail)
@@ -284,7 +284,7 @@ export const InteractiveDateSwitcher: React.FC<InteractiveDateSwitcherProps> = (
               <span className="text-slate-600">•</span>
               <button
                 onClick={jumpToFourthSunday}
-                className="text-indigo-300 hover:text-indigo-200 font-semibold underline cursor-pointer"
+                className="text-indigo-300 hover:text-indigo-200 font-semibold underline cursor-pointer p-1"
                 title="Jump to 4th Sunday of this month to test 'Inside Refrigerator Deep Clean'"
               >
                 4th Sun (Refrigerator Clean)

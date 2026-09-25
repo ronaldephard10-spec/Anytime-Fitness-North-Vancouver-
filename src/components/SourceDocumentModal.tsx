@@ -155,10 +155,10 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-purple-200 bg-purple-950/80 px-2 py-0.5 rounded border border-purple-800">
+                <span className="text-xs font-bold uppercase tracking-wider text-purple-200 bg-purple-950/80 px-2 py-0.5 rounded border border-purple-800">
                   Original Source Document
                 </span>
-                <span className="text-[11px] font-semibold text-emerald-300 bg-emerald-950/70 px-2 py-0.5 rounded border border-emerald-800">
+                <span className="text-xs font-semibold text-emerald-300 bg-emerald-950/70 px-2 py-0.5 rounded border border-emerald-800">
                   Account #3007
                 </span>
               </div>
@@ -274,10 +274,10 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-purple-300 bg-purple-900/60 px-2.5 py-0.5 rounded-full border border-purple-700">
+                      <span className="text-xs font-bold uppercase tracking-wider text-purple-300 bg-purple-900/60 px-2.5 py-0.5 rounded-full border border-purple-700">
                         Coverall Health-Based Cleaning System
                       </span>
-                      <span className="text-[11px] font-bold text-emerald-300 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">
+                      <span className="text-xs font-bold text-emerald-300 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">
                         Quality Assurance Rating Manual
                       </span>
                     </div>
@@ -297,7 +297,7 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                       <Check className="w-4 h-4 text-emerald-400" />
                       <h4 className="text-xs font-bold text-emerald-300">Grade 9: Meets Standards</h4>
                     </div>
-                    <p className="text-[11px] text-emerald-200/90 leading-snug">
+                    <p className="text-xs text-emerald-200/90 leading-snug">
                       Facility cleanliness meets Coverall specifications. Surfaces sanitized, streak-free, dust-free under accessories, and odors eliminated.
                     </p>
                   </div>
@@ -307,7 +307,7 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                       <AlertTriangle className="w-4 h-4 text-amber-400" />
                       <h4 className="text-xs font-bold text-amber-300">Grade 7: Needs Improvement</h4>
                     </div>
-                    <p className="text-[11px] text-amber-200/90 leading-snug">
+                    <p className="text-xs text-amber-200/90 leading-snug">
                       Minor flaw detected (light dust, faint streak). If customer mentions an issue, mark 7 even if you disagree. Note quietly without showing customer defects.
                     </p>
                   </div>
@@ -317,7 +317,7 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                       <ShieldCheck className="w-4 h-4 text-rose-400" />
                       <h4 className="text-xs font-bold text-rose-300">Grade 5: Below Standards</h4>
                     </div>
-                    <p className="text-[11px] text-rose-200/90 leading-snug">
+                    <p className="text-xs text-rose-200/90 leading-snug">
                       Unacceptable service or sanitation failure. <strong className="text-rose-200">Mandatory Rule:</strong> Must be re-cleaned and fully corrected within 24 hours.
                     </p>
                   </div>
@@ -352,9 +352,9 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                   <div className="bg-slate-800/50 border border-slate-700/70 rounded-xl p-3.5 space-y-2.5">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-purple-300 uppercase">Restrooms (9 Steps)</span>
-                      <span className="text-[10px] text-slate-400">Restroom Standard</span>
+                      <span className="text-xs text-slate-400">Restroom Standard</span>
                     </div>
-                    <ul className="text-[11px] text-slate-300 space-y-1.5 list-decimal list-inside leading-snug">
+                    <ul className="text-xs text-slate-300 space-y-1.5 list-decimal list-inside leading-snug">
                       <li>Check that NO foul odors are present.</li>
                       <li>Check corners of floors & behind toilets for dirt/hair.</li>
                       <li>Check inside/outside of toilets & urinal bowl faces.</li>
@@ -371,9 +371,9 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                   <div className="bg-slate-800/50 border border-slate-700/70 rounded-xl p-3.5 space-y-2.5">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-cyan-300 uppercase">Floors (9 Steps)</span>
-                      <span className="text-[10px] text-slate-400">Hard & Carpet Floors</span>
+                      <span className="text-xs text-slate-400">Hard & Carpet Floors</span>
                     </div>
-                    <ul className="text-[11px] text-slate-300 space-y-1.5 list-decimal list-inside leading-snug">
+                    <ul className="text-xs text-slate-300 space-y-1.5 list-decimal list-inside leading-snug">
                       <li>Check general appearance for loose debris & soil.</li>
                       <li>Check tiling for dullness, streaks or dirty grout.</li>
                       <li>Check transitions, edges & trim strips.</li>
@@ -390,9 +390,9 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                   <div className="bg-slate-800/50 border border-slate-700/70 rounded-xl p-3.5 space-y-2.5">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-emerald-300 uppercase">Detail Cleaning (12 Steps)</span>
-                      <span className="text-[10px] text-slate-400">Furniture & Glass</span>
+                      <span className="text-xs text-slate-400">Furniture & Glass</span>
                     </div>
-                    <ul className="text-[11px] text-slate-300 space-y-1.5 list-decimal list-inside leading-snug">
+                    <ul className="text-xs text-slate-300 space-y-1.5 list-decimal list-inside leading-snug">
                       <li>Check reception & front entrance foyer.</li>
                       <li>Check for smudges or streaks on glass doors.</li>
                       <li>Check desk tops & dust underneath small items.</li>
@@ -464,15 +464,15 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
                               {item.isMonthly && (
-                                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-700">
+                                <span className="text-xs font-bold px-2 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-700">
                                   Monthly Detail
                                 </span>
                               )}
-                              <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-slate-800 text-purple-300 border border-slate-700">
+                              <span className="text-xs font-bold uppercase px-2 py-0.5 rounded bg-slate-800 text-purple-300 border border-slate-700">
                                 {item.category.toUpperCase()}
                               </span>
                               {guide && (
-                                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-950 text-purple-200 border border-purple-800">
+                                <span className="text-xs font-bold px-2 py-0.5 rounded bg-purple-950 text-purple-200 border border-purple-800">
                                   {guide.coverallSection}
                                 </span>
                               )}
@@ -495,7 +495,7 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                           <div className="pt-3 border-t border-slate-700/60 space-y-3 animate-in fade-in duration-150">
                             {/* Physical Walkthrough Procedure */}
                             <div className="space-y-1">
-                              <h5 className="text-[11px] font-bold text-purple-300 uppercase tracking-wider flex items-center gap-1.5">
+                              <h5 className="text-xs font-bold text-purple-300 uppercase tracking-wider flex items-center gap-1.5">
                                 <ClipboardList className="w-3.5 h-3.5 text-purple-400" />
                                 <span>The Way to Do the Inspection (Physical Walkthrough Procedure)</span>
                               </h5>
@@ -506,7 +506,7 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
 
                             {/* Inspection Checkpoints */}
                             <div className="space-y-1.5">
-                              <h5 className="text-[11px] font-bold text-emerald-300 uppercase tracking-wider flex items-center gap-1.5">
+                              <h5 className="text-xs font-bold text-emerald-300 uppercase tracking-wider flex items-center gap-1.5">
                                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
                                 <span>Inspection Checkpoints (From Coverall Guidelines)</span>
                               </h5>
@@ -516,7 +516,7 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                                     key={sIdx}
                                     className="flex items-start gap-2 bg-slate-900/80 p-2 rounded-lg border border-slate-800"
                                   >
-                                    <span className="shrink-0 w-4 h-4 rounded-full bg-purple-900/80 text-purple-200 font-mono text-[10px] font-bold flex items-center justify-center mt-0.5">
+                                    <span className="shrink-0 w-4 h-4 rounded-full bg-purple-900/80 text-purple-200 font-mono text-xs font-bold flex items-center justify-center mt-0.5">
                                       {sIdx + 1}
                                     </span>
                                     <span className="leading-snug">{step}</span>
@@ -527,37 +527,37 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
 
                             {/* Rating Matrix */}
                             <div className="space-y-1.5 pt-1">
-                              <h5 className="text-[11px] font-bold text-cyan-300 uppercase tracking-wider flex items-center gap-1.5">
+                              <h5 className="text-xs font-bold text-cyan-300 uppercase tracking-wider flex items-center gap-1.5">
                                 <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
                                 <span>Coverall 9 / 7 / 5 Grading System Standards</span>
                               </h5>
                               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
                                 <div className="bg-emerald-950/30 border border-emerald-600/40 rounded-lg p-2.5 space-y-1">
-                                  <span className="font-bold text-emerald-300 text-[11px] flex items-center gap-1">
+                                  <span className="font-bold text-emerald-300 text-xs flex items-center gap-1">
                                     <Check className="w-3 h-3 text-emerald-400" />
                                     Grade 9: Meets Standards
                                   </span>
-                                  <p className="text-[11px] text-emerald-200/90 leading-snug">
+                                  <p className="text-xs text-emerald-200/90 leading-snug">
                                     {guide.passStandard}
                                   </p>
                                 </div>
 
                                 <div className="bg-amber-950/30 border border-amber-600/40 rounded-lg p-2.5 space-y-1">
-                                  <span className="font-bold text-amber-300 text-[11px] flex items-center gap-1">
+                                  <span className="font-bold text-amber-300 text-xs flex items-center gap-1">
                                     <AlertTriangle className="w-3 h-3 text-amber-400" />
                                     Grade 7: Needs Improvement
                                   </span>
-                                  <p className="text-[11px] text-amber-200/90 leading-snug">
+                                  <p className="text-xs text-amber-200/90 leading-snug">
                                     {guide.needsImprovementStandard}
                                   </p>
                                 </div>
 
                                 <div className="bg-rose-950/30 border border-rose-600/40 rounded-lg p-2.5 space-y-1">
-                                  <span className="font-bold text-rose-300 text-[11px] flex items-center gap-1">
+                                  <span className="font-bold text-rose-300 text-xs flex items-center gap-1">
                                     <ShieldCheck className="w-3 h-3 text-rose-400" />
                                     Grade 5: Below Standards
                                   </span>
-                                  <p className="text-[11px] text-rose-200/90 leading-snug">
+                                  <p className="text-xs text-rose-200/90 leading-snug">
                                     {guide.belowStandard}
                                   </p>
                                 </div>
@@ -647,11 +647,11 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                       >
                         <div className="space-y-1 max-w-3xl">
                           <div className="flex flex-wrap items-center gap-2">
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-purple-300 bg-purple-950/70 px-2 py-0.5 rounded border border-purple-800/60">
+                            <span className="text-xs font-bold uppercase tracking-wider text-purple-300 bg-purple-950/70 px-2 py-0.5 rounded border border-purple-800/60">
                               {item.section}
                             </span>
                             <span
-                              className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+                              className={`text-xs font-bold px-2 py-0.5 rounded ${
                                 isDaily
                                   ? 'bg-blue-950 text-blue-300 border border-blue-800'
                                   : isWeekly
@@ -678,7 +678,7 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                           </div>
 
                           {item.notes && (
-                            <div className="text-[11px] text-purple-300/90 bg-purple-950/40 px-2.5 py-1 rounded border border-purple-900/40">
+                            <div className="text-xs text-purple-300/90 bg-purple-950/40 px-2.5 py-1 rounded border border-purple-900/40">
                               <span className="font-semibold">Schedule Note:</span> {item.notes}
                             </div>
                           )}
@@ -882,7 +882,7 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                       <button
                         type="button"
                         onClick={handleCurrentMonth}
-                        className="flex items-center gap-1 text-[11px] font-semibold text-purple-300 hover:text-white px-2 py-1.5 rounded-lg bg-purple-950/60 hover:bg-purple-900/80 border border-purple-700/50 transition"
+                        className="flex items-center gap-1 text-xs font-semibold text-purple-300 hover:text-white px-2 py-1.5 rounded-lg bg-purple-950/60 hover:bg-purple-900/80 border border-purple-700/50 transition"
                         title="Jump to Today's Month"
                       >
                         <RotateCcw className="w-3 h-3 text-purple-400" />
@@ -900,7 +900,7 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                       </span>
                       <span className="text-slate-400 hidden sm:inline">• Click any calendar day below to instantly load its walkthrough</span>
                     </div>
-                    <div className="text-[11px] text-purple-300">
+                    <div className="text-xs text-purple-300">
                       Weekly Schedule: Tuesday, Thursday, Sunday after 11:00 PM
                     </div>
                   </div>
@@ -909,7 +909,7 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                 {/* Calendar Grid */}
                 <div className="bg-slate-900/80 rounded-2xl border border-slate-800 overflow-hidden shadow-xl">
                   {/* Day headers */}
-                  <div className="grid grid-cols-7 bg-slate-950 border-b border-slate-800 text-center py-2 text-[11px] font-bold text-slate-400">
+                  <div className="grid grid-cols-7 bg-slate-950 border-b border-slate-800 text-center py-2 text-xs font-bold text-slate-400">
                     <div className="text-purple-300">SUN (Service)</div>
                     <div>MON</div>
                     <div className="text-purple-300">TUE (Service)</div>
@@ -985,25 +985,25 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                               </div>
 
                               {isServiceDay ? (
-                                <span className="text-[10px] font-bold text-emerald-400 bg-emerald-950/80 px-1.5 py-0.2 rounded border border-emerald-800/60">
+                                <span className="text-xs font-bold text-emerald-400 bg-emerald-950/80 px-1.5 py-0.2 rounded border border-emerald-800/60">
                                   #{cell.visitNumber}/{monthlyVisitsTotal}
                                 </span>
                               ) : (
-                                <span className="text-[9px] text-slate-600 font-medium">Off-Day</span>
+                                <span className="text-xs text-slate-600 font-medium">Off-Day</span>
                               )}
                             </div>
 
                             {/* Service Badges & Monthly Rotations */}
                             <div className="mt-1.5 space-y-1">
                               {isServiceDay && (
-                                <div className="text-[10px] font-semibold text-purple-300 flex items-center gap-1">
+                                <div className="text-xs font-semibold text-purple-300 flex items-center gap-1">
                                   <Clock className="w-2.5 h-2.5 text-purple-400" />
                                   <span>11:00 PM</span>
                                 </div>
                               )}
 
                               {cell.isFirstTuesday && (
-                                <div className="p-1 rounded bg-amber-950/90 border border-amber-500/70 text-amber-200 text-[10px] font-extrabold leading-tight shadow-sm">
+                                <div className="p-1 rounded bg-amber-950/90 border border-amber-500/70 text-amber-200 text-xs font-extrabold leading-tight shadow-sm">
                                   <div className="flex items-center gap-1">
                                     <Sparkles className="w-3 h-3 text-amber-400 shrink-0" />
                                     <span>1st Tue Mandated:</span>
@@ -1015,37 +1015,37 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                               )}
 
                               {cell.isSecondSunday && (
-                                <div className="p-1 rounded bg-purple-950/80 border border-purple-600/60 text-purple-200 text-[9px] font-bold">
+                                <div className="p-1 rounded bg-purple-950/80 border border-purple-600/60 text-purple-200 text-xs font-bold">
                                   2nd Sun: Partition Glass Detail
                                 </div>
                               )}
 
                               {cell.isSecondTuesday && (
-                                <div className="p-1 rounded bg-purple-950/80 border border-purple-600/60 text-purple-200 text-[9px] font-bold">
+                                <div className="p-1 rounded bg-purple-950/80 border border-purple-600/60 text-purple-200 text-xs font-bold">
                                   2nd Tue: Fixtures & Vents (6-10 ft)
                                 </div>
                               )}
 
                               {cell.isThirdTuesday && (
-                                <div className="p-1 rounded bg-purple-950/80 border border-purple-600/60 text-purple-200 text-[9px] font-bold">
+                                <div className="p-1 rounded bg-purple-950/80 border border-purple-600/60 text-purple-200 text-xs font-bold">
                                   3rd Tue: Blinds & Glass Doors
                                 </div>
                               )}
 
                               {cell.isSecondThursday && (
-                                <div className="p-1 rounded bg-purple-950/80 border border-purple-600/60 text-purple-200 text-[9px] font-bold">
+                                <div className="p-1 rounded bg-purple-950/80 border border-purple-600/60 text-purple-200 text-xs font-bold">
                                   2nd Thu: Fabric & Leather Furniture
                                 </div>
                               )}
 
                               {cell.isThirdThursday && (
-                                <div className="p-1 rounded bg-purple-950/80 border border-purple-600/60 text-purple-200 text-[9px] font-bold">
+                                <div className="p-1 rounded bg-purple-950/80 border border-purple-600/60 text-purple-200 text-xs font-bold">
                                   3rd Thu: Detail Edge Vacuuming
                                 </div>
                               )}
 
                               {cell.isFourthSunday && (
-                                <div className="p-1 rounded bg-indigo-950/90 border border-indigo-400/80 text-indigo-200 text-[10px] font-extrabold leading-tight shadow-sm">
+                                <div className="p-1 rounded bg-indigo-950/90 border border-indigo-400/80 text-indigo-200 text-xs font-extrabold leading-tight shadow-sm">
                                   <div className="flex items-center gap-1">
                                     <Sparkles className="w-3 h-3 text-indigo-300 shrink-0" />
                                     <span>4th Sun Mandated:</span>
@@ -1059,7 +1059,7 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                           </div>
 
                           {/* Hover / Click Prompt */}
-                          <div className="mt-1 pt-1 border-t border-slate-800/60 flex items-center justify-between text-[9px] text-slate-400 group-hover:text-purple-300">
+                          <div className="mt-1 pt-1 border-t border-slate-800/60 flex items-center justify-between text-xs text-slate-400 group-hover:text-purple-300">
                             <span>{cell.isSelectedDate ? 'Active Day' : isServiceDay ? 'Load Walkthrough' : 'Load Shift'}</span>
                             <ArrowRight className="w-2.5 h-2.5 transition transform group-hover:translate-x-0.5" />
                           </div>
@@ -1074,7 +1074,7 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                   {/* 1st Tuesday Mandate */}
                   <div className="p-4 rounded-xl bg-amber-950/30 border border-amber-500/50 space-y-2">
                     <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded bg-amber-900 border border-amber-400 text-amber-200 text-[11px] font-black uppercase">
+                      <span className="px-2 py-0.5 rounded bg-amber-900 border border-amber-400 text-amber-200 text-xs font-black uppercase">
                         1st Tuesday Mandate
                       </span>
                       <h4 className="text-sm font-bold text-white">Clean Partition Glass</h4>
@@ -1082,7 +1082,7 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                     <p className="text-xs text-slate-300">
                       <strong>Contract Requirement:</strong> Mandates "Clean partition glass" on the 1st Tuesday of every month. Thoroughly clean all interior glass partition walls, conference dividers, and glass sidelites to streak-free clarity using hospital-grade glass cleaner.
                     </p>
-                    <div className="text-[11px] text-amber-300 bg-amber-950/80 p-2 rounded-lg border border-amber-800/60">
+                    <div className="text-xs text-amber-300 bg-amber-950/80 p-2 rounded-lg border border-amber-800/60">
                       ✓ Automatically activated when walkthrough date is set to the 1st Tuesday of any month.
                     </div>
                   </div>
@@ -1090,7 +1090,7 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                   {/* 4th Sunday Mandate */}
                   <div className="p-4 rounded-xl bg-indigo-950/30 border border-indigo-400/50 space-y-2">
                     <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded bg-indigo-900 border border-indigo-400 text-indigo-200 text-[11px] font-black uppercase">
+                      <span className="px-2 py-0.5 rounded bg-indigo-900 border border-indigo-400 text-indigo-200 text-xs font-black uppercase">
                         4th Sunday Mandate
                       </span>
                       <h4 className="text-sm font-bold text-white">Inside Refrigerator Deep Clean</h4>
@@ -1098,7 +1098,7 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                     <p className="text-xs text-slate-300">
                       <strong>Contract Requirement:</strong> Mandates "Inside Refrigerator Deep Clean" on the 4th Sunday of every month. Empty interior shelves, crisper bins, door gaskets, and sanitize with hospital-grade disinfectant.
                     </p>
-                    <div className="text-[11px] text-indigo-300 bg-indigo-950/80 p-2 rounded-lg border border-indigo-800/60">
+                    <div className="text-xs text-indigo-300 bg-indigo-950/80 p-2 rounded-lg border border-indigo-800/60">
                       ✓ Automatically activated when walkthrough date is set to the 4th Sunday of any month.
                     </div>
                   </div>
@@ -1108,11 +1108,11 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                 <div className="border border-slate-800 rounded-xl overflow-hidden bg-slate-950/60 p-4">
                   <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider mb-3 flex items-center justify-between">
                     <span>Summary Table: All Monthly Services & Exact Cadence</span>
-                    <span className="text-[11px] font-semibold text-purple-300 normal-case">156 Annual Visits Total</span>
+                    <span className="text-xs font-semibold text-purple-300 normal-case">156 Annual Visits Total</span>
                   </h4>
                   <div className="overflow-x-auto">
                     <table className="w-full text-xs text-left">
-                      <thead className="bg-slate-900 text-slate-300 uppercase text-[10px] font-semibold">
+                      <thead className="bg-slate-900 text-slate-300 uppercase text-xs font-semibold">
                         <tr>
                           <th className="py-2.5 px-3">Service Name</th>
                           <th className="py-2.5 px-3">Scheduled Timing</th>
@@ -1251,18 +1251,18 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                     <div>
                       <dt className="text-slate-400 font-medium">Primary Contact</dt>
                       <dd className="font-semibold text-slate-200 mt-0.5">Jennifer Johnson</dd>
-                      <dd className="text-purple-300 text-[11px] font-mono">604-785-4857</dd>
-                      <dd className="text-slate-400 text-[11px]">jen.johnson@anytimefitness.ca</dd>
+                      <dd className="text-purple-300 text-xs font-mono">604-785-4857</dd>
+                      <dd className="text-slate-400 text-xs">jen.johnson@anytimefitness.ca</dd>
                     </div>
                     <div>
                       <dt className="text-slate-400 font-medium">Other Emergency Contact</dt>
                       <dd className="font-semibold text-slate-200 mt-0.5">Tara</dd>
-                      <dd className="text-purple-300 text-[11px] font-mono">604-620-0048</dd>
+                      <dd className="text-purple-300 text-xs font-mono">604-620-0048</dd>
                     </div>
                     <div>
                       <dt className="text-slate-400 font-medium">Franchise Owner</dt>
                       <dd className="font-semibold text-slate-200 mt-0.5">Ronald Ephard</dd>
-                      <dd className="text-slate-400 text-[11px]">Coverall Franchisee</dd>
+                      <dd className="text-slate-400 text-xs">Coverall Franchisee</dd>
                     </div>
                     <div>
                       <dt className="text-slate-400 font-medium">Coverall Regional Fax</dt>
@@ -1277,7 +1277,7 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                     </div>
                     <div className="col-span-2">
                       <dt className="text-slate-400 font-medium">Closing Security Mandate</dt>
-                      <dd className="text-slate-300 mt-0.5 text-[11px]">
+                      <dd className="text-slate-300 mt-0.5 text-xs">
                         Turn off office lights, verify gym perimeter, ensure all exterior doors and windows are securely locked (1 Fob + 1 Key).
                       </dd>
                     </div>
@@ -1311,7 +1311,7 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                     </div>
                     <div>
                       <div className="font-bold text-sm text-slate-200">{area}</div>
-                      <div className="text-[11px] text-slate-400 mt-0.5">
+                      <div className="text-xs text-slate-400 mt-0.5">
                         Serviced according to Coverall daily, weekly, and monthly schedule matrix.
                       </div>
                     </div>
@@ -1355,7 +1355,7 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                     Periodic and annual special services available for Anytime Fitness North Vancouver.
                   </p>
                 </div>
-                <span className="text-[11px] font-semibold text-purple-300 bg-purple-950 px-2.5 py-1 rounded border border-purple-800">
+                <span className="text-xs font-semibold text-purple-300 bg-purple-950 px-2.5 py-1 rounded border border-purple-800">
                   Separate Work Orders / Periodic Cycles
                 </span>
               </div>
@@ -1368,12 +1368,12 @@ export const SourceDocumentModal: React.FC<SourceDocumentModalProps> = ({
                   >
                     <div className="flex items-center justify-between gap-2">
                       <h4 className="text-sm font-bold text-slate-200">{serv.title}</h4>
-                      <span className="text-[10px] font-bold text-purple-300 bg-purple-950 px-2 py-0.5 rounded border border-purple-800">
+                      <span className="text-xs font-bold text-purple-300 bg-purple-950 px-2 py-0.5 rounded border border-purple-800">
                         {serv.frequencyLabel}
                       </span>
                     </div>
                     <p className="text-xs text-slate-300 leading-relaxed">{serv.description}</p>
-                    <div className="text-[11px] text-slate-400 pt-1 border-t border-slate-700/50 flex items-center justify-between">
+                    <div className="text-xs text-slate-400 pt-1 border-t border-slate-700/50 flex items-center justify-between">
                       <span>Source: {serv.contractReference}</span>
                       <span className="text-slate-400 font-medium">
                         Cycle: {serv.recommendedCycleMonths} mos

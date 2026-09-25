@@ -1,1 +1,43 @@
 @import "tailwindcss";
+
+:root {
+  --app-font-scale: 1;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  font-size: 16px;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Text Size Accessibility Settings for Mobile & Desktop */
+html[data-text-size="normal"] {
+  font-size: 16px;
+}
+
+html[data-text-size="large"] {
+  font-size: 18px;
+}
+
+html[data-text-size="xl"] {
+  font-size: 20.5px;
+}
+
+@media (max-width: 640px) {
+  /* Enhanced mobile readability defaults */
+  html[data-text-size="normal"] {
+    font-size: 16.5px;
+  }
+  html[data-text-size="large"] {
+    font-size: 19px;
+  }
+  html[data-text-size="xl"] {
+    font-size: 21.5px;
+  }
+
+  /* Ensure minimum button and interactive touch target size */
+  button, input, select, textarea {
+    touch-action: manipulation;
+  }
+}

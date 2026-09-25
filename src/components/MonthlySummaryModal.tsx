@@ -178,7 +178,7 @@ export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
               <div>
                 <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight flex items-center gap-2">
                   Monthly Quality Assurance Summary
-                  <span className="text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-950 border border-emerald-500/40 text-emerald-300">
+                  <span className="text-xs uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-950 border border-emerald-500/40 text-emerald-300">
                     Client Executive Report
                   </span>
                 </h2>
@@ -205,7 +205,7 @@ export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
               <strong>Option 2 Cadence Active:</strong> Monthly Summary to Client • Every Inspection to Ronald (Recommended Strategy).
             </span>
           </div>
-          <div className="text-[11px] text-purple-300 font-medium bg-purple-900/50 px-2.5 py-1 rounded-md border border-purple-700/40 self-start sm:self-auto">
+          <div className="text-xs text-purple-300 font-medium bg-purple-900/50 px-2.5 py-1 rounded-md border border-purple-700/40 self-start sm:self-auto">
             Schedule: First Friday Release (or On-Demand)
           </div>
         </div>
@@ -248,7 +248,7 @@ export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
                 }`}
               >
                 <span>Shift Audit Trail</span>
-                <span className="px-1.5 py-0.2 rounded-full bg-slate-800 text-[10px] text-purple-300">
+                <span className="px-1.5 py-0.2 rounded-full bg-slate-800 text-xs text-purple-300">
                   {metrics.inspectionsCount}
                 </span>
               </button>
@@ -286,14 +286,14 @@ export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {/* Card 1: Completed Audits */}
             <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 space-y-1">
-              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
                 Shift Inspections
               </span>
               <div className="flex items-baseline gap-2">
                 <span className="text-2xl font-black text-white">{metrics.inspectionsCount}</span>
                 <span className="text-xs text-slate-400">/ 13 scheduled</span>
               </div>
-              <p className="text-[11px] text-emerald-400 font-medium flex items-center gap-1">
+              <p className="text-xs text-emerald-400 font-medium flex items-center gap-1">
                 <CheckCircle2 className="w-3 h-3" />
                 <span>100% Verified Attendance</span>
               </p>
@@ -301,21 +301,21 @@ export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
 
             {/* Card 2: Average Compliance */}
             <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 space-y-1">
-              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
                 Avg Compliance
               </span>
               <div className="flex items-baseline gap-2">
                 <span className="text-2xl font-black text-emerald-400">{metrics.averageScore}%</span>
                 <span className="text-xs text-slate-400">score</span>
               </div>
-              <p className="text-[11px] text-purple-300 font-medium">
+              <p className="text-xs text-purple-300 font-medium">
                 High Pass (Target: ≥85%)
               </p>
             </div>
 
             {/* Card 3: Deep Clean Rotations */}
             <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 space-y-1">
-              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
                 Deep Cleans Completed
               </span>
               <div className="flex items-baseline gap-2">
@@ -324,14 +324,14 @@ export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
                 </span>
                 <span className="text-xs text-slate-400">of 6 rotational</span>
               </div>
-              <p className="text-[11px] text-slate-400 font-medium">
+              <p className="text-xs text-slate-400 font-medium">
                 Agreement Schedule Met
               </p>
             </div>
 
             {/* Card 4: Deficiencies Remediated */}
             <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 space-y-1">
-              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
                 Deficiencies Caught
               </span>
               <div className="flex items-baseline gap-2">
@@ -340,7 +340,7 @@ export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
                 </span>
                 <span className="text-xs text-slate-400">items</span>
               </div>
-              <p className="text-[11px] text-emerald-400 font-medium flex items-center gap-1">
+              <p className="text-xs text-emerald-400 font-medium flex items-center gap-1">
                 <CheckCircle2 className="w-3 h-3" />
                 <span>100% Remediated on-site</span>
               </p>
@@ -357,7 +357,7 @@ export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
                     <Sparkles className="w-4 h-4 text-purple-400" />
                     Coverall Health-Based Cleaning System: Monthly Periodic Rotations
                   </h3>
-                  <span className="text-[10px] text-slate-400">Page 2–5 Agreement Scope</span>
+                  <span className="text-xs text-slate-400">Page 2–5 Agreement Scope</span>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs">
@@ -409,16 +409,16 @@ export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
                     >
                       <div>
                         <div className="flex items-center gap-1.5 font-bold">
-                          <span className="text-[10px] uppercase font-bold text-purple-300">
+                          <span className="text-xs uppercase font-bold text-purple-300">
                             {item.rotation}:
                           </span>
                           <span className="text-white">{item.name}</span>
                         </div>
-                        <p className="text-[11px] text-slate-400 mt-0.5">{item.area}</p>
+                        <p className="text-xs text-slate-400 mt-0.5">{item.area}</p>
                       </div>
 
                       <span
-                        className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase shrink-0 ${
+                        className={`text-xs font-bold px-2 py-0.5 rounded-full uppercase shrink-0 ${
                           item.completed
                             ? 'bg-emerald-950 border border-emerald-500/40 text-emerald-300'
                             : 'bg-slate-800 border border-slate-700 text-slate-400'
@@ -438,7 +438,7 @@ export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
                     <AlertTriangle className="w-4 h-4 text-amber-400" />
                     Quality Deficiency &amp; Immediate Remediation Log
                   </h3>
-                  <span className="text-[11px] text-slate-400">
+                  <span className="text-xs text-slate-400">
                     Proactive Quality Assurance by Ronald Ephard
                   </span>
                 </div>
@@ -461,12 +461,12 @@ export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
                           <span className="font-bold text-amber-300">
                             [{def.date} - {def.shift} Shift] {def.itemName}
                           </span>
-                          <span className="text-[10px] font-bold text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded-full border border-emerald-500/30 flex items-center gap-1">
+                          <span className="text-xs font-bold text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded-full border border-emerald-500/30 flex items-center gap-1">
                             <CheckCircle2 className="w-3 h-3" />
                             Resolved On-Site
                           </span>
                         </div>
-                        <p className="text-slate-300 text-[11px]">{def.notes}</p>
+                        <p className="text-slate-300 text-xs">{def.notes}</p>
                       </div>
                     ))}
                   </div>
@@ -480,7 +480,7 @@ export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
                   <h4 className="font-bold text-white">
                     Why Client Receives Monthly QA (Instead of Daily/Per-Visit Emails)
                   </h4>
-                  <p className="text-slate-300 leading-relaxed text-[11px]">
+                  <p className="text-slate-300 leading-relaxed text-xs">
                     Gym managers receive hundreds of vendor alerts each week. By consolidating the 12–13 monthly inspections into this single executive quality report delivered on the First Friday of each month, Anytime Fitness North Vancouver receives undeniable proof of compliance, photos, and deep-clean tasks without inbox fatigue. Meanwhile, you retain complete shift-by-shift internal documentation.
                   </p>
                 </div>
@@ -497,7 +497,7 @@ export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
                 </span>
                 <button
                   onClick={handleResetHistory}
-                  className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 text-[11px] transition"
+                  className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 text-xs transition"
                   title="Reset sample seed data"
                 >
                   <RotateCcw className="w-3 h-3 text-slate-400" />
@@ -508,7 +508,7 @@ export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
               <div className="border border-slate-800 rounded-xl overflow-hidden bg-slate-950/70">
                 <table className="w-full text-left text-xs border-collapse">
                   <thead>
-                    <tr className="bg-purple-950/50 text-purple-200 border-b border-purple-900/40 text-[11px] uppercase tracking-wider">
+                    <tr className="bg-purple-950/50 text-purple-200 border-b border-purple-900/40 text-xs uppercase tracking-wider">
                       <th className="p-3 font-bold">Date</th>
                       <th className="p-3 font-bold">Shift Timing</th>
                       <th className="p-3 font-bold">Score</th>
@@ -522,7 +522,7 @@ export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
                       <tr key={insp.id} className="hover:bg-slate-900/50 transition">
                         <td className="p-3 font-mono font-medium text-white">{insp.date}</td>
                         <td className="p-3">
-                          <span className="px-2 py-0.5 rounded-full bg-purple-950 border border-purple-800/40 text-purple-300 font-semibold text-[10px] uppercase">
+                          <span className="px-2 py-0.5 rounded-full bg-purple-950 border border-purple-800/40 text-purple-300 font-semibold text-xs uppercase">
                             {insp.shift} (11:00 PM)
                           </span>
                         </td>
@@ -532,7 +532,7 @@ export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
                           </span>
                         </td>
                         <td className="p-3 text-slate-300">{insp.inspectorName}</td>
-                        <td className="p-3 text-slate-400 text-[11px]">
+                        <td className="p-3 text-slate-400 text-xs">
                           {insp.monthlyTasksCompleted.length > 0 ? (
                             <span className="text-purple-300 font-semibold">
                               {insp.monthlyTasksCompleted.join(', ')}
@@ -584,7 +584,7 @@ export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1">
+                    <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1">
                       Client Recipient (Anytime Fitness Manager)
                     </label>
                     <input
@@ -597,13 +597,13 @@ export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
                       placeholder="jen.johnson@anytimefitness.ca"
                       className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white font-mono text-xs focus:outline-hidden focus:border-purple-500"
                     />
-                    <span className="text-[10px] text-slate-400 mt-1 block">
+                    <span className="text-xs text-slate-400 mt-1 block">
                       Default: Primary Club Manager Jennifer Johnson
                     </span>
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1">
+                    <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1">
                       Carbon Copy (Ronald / Coverall Franchisee)
                     </label>
                     <input
@@ -616,7 +616,7 @@ export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
                       placeholder="ronaldephard10@gmail.com, ronald@marketingdo.net"
                       className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white font-mono text-xs focus:outline-hidden focus:border-purple-500"
                     />
-                    <span className="text-[10px] text-slate-400 mt-1 block">
+                    <span className="text-xs text-slate-400 mt-1 block">
                       Receives exact duplicate of the client's executive report
                     </span>
                   </div>
@@ -630,7 +630,7 @@ export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
                   <h4 className="font-bold text-white mb-0.5">
                     Recommended Delivery Window: First Friday of the Month
                   </h4>
-                  <p className="text-[11px] text-slate-400">
+                  <p className="text-xs text-slate-400">
                     Sending on the First Friday morning gives the club manager a crisp end-of-week review of gym sanitation, positioning Coverall as a strategic partner ahead of weekend member traffic.
                   </p>
                 </div>
@@ -661,12 +661,12 @@ export const MonthlySummaryModal: React.FC<MonthlySummaryModalProps> = ({
                             Executive Report for <strong>{metrics.monthName}</strong> transmitted to <strong>{clientEmail}</strong>.
                           </p>
                           {sendResult.messageId && (
-                            <p className="font-mono text-[11px] text-emerald-300">
+                            <p className="font-mono text-xs text-emerald-300">
                               Resend Reference ID: {sendResult.messageId}
                             </p>
                           )}
                           {sendResult.note && (
-                            <p className="italic text-[11px] text-purple-300 mt-1">
+                            <p className="italic text-xs text-purple-300 mt-1">
                               {sendResult.note}
                             </p>
                           )}

@@ -52,21 +52,21 @@ export const NewDayRolloverBanner: React.FC<NewDayRolloverBannerProps> = ({
             <Sparkles className="w-5 h-5 text-purple-300" />
           </div>
 
-          <div className="space-y-1">
+          <div className="space-y-1.5">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-purple-900/80 border border-purple-400/50 text-purple-200">
+              <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-purple-900/80 border border-purple-400/50 text-purple-200">
                 New Day Started
               </span>
-              <span className="text-xs font-bold text-white">
+              <span className="text-sm sm:text-xs font-bold text-white">
                 {currentDayName} Shift Initialized
               </span>
-              <span className="text-[11px] text-emerald-400 font-semibold flex items-center gap-1">
-                <CheckCircle2 className="w-3 h-3" />
+              <span className="text-xs text-emerald-400 font-semibold flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5" />
                 Previous audit safely archived
               </span>
             </div>
 
-            <p className="text-xs text-slate-300 leading-relaxed max-w-2xl">
+            <p className="text-sm sm:text-xs text-slate-200 leading-relaxed max-w-2xl">
               A fresh checklist has been prepared for today. Your inspection from{' '}
               <strong className="text-white">{previousDate} ({previousShift.toUpperCase()})</strong>{' '}
               {archivedRecord ? `scored ${archivedRecord.score}% and ` : ''}has been stored in your certified history.
@@ -79,17 +79,17 @@ export const NewDayRolloverBanner: React.FC<NewDayRolloverBannerProps> = ({
             <button
               onClick={handleDownloadPrevious}
               disabled={downloading}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition shadow-md shadow-purple-950/60 active:scale-95 disabled:opacity-50"
+              className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-sm sm:text-xs font-bold transition shadow-md shadow-purple-950/60 active:scale-95 disabled:opacity-50 min-h-[44px]"
               title="Download previous day's certified PDF report"
             >
               {downloaded ? (
                 <>
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-300" />
+                  <CheckCircle2 className="w-4 h-4 text-emerald-300" />
                   <span>Report Downloaded!</span>
                 </>
               ) : (
                 <>
-                  <Download className="w-3.5 h-3.5 text-purple-100" />
+                  <Download className="w-4 h-4 text-purple-100" />
                   <span>Download {previousDate} Report (PDF)</span>
                 </>
               )}
@@ -98,19 +98,19 @@ export const NewDayRolloverBanner: React.FC<NewDayRolloverBannerProps> = ({
 
           <button
             onClick={onOpenHistory}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-200 text-xs font-semibold transition active:scale-95"
+            className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-200 text-sm sm:text-xs font-semibold transition active:scale-95 min-h-[44px]"
             title="View full inspection history"
           >
-            <History className="w-3.5 h-3.5 text-purple-400" />
+            <History className="w-4 h-4 text-purple-400" />
             <span>View History</span>
           </button>
 
           <button
             onClick={onDismiss}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/80 transition"
+            className="p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/80 transition min-h-[44px] min-w-[44px] flex items-center justify-center"
             title="Dismiss notification"
           >
-            <X className="w-4 h-4" />
+            <X className="w-5 h-5" />
           </button>
         </div>
       </div>

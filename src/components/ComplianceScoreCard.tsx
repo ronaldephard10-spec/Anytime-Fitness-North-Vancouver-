@@ -58,39 +58,39 @@ export const ComplianceScoreCard: React.FC<ComplianceScoreCardProps> = ({
             }`}
           >
             <div className="text-center">
-              <span className="text-2xl font-black tracking-tight block">
+              <span className="text-3xl font-black tracking-tight block">
                 {score.totalScorable === 0 ? '0' : score.percentage}%
               </span>
-              <span className="text-[10px] font-bold uppercase tracking-wider block opacity-80">
+              <span className="text-xs font-bold uppercase tracking-wider block opacity-90 text-purple-200">
                 Score
               </span>
             </div>
           </div>
 
           <div>
-            <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide bg-purple-900/60 text-purple-200 border border-purple-700/50">
-                <Award className="w-3.5 h-3.5 text-purple-300" />
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide bg-purple-900/60 text-purple-200 border border-purple-700/50">
+                <Award className="w-4 h-4 text-purple-300" />
                 {tabLabels[activeTab]}
               </span>
 
               {isPassing ? (
-                <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-400 bg-emerald-950/50 px-2 py-0.5 rounded-full border border-emerald-500/30">
-                  <CheckCircle2 className="w-3 h-3" />
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-300 bg-emerald-950/60 px-3 py-1 rounded-full border border-emerald-500/40">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
                   Certified Standard (≥85%)
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-rose-400 bg-rose-950/50 px-2 py-0.5 rounded-full border border-rose-500/30">
-                  <AlertCircle className="w-3 h-3" />
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-rose-300 bg-rose-950/60 px-3 py-1 rounded-full border border-rose-500/40">
+                  <AlertCircle className="w-3.5 h-3.5 text-rose-400" />
                   Below 85% Target
                 </span>
               )}
             </div>
 
-            <h2 className="text-base sm:text-lg font-bold text-white mt-1">
+            <h2 className="text-lg sm:text-xl font-bold text-white mt-1.5">
               Active Compliance Score: {score.percentage}%
             </h2>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-sm sm:text-xs text-slate-300 mt-1">
               Calculated dynamically strictly for <strong>{tabLabels[activeTab]}</strong> items
               {monthlyCountActive > 0 ? ` (+${monthlyCountActive} active monthly deep cleans)` : ''}.
             </p>
@@ -100,19 +100,19 @@ export const ComplianceScoreCard: React.FC<ComplianceScoreCardProps> = ({
         {/* Right: Quick actions & counters */}
         <div className="w-full sm:w-auto flex flex-wrap items-center gap-2 sm:justify-end">
           {/* Item counters */}
-          <div className="flex items-center gap-2 text-xs bg-slate-950/60 p-1.5 px-3 rounded-xl border border-slate-800">
-            <span className="flex items-center gap-1 text-emerald-400 font-semibold" title="Passed items">
-              <CheckCircle2 className="w-3.5 h-3.5" />
+          <div className="flex items-center gap-2.5 text-sm sm:text-xs bg-slate-950/60 p-2 px-3.5 rounded-xl border border-slate-800">
+            <span className="flex items-center gap-1.5 text-emerald-400 font-bold" title="Passed items">
+              <CheckCircle2 className="w-4 h-4" />
               {score.passedCount} Pass
             </span>
             <span className="text-slate-600">•</span>
-            <span className="flex items-center gap-1 text-rose-400 font-semibold" title="Failed items">
-              <XCircle className="w-3.5 h-3.5" />
+            <span className="flex items-center gap-1.5 text-rose-400 font-bold" title="Failed items">
+              <XCircle className="w-4 h-4" />
               {score.failedCount} Fail
             </span>
             <span className="text-slate-600">•</span>
-            <span className="flex items-center gap-1 text-slate-400 font-semibold" title="Non-applicable items">
-              <MinusCircle className="w-3.5 h-3.5" />
+            <span className="flex items-center gap-1.5 text-slate-300 font-bold" title="Non-applicable items">
+              <MinusCircle className="w-4 h-4" />
               {score.naCount} N/A
             </span>
           </div>
@@ -121,10 +121,10 @@ export const ComplianceScoreCard: React.FC<ComplianceScoreCardProps> = ({
           <button
             id="mark-all-passed-button"
             onClick={onPassAll}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-700 hover:bg-purple-600 text-white text-xs font-semibold shadow-sm transition active:scale-95"
+            className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-purple-700 hover:bg-purple-600 text-white text-sm sm:text-xs font-bold shadow-sm transition active:scale-95 min-h-[44px]"
             title="Mark all current shift items as passed"
           >
-            <CheckCheck className="w-3.5 h-3.5" />
+            <CheckCheck className="w-4 h-4" />
             <span>Pass All Shift Items</span>
           </button>
 
@@ -136,7 +136,7 @@ export const ComplianceScoreCard: React.FC<ComplianceScoreCardProps> = ({
                 setSaveSuccess(true);
                 setTimeout(() => setSaveSuccess(false), 3000);
               }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold shadow-sm transition active:scale-95 ${
+              className={`flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border text-sm sm:text-xs font-bold shadow-sm transition active:scale-95 min-h-[44px] ${
                 saveSuccess
                   ? 'bg-emerald-950 border-emerald-500 text-emerald-300'
                   : 'bg-slate-800 hover:bg-slate-750 border-slate-700 text-slate-200'
@@ -145,12 +145,12 @@ export const ComplianceScoreCard: React.FC<ComplianceScoreCardProps> = ({
             >
               {saveSuccess ? (
                 <>
-                  <Check className="w-3.5 h-3.5 text-emerald-400" />
+                  <Check className="w-4 h-4 text-emerald-400" />
                   <span>Saved</span>
                 </>
               ) : (
                 <>
-                  <Save className="w-3.5 h-3.5 text-purple-400" />
+                  <Save className="w-4 h-4 text-purple-400" />
                   <span>Save Report</span>
                 </>
               )}
@@ -165,7 +165,7 @@ export const ComplianceScoreCard: React.FC<ComplianceScoreCardProps> = ({
                 setDownloadSuccess(true);
                 setTimeout(() => setDownloadSuccess(false), 3000);
               }}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border text-xs font-bold shadow-sm transition active:scale-95 ${
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm sm:text-xs font-bold shadow-sm transition active:scale-95 min-h-[44px] ${
                 downloadSuccess
                   ? 'bg-emerald-950 border-emerald-500 text-emerald-300'
                   : 'bg-purple-900/60 hover:bg-purple-800/80 border-purple-600 text-purple-100'
@@ -174,13 +174,13 @@ export const ComplianceScoreCard: React.FC<ComplianceScoreCardProps> = ({
             >
               {downloadSuccess ? (
                 <>
-                  <Check className="w-3.5 h-3.5 text-emerald-400" />
+                  <Check className="w-4 h-4 text-emerald-400" />
                   <span>Downloaded!</span>
                 </>
               ) : (
                 <>
-                  <Download className="w-3.5 h-3.5 text-purple-300" />
-                  <span>Download PDF</span>
+                  <Download className="w-4 h-4 text-purple-300" />
+                  <span>Download Report</span>
                 </>
               )}
             </button>

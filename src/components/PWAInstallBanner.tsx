@@ -29,7 +29,7 @@ export const PWAInstallBanner: React.FC = () => {
             id="pwa-install-button"
             onClick={handleInstall}
             disabled={isInstalling}
-            className="flex items-center gap-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-1.5 text-xs font-semibold shadow-sm transition active:scale-95 disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-1.5 text-xs font-bold shadow-sm transition active:scale-95 disabled:opacity-50 min-h-[36px]"
             title="Install Anytime Fitness Inspection App on this device"
           >
             <Download className="w-3.5 h-3.5" />
@@ -43,7 +43,7 @@ export const PWAInstallBanner: React.FC = () => {
           <button
             id="pwa-ios-button"
             onClick={() => setShowIOSGuide(true)}
-            className="flex items-center gap-1.5 rounded-lg border border-purple-400/40 bg-purple-950/60 hover:bg-purple-900/60 text-purple-200 px-3 py-1.5 text-xs font-medium transition"
+            className="flex items-center gap-1.5 rounded-lg border border-purple-400/40 bg-purple-950/60 hover:bg-purple-900/60 text-purple-200 px-3 py-1.5 text-xs font-bold transition min-h-[36px]"
           >
             <Smartphone className="w-3.5 h-3.5 text-purple-300" />
             <span>Install on iOS</span>
@@ -67,25 +67,25 @@ export const PWAInstallBanner: React.FC = () => {
                   </button>
                 </div>
 
-                <div className="mt-4 space-y-3 text-xs text-slate-300 leading-relaxed">
-                  <div className="flex items-start gap-2.5">
-                    <span className="flex-shrink-0 w-5 h-5 rounded-full bg-purple-950 border border-purple-500 text-purple-300 font-bold flex items-center justify-center text-[10px]">
+                <div className="mt-4 space-y-3.5 text-sm text-slate-200 leading-relaxed">
+                  <div className="flex items-start gap-3">
+                    <span className="shrink-0 w-6 h-6 rounded-full bg-purple-950 border border-purple-500 text-purple-300 font-bold flex items-center justify-center text-xs">
                       1
                     </span>
                     <p>
                       Tap the <strong className="text-white">Share</strong> icon at the bottom of your Safari browser toolbar (square with upward arrow).
                     </p>
                   </div>
-                  <div className="flex items-start gap-2.5">
-                    <span className="flex-shrink-0 w-5 h-5 rounded-full bg-purple-950 border border-purple-500 text-purple-300 font-bold flex items-center justify-center text-[10px]">
+                  <div className="flex items-start gap-3">
+                    <span className="shrink-0 w-6 h-6 rounded-full bg-purple-950 border border-purple-500 text-purple-300 font-bold flex items-center justify-center text-xs">
                       2
                     </span>
                     <p>
                       Scroll down the action sheet and tap <strong className="text-white">Add to Home Screen</strong>.
                     </p>
                   </div>
-                  <div className="flex items-start gap-2.5">
-                    <span className="flex-shrink-0 w-5 h-5 rounded-full bg-purple-950 border border-purple-500 text-purple-300 font-bold flex items-center justify-center text-[10px]">
+                  <div className="flex items-start gap-3">
+                    <span className="shrink-0 w-6 h-6 rounded-full bg-purple-950 border border-purple-500 text-purple-300 font-bold flex items-center justify-center text-xs">
                       3
                     </span>
                     <p>
@@ -96,7 +96,7 @@ export const PWAInstallBanner: React.FC = () => {
 
                 <button
                   onClick={() => setShowIOSGuide(false)}
-                  className="mt-6 w-full rounded-xl bg-purple-600 hover:bg-purple-500 py-2.5 text-xs font-bold text-white transition"
+                  className="mt-6 w-full rounded-xl bg-purple-600 hover:bg-purple-500 py-3 text-sm font-bold text-white transition min-h-[44px]"
                 >
                   Got It
                 </button>

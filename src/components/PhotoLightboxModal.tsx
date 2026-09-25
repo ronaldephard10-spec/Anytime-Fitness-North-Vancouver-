@@ -45,7 +45,7 @@ export const PhotoLightboxModal: React.FC<PhotoLightboxModalProps> = ({
             </div>
             <div className="min-w-0">
               <h3 className="text-sm font-bold text-slate-100 truncate">{itemName}</h3>
-              <div className="flex items-center gap-2 text-[11px] text-slate-400">
+              <div className="flex items-center gap-2 text-xs text-slate-400">
                 <Clock className="w-3 h-3 text-slate-500" />
                 <span>Captured: {photo.timestamp}</span>
               </div>

@@ -328,94 +328,94 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-purple-900/30">
         <div>
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">
+            <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight">
               Certified Inspection Dispatch &amp; Client Reporting
             </h3>
-            <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-500/40 text-emerald-300">
+            <span className="text-xs uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-950 border border-emerald-500/40 text-emerald-300">
               Clean Audit Pro
             </span>
             {totalPhotos > 0 && (
-              <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-purple-950 border border-purple-500/40 text-purple-300 flex items-center gap-1">
-                <Camera className="w-3 h-3" />
+              <span className="text-xs uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-purple-950 border border-purple-500/40 text-purple-300 flex items-center gap-1">
+                <Camera className="w-3.5 h-3.5" />
                 <span>
                   {totalPhotos} Station {totalPhotos === 1 ? 'Picture' : 'Pictures'} Attached
                 </span>
               </span>
             )}
           </div>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-sm sm:text-xs text-slate-300 mt-1">
             Anytime Fitness North Vancouver • Account #3007 • Resend API Dispatched
           </p>
         </div>
 
-        <div className="flex items-center gap-2 self-start sm:self-auto">
+        <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
           {onOpenMonthlySummary && (
             <button
               onClick={onOpenMonthlySummary}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-purple-600 bg-purple-900/60 hover:bg-purple-800 text-purple-100 text-xs font-bold transition shadow-sm"
+              className="flex items-center gap-1.5 px-3.5 py-2.5 sm:px-3 sm:py-1.5 rounded-xl border border-purple-600 bg-purple-900/60 hover:bg-purple-800 text-purple-100 text-sm sm:text-xs font-bold transition shadow-sm min-h-[44px] sm:min-h-0"
               title="Open Client Monthly QA Summary Generator"
             >
-              <FileText className="w-3.5 h-3.5 text-purple-300" />
+              <FileText className="w-4 h-4 text-purple-300" />
               <span>Monthly Client QA Report</span>
             </button>
           )}
 
           <button
             onClick={handlePreviewPDF}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-750 text-slate-200 text-xs font-semibold transition active:scale-95"
+            className="flex items-center gap-1.5 px-3.5 py-2.5 sm:px-3 sm:py-1.5 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-750 text-slate-200 text-sm sm:text-xs font-semibold transition active:scale-95 min-h-[44px] sm:min-h-0"
             title="Preview generated PDF document"
           >
-            <Eye className="w-3.5 h-3.5 text-purple-400" />
+            <Eye className="w-4 h-4 text-purple-400" />
             <span>Preview PDF</span>
           </button>
 
           <button
             onClick={handleDownloadPDF}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-purple-700/60 bg-purple-950/60 hover:bg-purple-900/60 text-purple-200 text-xs font-semibold transition active:scale-95"
+            className="flex items-center gap-1.5 px-3.5 py-2.5 sm:px-3 sm:py-1.5 rounded-xl border border-purple-700/60 bg-purple-950/60 hover:bg-purple-900/60 text-purple-200 text-sm sm:text-xs font-semibold transition active:scale-95 min-h-[44px] sm:min-h-0"
             title="Download PDF directly to device"
           >
-            <Download className="w-3.5 h-3.5 text-purple-300" />
+            <Download className="w-4 h-4 text-purple-300" />
             <span>Download PDF</span>
           </button>
         </div>
       </div>
 
       {/* Strategic Reporting Cadence Policy Selector */}
-      <div className="bg-slate-950/90 border border-slate-800 rounded-xl p-4 space-y-3">
+      <div className="bg-slate-950/90 border border-slate-800 rounded-xl p-4 space-y-3.5">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-purple-400" />
-            <span className="text-xs font-bold text-white uppercase tracking-wider">
+            <span className="text-sm sm:text-xs font-bold text-white uppercase tracking-wider">
               Client Reporting Policy &amp; Cadence
             </span>
           </div>
-          <span className="text-[11px] text-purple-300 font-semibold">
+          <span className="text-xs text-purple-300 font-semibold">
             Select how Anytime Fitness receives reports
           </span>
         </div>
 
         {/* 3 Strategy Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {/* Option 2 (Recommended / Active) */}
           <button
             type="button"
             onClick={() => handleCadenceChange('monthly-summary')}
-            className={`p-3 rounded-xl border text-left transition relative ${
+            className={`p-3.5 rounded-xl border text-left transition relative ${
               cadence === 'monthly-summary'
-                ? 'bg-purple-950/60 border-purple-500 shadow-md ring-1 ring-purple-500/50'
+                ? 'bg-purple-950/60 border-purple-500 shadow-md ring-2 ring-purple-500/50'
                 : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'
             }`}
           >
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-bold text-white">Option 2 (Preferred)</span>
-              <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-emerald-950 border border-emerald-500/40 text-emerald-300">
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-sm font-bold text-white">Option 2 (Preferred)</span>
+              <span className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-500/40 text-emerald-300">
                 Recommended
               </span>
             </div>
-            <div className="text-[11px] font-semibold text-purple-300 mb-1">
+            <div className="text-xs font-semibold text-purple-300 mb-1.5">
               Monthly Summary to Client • Every Inspection to Ronald
             </div>
-            <p className="text-[10px] text-slate-400 leading-relaxed">
+            <p className="text-xs text-slate-300 leading-relaxed">
               Emails Ronald after every visit. Client receives a single executive report on the First Friday of the month. Avoids report fatigue.
             </p>
           </button>
@@ -424,22 +424,22 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
           <button
             type="button"
             onClick={() => handleCadenceChange('weekly-summary')}
-            className={`p-3 rounded-xl border text-left transition relative ${
+            className={`p-3.5 rounded-xl border text-left transition relative ${
               cadence === 'weekly-summary'
-                ? 'bg-purple-950/60 border-purple-500 shadow-md ring-1 ring-purple-500/50'
+                ? 'bg-purple-950/60 border-purple-500 shadow-md ring-2 ring-purple-500/50'
                 : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'
             }`}
           >
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-bold text-white">Option 1</span>
-              <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-slate-800 text-slate-400">
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-sm font-bold text-white">Option 1</span>
+              <span className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">
                 Balanced
               </span>
             </div>
-            <div className="text-[11px] font-semibold text-purple-300 mb-1">
+            <div className="text-xs font-semibold text-purple-300 mb-1.5">
               Weekly Thursday Roll-up
             </div>
-            <p className="text-[10px] text-slate-400 leading-relaxed">
+            <p className="text-xs text-slate-300 leading-relaxed">
               Complete inspections Sun, Tue, Thu. Dispatches weekly certified PDF to client only after Thursday cleaning with all 3 shifts.
             </p>
           </button>
@@ -448,22 +448,22 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
           <button
             type="button"
             onClick={() => handleCadenceChange('every-visit')}
-            className={`p-3 rounded-xl border text-left transition relative ${
+            className={`p-3.5 rounded-xl border text-left transition relative ${
               cadence === 'every-visit'
-                ? 'bg-purple-950/60 border-purple-500 shadow-md ring-1 ring-purple-500/50'
+                ? 'bg-purple-950/60 border-purple-500 shadow-md ring-2 ring-purple-500/50'
                 : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'
             }`}
           >
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-bold text-white">Option 3</span>
-              <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-amber-950 border border-amber-500/40 text-amber-300">
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-sm font-bold text-white">Option 3</span>
+              <span className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-950 border border-amber-500/40 text-amber-300">
                 Problem Accounts
               </span>
             </div>
-            <div className="text-[11px] font-semibold text-amber-300 mb-1">
+            <div className="text-xs font-semibold text-amber-300 mb-1.5">
               Every Visit to Client
             </div>
-            <p className="text-[10px] text-slate-400 leading-relaxed">
+            <p className="text-xs text-slate-300 leading-relaxed">
               Direct email to Jennifer Johnson after every Sun, Tue, and Thu shift. Used for new accounts, complaints, or contract renewals.
             </p>
           </button>
@@ -471,7 +471,7 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
 
         {/* Dynamic Cadence Notice Banner */}
         {cadence === 'monthly-summary' && (
-          <div className="p-3 rounded-lg bg-purple-950/30 border border-purple-800/40 flex items-start gap-2.5 text-xs text-purple-200">
+          <div className="p-3.5 rounded-xl bg-purple-950/30 border border-purple-800/40 flex items-start gap-2.5 text-sm sm:text-xs text-purple-200">
             <Info className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
             <div>
               <span className="font-bold text-white">
@@ -485,7 +485,7 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
         )}
 
         {cadence === 'weekly-summary' && (
-          <div className="p-3 rounded-lg bg-slate-900 border border-slate-800 flex items-start gap-2.5 text-xs text-slate-300">
+          <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 flex items-start gap-2.5 text-sm sm:text-xs text-slate-300">
             <Calendar className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
             <div>
               <span className="font-bold text-white">
@@ -501,7 +501,7 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
         )}
 
         {cadence === 'every-visit' && (
-          <div className="p-3 rounded-lg bg-amber-950/30 border border-amber-800/40 flex items-start gap-2.5 text-xs text-amber-200">
+          <div className="p-3.5 rounded-xl bg-amber-950/30 border border-amber-800/40 flex items-start gap-2.5 text-sm sm:text-xs text-amber-200">
             <AlertCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
             <div>
               <span className="font-bold text-white">
@@ -520,11 +520,11 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <Mail className="w-4 h-4 text-purple-400" />
-            <span className="text-xs font-bold uppercase tracking-wider text-purple-200">
+            <span className="text-sm sm:text-xs font-bold uppercase tracking-wider text-purple-200">
               Shift Email Dispatch Routing
             </span>
             {isCustomized && (
-              <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full bg-cyan-950/80 border border-cyan-500/40 text-cyan-300">
+              <span className="text-xs font-semibold uppercase px-2 py-0.5 rounded-full bg-cyan-950/80 border border-cyan-500/40 text-cyan-300">
                 Customized
               </span>
             )}
@@ -535,10 +535,10 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
               <button
                 type="button"
                 onClick={handleResetRecipients}
-                className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-850 border border-slate-700 text-[11px] text-slate-300 hover:text-white transition"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-850 border border-slate-700 text-xs text-slate-200 hover:text-white transition min-h-[38px] sm:min-h-0"
                 title="Restore default recipient emails"
               >
-                <RotateCcw className="w-3 h-3 text-slate-400" />
+                <RotateCcw className="w-3.5 h-3.5 text-slate-400" />
                 <span>Reset Defaults</span>
               </button>
             )}
@@ -546,7 +546,7 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
             <button
               type="button"
               onClick={() => setIsEditingRecipients(!isEditingRecipients)}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition min-h-[38px] sm:min-h-0 ${
                 isEditingRecipients
                   ? 'bg-purple-700 hover:bg-purple-600 text-white'
                   : 'bg-slate-800 hover:bg-slate-750 border border-slate-700 text-purple-300'
@@ -554,12 +554,12 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
             >
               {isEditingRecipients ? (
                 <>
-                  <Check className="w-3 h-3" />
+                  <Check className="w-3.5 h-3.5" />
                   <span>Done Editing</span>
                 </>
               ) : (
                 <>
-                  <Edit3 className="w-3 h-3" />
+                  <Edit3 className="w-3.5 h-3.5" />
                   <span>Change Email</span>
                 </>
               )}
@@ -569,45 +569,45 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
 
         {isEditingRecipients ? (
           /* Recipient Edit Form */
-          <div className="space-y-3 pt-1 bg-slate-900/90 p-3.5 rounded-xl border border-purple-900/40">
+          <div className="space-y-3 pt-1 bg-slate-900/90 p-4 rounded-xl border border-purple-900/40">
             <div>
               <div className="flex items-center justify-between mb-1">
-                <label className="text-[11px] font-bold text-slate-200 uppercase tracking-wider">
+                <label className="text-xs font-bold text-slate-200 uppercase tracking-wider">
                   Primary Recipient (To)
                 </label>
-                <span className="text-[10px] text-slate-400">Separate multiple with commas</span>
+                <span className="text-xs text-slate-400">Separate multiple with commas</span>
               </div>
               <input
                 type="text"
                 value={recipientTo}
                 onChange={(e) => handleToChange(e.target.value)}
                 placeholder="e.g. ronaldephard10@gmail.com, manager@anytimefitness.com"
-                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-500 font-mono focus:outline-hidden focus:border-purple-500"
+                className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm sm:text-xs text-white placeholder-slate-500 font-mono focus:outline-hidden focus:border-purple-500 min-h-[44px]"
               />
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-1">
-                <label className="text-[11px] font-bold text-slate-200 uppercase tracking-wider">
+                <label className="text-xs font-bold text-slate-200 uppercase tracking-wider">
                   Carbon Copy (Cc)
                 </label>
-                <span className="text-[10px] text-slate-400">Optional (leave empty for no CC)</span>
+                <span className="text-xs text-slate-400">Optional (leave empty for no CC)</span>
               </div>
               <input
                 type="text"
                 value={recipientCc}
                 onChange={(e) => handleCcChange(e.target.value)}
                 placeholder="e.g. ronald@marketingdo.net"
-                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-500 font-mono focus:outline-hidden focus:border-purple-500"
+                className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm sm:text-xs text-white placeholder-slate-500 font-mono focus:outline-hidden focus:border-purple-500 min-h-[44px]"
               />
             </div>
 
-            <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-slate-800">
+            <div className="flex items-center justify-between text-xs text-slate-300 pt-1.5 border-t border-slate-800">
               <span className="italic">Changes are automatically saved for your future inspections.</span>
               <button
                 type="button"
                 onClick={() => setIsEditingRecipients(false)}
-                className="text-purple-400 hover:text-purple-300 font-semibold"
+                className="text-purple-400 hover:text-purple-300 font-bold"
               >
                 Save &amp; Close
               </button>
@@ -615,18 +615,18 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
           </div>
         ) : (
           /* Recipient Cards Display */
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 font-mono text-[11px]">
-            <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800">
-              <span className="block text-slate-500 font-sans text-[10px] uppercase font-bold">To (Primary)</span>
-              <span className="text-purple-300 font-semibold break-all block">{recipientTo || '(None specified)'}</span>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1 font-mono text-xs">
+            <div className="bg-slate-900 p-3 rounded-xl border border-slate-800">
+              <span className="block text-slate-400 font-sans text-xs uppercase font-bold">To (Primary)</span>
+              <span className="text-purple-300 font-semibold break-all block mt-0.5">{recipientTo || '(None specified)'}</span>
             </div>
-            <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800">
-              <span className="block text-slate-500 font-sans text-[10px] uppercase font-bold">Cc (Carbon Copy)</span>
-              <span className="text-purple-300 font-semibold break-all block">{recipientCc || '(None)'}</span>
+            <div className="bg-slate-900 p-3 rounded-xl border border-slate-800">
+              <span className="block text-slate-400 font-sans text-xs uppercase font-bold">Cc (Carbon Copy)</span>
+              <span className="text-purple-300 font-semibold break-all block mt-0.5">{recipientCc || '(None)'}</span>
             </div>
-            <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800">
-              <span className="block text-slate-500 font-sans text-[10px] uppercase font-bold">From (Sender)</span>
-              <span className="text-emerald-400 font-semibold truncate block">{RECIPIENT_CONFIG.from}</span>
+            <div className="bg-slate-900 p-3 rounded-xl border border-slate-800">
+              <span className="block text-slate-400 font-sans text-xs uppercase font-bold">From (Sender)</span>
+              <span className="text-emerald-400 font-semibold truncate block mt-0.5">{RECIPIENT_CONFIG.from}</span>
             </div>
           </div>
         )}
@@ -638,7 +638,7 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
           id="send-inspection-button"
           onClick={handleSendResendEmail}
           disabled={isSending}
-          className="flex-1 sm:flex-initial min-w-[260px] flex items-center justify-center gap-2.5 px-6 py-3 rounded-xl bg-gradient-to-r from-purple-700 via-purple-600 to-indigo-600 hover:from-purple-600 hover:to-indigo-500 text-white font-bold text-sm shadow-lg shadow-purple-950/60 transition active:scale-[0.98] disabled:opacity-50"
+          className="flex-1 sm:flex-initial min-w-[260px] flex items-center justify-center gap-2.5 px-6 py-3 rounded-xl bg-gradient-to-r from-purple-700 via-purple-600 to-indigo-600 hover:from-purple-600 hover:to-indigo-500 text-white font-bold text-base sm:text-sm shadow-lg shadow-purple-950/60 transition active:scale-[0.98] disabled:opacity-50 min-h-[48px]"
         >
           {isSending ? (
             <>
@@ -732,21 +732,21 @@ export const SubmissionSection: React.FC<SubmissionSectionProps> = ({
                     Certified PDF for Anytime Fitness North Vancouver (<strong>{record.activeDay.toUpperCase()} Shift</strong>)
                     has been saved to the Monthly Record and dispatched.
                   </p>
-                  <p className="text-[11px] text-emerald-300 font-mono">
+                  <p className="text-xs text-emerald-300 font-mono">
                     Routing: {recipientTo} {recipientCc ? `(Cc: ${recipientCc})` : ''}
                   </p>
                   {sendResult.messageId && (
-                    <p className="text-[11px] opacity-80 font-mono">
+                    <p className="text-xs opacity-80 font-mono">
                       Tracking Reference ID: {sendResult.messageId}
                     </p>
                   )}
                   {cadence === 'monthly-summary' && (
-                    <p className="text-[11px] text-purple-300 font-medium mt-1">
+                    <p className="text-xs text-purple-300 font-medium mt-1">
                       ✓ Logged to Monthly QA Summary. Jennifer Johnson will receive this shift compiled into the executive report on the First Friday of next month.
                     </p>
                   )}
                   {sendResult.note && (
-                    <p className="text-[11px] text-purple-300 italic mt-1">
+                    <p className="text-xs text-purple-300 italic mt-1">
                       {sendResult.note}
                     </p>
                   )}

@@ -15,10 +15,12 @@ import {
   Check,
   BookOpen,
   Calendar,
+  Type,
 } from 'lucide-react';
 import { FACILITY_INFO } from '../types/inspection';
 import { PWAInstallBanner } from './PWAInstallBanner';
 import { useOnlineStatus } from '../hooks/useOnlineStatus';
+import { TextSize } from '../hooks/useTextSize';
 
 interface HeaderProps {
   currentDayName: string;
@@ -36,6 +38,8 @@ interface HeaderProps {
   onDownloadReport?: () => void;
   onSaveReport?: () => void;
   lastSavedText?: string;
+  textSize?: TextSize;
+  onCycleTextSize?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -52,7 +56,8 @@ export const Header: React.FC<HeaderProps> = ({
   isVoiceSupported,
   onDownloadReport,
   onSaveReport,
-  lastSavedText,
+  textSize = 'normal',
+  onCycleTextSize,
 }) => {
   const isOnline = useOnlineStatus();
   const [downloadSuccess, setDownloadSuccess] = useState(false);
@@ -81,36 +86,54 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             {/* Anytime Fitness Purple Badge */}
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-700 to-indigo-900 border border-purple-400/30 flex items-center justify-center text-white shadow-md shadow-purple-950/50">
-              <ShieldCheck className="w-6 h-6 text-purple-200" />
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-purple-700 to-indigo-900 border border-purple-400/30 flex items-center justify-center text-white shadow-md shadow-purple-950/50 shrink-0">
+              <ShieldCheck className="w-7 h-7 text-purple-200" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-purple-900/70 text-purple-300 border border-purple-700/50">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-bold tracking-wider uppercase bg-purple-900/70 text-purple-300 border border-purple-700/50">
                   Clean Audit Pro
                 </span>
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-300 border border-slate-700">
-                  <Clock className="w-3 h-3 text-purple-400" />
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-xs font-semibold bg-slate-800 text-slate-200 border border-slate-700">
+                  <Clock className="w-3.5 h-3.5 text-purple-400" />
                   {currentDayName} • 11:00 PM Shift
                 </span>
-                <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-800">
+                <span className="hidden sm:inline-flex items-center px-2.5 py-0.5 rounded text-xs font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-800">
                   Acct #3007
                 </span>
               </div>
-              <h1 className="text-base sm:text-lg font-extrabold text-white tracking-tight mt-0.5">
+              <h1 className="text-lg sm:text-xl font-extrabold text-white tracking-tight mt-0.5">
                 {FACILITY_INFO.facility}
               </h1>
             </div>
           </div>
 
-          {/* Right utility buttons: Voice Assistant, Monthly Summary, Source Document, PWA install, connectivity, reset */}
-          <div className="flex items-center gap-2.5 ml-auto">
+          {/* Right utility buttons */}
+          <div className="flex items-center gap-2 sm:gap-2.5 ml-auto flex-wrap justify-end">
+            {/* Text Size Accessibility Switcher for Mobile & Desktop */}
+            {onCycleTextSize && (
+              <button
+                id="header-text-size-btn"
+                onClick={onCycleTextSize}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-750 text-slate-100 border border-purple-500/40 text-xs font-bold transition shadow-xs cursor-pointer min-h-[36px]"
+                title={`Text Size: ${textSize === 'xl' ? 'Extra Large (130%)' : textSize === 'large' ? 'Large (115%)' : 'Standard (100%)'}. Tap to cycle size.`}
+              >
+                <Type className="w-4 h-4 text-purple-400" />
+                <span className="font-mono font-black text-xs text-purple-300">
+                  {textSize === 'xl' ? 'A++' : textSize === 'large' ? 'A+' : 'A'}
+                </span>
+                <span className="hidden md:inline text-xs text-slate-300">
+                  {textSize === 'xl' ? 'Extra Large' : textSize === 'large' ? 'Large' : 'Normal'}
+                </span>
+              </button>
+            )}
+
             {/* Hands-Free Voice Walkthrough Toggle */}
             {isVoiceSupported && onToggleVoice && (
               <button
                 onClick={onToggleVoice}
                 id="header-voice-assistant-btn"
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-bold transition shadow-sm relative ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-bold transition shadow-sm relative min-h-[36px] ${
                   isVoiceListening
                     ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white border-purple-400 ring-2 ring-purple-400/40 shadow-purple-900/50'
                     : 'bg-slate-800 hover:bg-slate-750 text-slate-200 border-slate-700'
@@ -141,13 +164,12 @@ export const Header: React.FC<HeaderProps> = ({
             {onOpenMonthlySummary && (
               <button
                 onClick={onOpenMonthlySummary}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-800 to-indigo-800 hover:from-purple-700 hover:to-indigo-700 text-white border border-purple-500/50 text-xs font-bold transition shadow-sm"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-800 to-indigo-800 hover:from-purple-700 hover:to-indigo-700 text-white border border-purple-500/50 text-xs font-bold transition shadow-sm min-h-[36px]"
                 title="Open Client Monthly QA Summary & Executive PDF Generator (Option 2 Strategy)"
               >
                 <FileText className="w-3.5 h-3.5 text-purple-200" />
                 <span className="hidden sm:inline">Monthly QA Report</span>
                 <span className="sm:hidden">Monthly QA</span>
-                <span className="text-[10px] bg-purple-950/80 px-1.5 py-0.2 rounded border border-purple-400/50 text-purple-200 font-extrabold">Client</span>
               </button>
             )}
 
@@ -155,12 +177,12 @@ export const Header: React.FC<HeaderProps> = ({
             {onOpenQAGuide && (
               <button
                 onClick={onOpenQAGuide}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-900/60 to-purple-800/60 hover:from-purple-800/80 hover:to-purple-700/80 text-purple-200 border border-purple-600/60 text-xs font-semibold transition shadow-sm cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-900/60 to-purple-800/60 hover:from-purple-800/80 hover:to-purple-700/80 text-purple-200 border border-purple-600/60 text-xs font-semibold transition shadow-sm cursor-pointer min-h-[36px]"
                 title="Open Coverall QA Inspection Method Guide, Walkthrough Procedures & 9/7/5 Rating Rules"
               >
                 <BookOpen className="w-3.5 h-3.5 text-purple-300" />
                 <span className="hidden sm:inline">QA Guide</span>
-                <span className="text-[10px] bg-purple-950 px-1 rounded border border-purple-800">FBO</span>
+                <span className="text-xs bg-purple-950 px-1.5 rounded border border-purple-800">FBO</span>
               </button>
             )}
 
@@ -175,20 +197,19 @@ export const Header: React.FC<HeaderProps> = ({
                   }
                 }}
                 id="header-source-document-calendar-btn"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-900/70 to-indigo-900/70 hover:from-purple-800 hover:to-indigo-800 text-purple-100 border border-purple-500/50 text-xs font-bold transition shadow-sm cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-900/70 to-indigo-900/70 hover:from-purple-800 hover:to-indigo-800 text-purple-100 border border-purple-500/50 text-xs font-bold transition shadow-sm cursor-pointer min-h-[36px]"
                 title="View Source Document & 12-Month Commercial Cleaning Calendar (Unit 103 - 2180 Dollarton Hwy • 156 Visits • Tue/Thu/Sat)"
               >
                 <Calendar className="w-3.5 h-3.5 text-purple-300" />
                 <span className="hidden sm:inline">Source Document (12-Mo Calendar)</span>
                 <span className="sm:hidden">12-Mo Cal</span>
-                <span className="text-[10px] bg-purple-950 px-1.5 py-0.2 rounded border border-purple-400/50 text-purple-200 font-extrabold">156</span>
               </button>
             )}
 
-            {/* Online/Offline pill */}
+            {/* Online/Offline indicator */}
             <div
               id="network-status-badge"
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium border ${
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold border ${
                 isOnline
                   ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-400'
                   : 'bg-amber-950/50 border-amber-500/50 text-amber-300'
@@ -196,13 +217,13 @@ export const Header: React.FC<HeaderProps> = ({
             >
               {isOnline ? (
                 <>
-                  <Wifi className="w-3 h-3" />
+                  <Wifi className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Online</span>
                 </>
               ) : (
                 <>
-                  <WifiOff className="w-3 h-3" />
-                  <span>Offline Mode</span>
+                  <WifiOff className="w-3.5 h-3.5" />
+                  <span>Offline</span>
                 </>
               )}
             </div>
@@ -215,7 +236,7 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 id="header-save-report-btn"
                 onClick={handleSaveClick}
-                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg border text-xs font-semibold transition ${
+                className={`flex items-center gap-1 px-3 py-1.5 rounded-lg border text-xs font-bold transition min-h-[36px] ${
                   saveSuccess
                     ? 'bg-emerald-950 border-emerald-500 text-emerald-300'
                     : 'bg-slate-800 hover:bg-slate-750 border-slate-700 text-slate-200'
@@ -241,7 +262,7 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 id="header-download-report-btn"
                 onClick={handleDownloadClick}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-bold transition shadow-sm ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-bold transition shadow-sm min-h-[36px] ${
                   downloadSuccess
                     ? 'bg-emerald-950 border-emerald-500 text-emerald-300'
                     : 'bg-purple-900/60 hover:bg-purple-800/80 border-purple-600 text-purple-100 shadow-purple-950/40'
@@ -267,7 +288,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               id="reset-audit-button"
               onClick={onResetAudit}
-              className="text-xs px-2.5 py-1.5 rounded-lg border border-slate-700 hover:border-slate-600 bg-slate-800 hover:bg-slate-750 text-slate-300 hover:text-white transition"
+              className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-slate-700 hover:border-slate-600 bg-slate-800 hover:bg-slate-750 text-slate-300 hover:text-white transition min-h-[36px]"
               title="Reset today's checklist state"
             >
               Reset
@@ -276,33 +297,34 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Facility Metadata Bar */}
-        <div className="mt-3 pt-2.5 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-x-5 gap-y-1.5 text-xs text-slate-400">
+        <div className="mt-3 pt-2.5 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-x-5 gap-y-2 text-sm sm:text-xs text-slate-300">
           <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5">
-            <div className="flex items-center gap-1.5 text-slate-300">
-              <MapPin className="w-3.5 h-3.5 text-purple-400 shrink-0" />
+            <div className="flex items-center gap-1.5 text-slate-200">
+              <MapPin className="w-4 h-4 text-purple-400 shrink-0" />
               <span className="font-medium">{FACILITY_INFO.address}</span>
             </div>
 
-            <div className="flex items-center gap-1.5 text-slate-300">
-              <Phone className="w-3.5 h-3.5 text-purple-400 shrink-0" />
-              <span>Contact: <strong className="text-slate-200">{FACILITY_INFO.contactName}</strong> ({FACILITY_INFO.contactPhone})</span>
+            <div className="flex items-center gap-1.5 text-slate-200">
+              <Phone className="w-4 h-4 text-purple-400 shrink-0" />
+              <span>Contact: <strong className="text-white">{FACILITY_INFO.contactName}</strong> ({FACILITY_INFO.contactPhone})</span>
             </div>
 
-            <div className="hidden lg:flex items-center gap-1.5 text-amber-300/90 text-[11px]">
-              <Key className="w-3 h-3 text-amber-400" />
+            <div className="hidden lg:flex items-center gap-1.5 text-amber-300">
+              <Key className="w-3.5 h-3.5 text-amber-400 shrink-0" />
               <span>Keys: 1 Fob + 1 Key</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 text-[11px] text-purple-300 bg-purple-950/50 px-2.5 py-1 rounded-md border border-purple-800/40">
-            <Clock className="w-3 h-3 text-purple-400 shrink-0" />
+          <div className="flex items-center gap-1.5 text-xs text-purple-200 bg-purple-950/70 px-3 py-1 rounded-lg border border-purple-800/50">
+            <Clock className="w-3.5 h-3.5 text-purple-400 shrink-0" />
             <span>
               <strong>Schedule:</strong> {FACILITY_INFO.frequency}
             </span>
-            <span className="text-slate-400 ml-1 hidden xl:inline">• {formattedDate} {formattedTime}</span>
+            <span className="text-slate-300 ml-1 hidden xl:inline">• {formattedDate} {formattedTime}</span>
           </div>
         </div>
       </div>
     </header>
   );
 };
+
